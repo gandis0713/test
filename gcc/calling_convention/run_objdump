@@ -1,0 +1,1 @@
+objdump -d --disassembler-options=intel $1 > $1.obj
