@@ -16,6 +16,9 @@ Initialize:
 	mov bp, 0xFFFF	; initialize Stack Base Pointer address.
 	mov sp, 0xFFFF	; initialize Stack Pointer address.
 
+	jmp Start
+
+Start:
 	call CleanDisplay
 	call StartBooting
 
@@ -42,10 +45,9 @@ CleanLoop:
 	ret
 
 StartBooting:
-
-	push msgStart
-	push 0x0000
-	push 0x0000
+	push msgStart	; push text message.
+	push 0x0000	; push Y position of text.
+	push 0x0000	; push X position of text.
 
 	call Print
 	call Done
@@ -70,11 +72,11 @@ Print:
 	add di, ax
 
 	mov si, word [ bp + 0x0008 ]
-.PrintLoop:
 
+.PrintLoop:
 	mov cl, byte [ si ]
 
-	cmp cl, 0x000
+	cmp cl, 0x0000
 
 	je Done
 
@@ -86,6 +88,7 @@ Print:
 
 	pop bp
 	ret
+
 Done:
 	jmp $
 	
