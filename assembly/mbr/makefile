@@ -7,7 +7,7 @@ floppy:
 	dd if=mbr.bin of=mbr.flp
 
 iso:
-	mkisofs -no-emul-boot -boot-load-size 4 -o mbr.iso -b mbr.bin out/
+	mkisofs -no-emul-boot -boot-load-size 4 -o mbr.iso -b mbr.bin .
 
 printHex:
 	hexdump -C mbr.bin
