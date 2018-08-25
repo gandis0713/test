@@ -3,7 +3,6 @@ all: clean build floppy iso printHex
 build:
 	nasm -f bin -o mbr.bin mbr.asm
 
-
 floppy:
 	dd if=mbr.bin of=mbr.flp
 
