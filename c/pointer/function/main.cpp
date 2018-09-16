@@ -8,7 +8,7 @@ void Callprint(AddFunc);
 int main()
 {
 	AddFunc addFunc = Add;
-	Callprint(addFunc);
+	Callprint(Add);
 	return 0;
 }
 
