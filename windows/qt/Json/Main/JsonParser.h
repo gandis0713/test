@@ -10,8 +10,8 @@
 class CJsonParser
 {
 public:
-    virtual CJsonParser();
-    virtual ~CJsonParser();
+    CJsonParser();
+    ~CJsonParser();
 
     static bool IsValidRequestData(const QByteArray &data);
     static bool IsValidResultData(const QByteArray &data);

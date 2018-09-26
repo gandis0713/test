@@ -3,33 +3,11 @@
 #include <gmock/gmock-matchers.h>
 
 #include "JsonParser.h"
-#include "JsonParser_Test.h"
 
 #include <QFile>
 #include <QJsonDocument>
 
 using namespace testing;
-
-
-TEST(JsonParser_Test, IsValidRequestDatatest)
-{
-    bool result = true;
-
-    QString strJsonFormat =  QString("{   "
-                                     "   \"Peer\": \"127.0.0.1\","
-                                     "   \"Port\": \"2323\","
-                                     "   \"Count\": \"2\","
-                                     "   \"FileDir\": \"C:/Users/gandis/Desktop/projects/qt/EzMtDicomSender/src/Resource/\","
-                                     "   \"Files\": [\"test1.txt\", \"test2.txt\"]"
-                                     "}");
-
-    QByteArray byteJsonFormat = strJsonFormat.toUtf8();
-
-    //result = CJsonParser_Test::IsValidRequestData(byteJsonFormat);
-
-    EXPECT_TRUE(result);
-}
-
 
 TEST(JsonParser_Test, IsValidRequestData)
 {

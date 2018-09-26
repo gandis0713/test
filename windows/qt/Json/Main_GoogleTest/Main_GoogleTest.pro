@@ -6,13 +6,10 @@ CONFIG += no_batch
 
 INCLUDEPATH += ../Main
 
-DEFINES += UNIT_TEST
-
 TEMPLATE = app
 
 HEADERS +=     \
-    ../Main/JsonParser.h \
-    JsonParser_Test.h
+    ../Main/JsonParser.h
 
 
 SOURCES +=     main.cpp \
