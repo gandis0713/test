@@ -1,5 +1,8 @@
 *.bin
 *.obj
+*.ilk
+*.exe
+*.pdb
 *.flp
 *.iso
 *.o
@@ -8,5 +11,3 @@
 *.i
 *.elf
 *.img
-
-
