@@ -1,7 +1,0 @@
-{
-	"Peer": "127.0.0.1",
-	"Port": "3434",
-	"Count": "2",
-	"FileDir": "C:/Users/gandis/Desktop/projects/qt/EzMtDicomSender/src/Resource/",
-	"Files": ["test1.txt", "test2.txt"]
-}
