@@ -6,16 +6,6 @@
 #include <QJsonArray>
 #include <QFile>
 
-CJsonParser::CJsonParser()
-{
-
-}
-
-CJsonParser::~CJsonParser()
-{
-
-}
-
 bool CJsonParser::IsValidRequestData(const QByteArray &data)
 {
     QJsonDocument jsonDocument = QJsonDocument::fromJson(data);
