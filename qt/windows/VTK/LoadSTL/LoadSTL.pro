@@ -1,16 +1,11 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2018-10-06T14:24:01
-#
-#-------------------------------------------------
 
 include(ImportVTK.pri)
 
-QT       += core gui
+QT       += core
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = segmentation
+TARGET = LoadSTL
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -26,15 +21,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp
-
-HEADERS += \
-        mainwindow.h
-
-FORMS += \
-        mainwindow.ui
-
-DISTFILES +=
+        main.cpp
 
 

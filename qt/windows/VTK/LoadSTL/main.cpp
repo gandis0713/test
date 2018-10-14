@@ -1,41 +1,71 @@
-#include "mainwindow.h"
 #include <QApplication>
 
-#include <vtkSmartPointer.h>
-#include <vtkSphereSource.h>
-#include <vtkPolyDataMapper.h>
-#include <vtkActor.h>
-#include <vtkRenderWindow.h>
+#include <vtkGenericOpenGLRenderWindow.h>
 #include <vtkRenderer.h>
+#include <vtkSTLReader.h>
+#include <vtkPolyDataMapper.h>
 
-#include <QVTKWidget.h>
+#include <QVTKOpenGLWidget.h>
+
+// added below code to handle the vtkPolyDataMapper error.
+#include <vtkAutoInit.h>
+VTK_MODULE_INIT(vtkRenderingOpenGL2);
+VTK_MODULE_INIT(vtkInteractionStyle);
+/* reference :
+ * https://stackoverflow.com/questions/18642155/no-override-found-for-vtkpolydatamapper
+ */
+
 
 int main(int argc, char *argv[])
-{
+{    
+    if ( argc != 2 )
+    {
+        cout << "Required argument as STL file path to load" << endl;
+        return -1;
+    }
+    std::string inputFilename = argv[1];
+
     QApplication app(argc, argv);
 
-    QVTKWidget widget;
-    widget.resize( 256, 256 );
+    // create widget
+    QVTKOpenGLWidget widget;
+    widget.resize(256,256);
 
-    vtkSmartPointer<vtkSphereSource> sphereSource =
-        vtkSmartPointer<vtkSphereSource>::New();
+    // create window for rendering
+    vtkNew<vtkGenericOpenGLRenderWindow> renderWindow;
 
-    vtkSmartPointer<vtkPolyDataMapper> sphereMapper =
-        vtkSmartPointer<vtkPolyDataMapper>::New();
-    sphereMapper->SetInputConnection( sphereSource->GetOutputPort() );
+    // set rendering window to widget.
+    widget.SetRenderWindow(renderWindow);
 
-    vtkSmartPointer<vtkActor> sphereActor =
-        vtkSmartPointer<vtkActor>::New();
-    sphereActor->SetMapper( sphereMapper );
+    // create STL Reader and set STL file.
+    vtkSmartPointer<vtkSTLReader> reader =
+      vtkSmartPointer<vtkSTLReader>::New();
+    reader->SetFileName(inputFilename.c_str());
+    reader->Update();
 
+    // map STL data to poly data mapper.
+    vtkSmartPointer<vtkPolyDataMapper> mapper =
+      vtkSmartPointer<vtkPolyDataMapper>::New();
+    mapper->SetInputConnection(reader->GetOutputPort());
+
+    // set mapper to actor.
+    vtkSmartPointer<vtkActor> actor =
+      vtkSmartPointer<vtkActor>::New();
+    actor->SetMapper(mapper);
+
+    // create renderer and set actor to renderer
     vtkSmartPointer<vtkRenderer> renderer =
-        vtkSmartPointer<vtkRenderer>::New();
-    renderer->AddActor( sphereActor );
+      vtkSmartPointer<vtkRenderer>::New();
+    renderer->AddActor(actor);
 
-    widget.GetRenderWindow()->AddRenderer( renderer );
+    // render window
+    renderWindow->AddRenderer(renderer);
+    renderWindow->Render();
+
+    // show widget
     widget.show();
 
     app.exec();
 
-    return EXIT_SUCCESS;
+    return 0;
 }
