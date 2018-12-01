@@ -1,1 +1,1 @@
-ADD_EXECUTABLE(main.out main.cpp DNumberSystems.h DLogicGate.h)
+ADD_EXECUTABLE(main main.cpp DNumberSystems.h DLogicGate.h)

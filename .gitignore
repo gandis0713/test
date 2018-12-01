@@ -11,3 +11,5 @@
 *.i
 *.elf
 *.img
+
+build/
