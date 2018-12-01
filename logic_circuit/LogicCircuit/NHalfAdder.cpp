@@ -2,12 +2,12 @@
 
 namespace NHalfAdder
 {
-    SHalfAdder Do(const STwoInput &sTwoInput)
+    SHalfAdder Do(const Input_2 &input_2)
     {
         SHalfAdder sHalfAdder;
 
-        sHalfAdder.sum = XOR(sTwoInput.input_1, sTwoInput.input_2);
-        sHalfAdder.carry = AND(sTwoInput.input_1, sTwoInput.input_2);
+        sHalfAdder.sum = XOR(input_2);
+        sHalfAdder.carry = AND(input_2);
 
         return sHalfAdder;
     }

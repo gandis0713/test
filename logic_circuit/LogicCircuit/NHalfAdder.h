@@ -3,11 +3,11 @@
 
 struct SHalfAdder
 {
-    bool carry;
-    bool sum;
+    Output carry;
+    Output sum;
 };
 
 namespace NHalfAdder
 {
-    SHalfAdder Do(const STwoInput &sTwoInput);
+    SHalfAdder Do(const Input_2 &input_2);
 }

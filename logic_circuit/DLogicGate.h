@@ -1,33 +1,36 @@
-inline bool NOT(bool a)
+#include "DLogicStruct.h"
+
+inline Input NOT(Input input)
 {
-    return !a;
+    return !input[0];
 }
 
-inline bool OR(bool a, bool b)
+inline bool OR(Input_2 inputs)
 {
-    return a | b;
+    return inputs[0] | inputs[1];
 }
 
-inline bool XOR(bool a, bool b)
+inline bool XOR(Input_2 inputs)
 {
-    return a ^ b;
+    return inputs[0] ^ inputs[1];
 }
 
-inline bool NOR(bool a, bool b)
+inline bool NOR(Input_2 inputs)
 {
-    return !OR(a, b);
-}
-inline bool XNOR(bool a, bool b)
-{
-    return !XOR(a, b);
+    return !OR(inputs);
 }
 
-inline bool AND(bool a, bool b)
+inline bool XNOR(Input_2 inputs)
 {
-    return a & b;
+    return !XOR(inputs);
 }
 
-inline bool NAND(bool a, bool b)
+inline bool AND(Input_2 inputs)
 {
-    return !AND(a, b);
+    return inputs[0] & inputs[1];
+}
+
+inline bool NAND(Input_2 inputs)
+{
+    return !AND(inputs);
 }
