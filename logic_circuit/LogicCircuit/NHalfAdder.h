@@ -1,13 +1,23 @@
 #include "../DLogicGate.h"
 #include "../DLogicStruct.h"
 
-struct SHalfAdder
+struct SAdderOutput
 {
-    Output carry;
-    Output sum;
+    SOutput carry;
+    SOutput sum;
 };
 
-namespace NHalfAdder
+typedef SInput_2 SHalfAdderInput;
+
+struct SAdderInput
 {
-    SHalfAdder Do(const Input_2 &input_2);
+    SHalfAdderInput sHAInput;
+    SInput carry;
+};
+
+
+namespace NAdder
+{
+    SAdderOutput DoFullAdder(const SAdderInput &sAdderInput);
+    SAdderOutput DoHalfAdder(const SHalfAdderInput &sHalfAdderInput);
 }

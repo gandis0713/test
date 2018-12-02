@@ -1,36 +1,36 @@
 #include "DLogicStruct.h"
 
-inline Input NOT(Input input)
+inline SOutput NOT(SInput sInput)
 {
-    return !input[0];
+    return !sInput[0];
 }
 
-inline bool OR(Input_2 inputs)
+inline SOutput OR(SInput_2 sInputs)
 {
-    return inputs[0] | inputs[1];
+    return sInputs.x[0] | sInputs.y[0];
 }
 
-inline bool XOR(Input_2 inputs)
+inline SOutput XOR(SInput_2 sInputs)
 {
-    return inputs[0] ^ inputs[1];
+    return sInputs.x[0] ^ sInputs.y[0];
 }
 
-inline bool NOR(Input_2 inputs)
+inline SOutput NOR(SInput_2 sInputs)
 {
-    return !OR(inputs);
+    return !OR(sInputs)[0];
 }
 
-inline bool XNOR(Input_2 inputs)
+inline SOutput XNOR(SInput_2 sInputs)
 {
-    return !XOR(inputs);
+    return !XOR(sInputs)[0];
 }
 
-inline bool AND(Input_2 inputs)
+inline SOutput AND(SInput_2 sInputs)
 {
-    return inputs[0] & inputs[1];
+    return sInputs.x[0] & sInputs.y[0];
 }
 
-inline bool NAND(Input_2 inputs)
+inline SOutput NAND(SInput_2 sInputs)
 {
-    return !AND(inputs);
+    return !AND(sInputs)[0];
 }

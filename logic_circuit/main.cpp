@@ -6,14 +6,15 @@ using namespace std;
 
 int main()
 {
-    Input_2 input_2;
-    input_2.set();
-    input_2[0] = 0;
+    SAdderInput sAdderIn;
+    sAdderIn.carry = 0;
+    sAdderIn.sHAInput.x[0] = 1;
+    sAdderIn.sHAInput.y[0] = 1;
 
-    SHalfAdder sHalfAdder = NHalfAdder::Do(input_2);
+    SAdderOutput sAdderOut = NAdder::DoFullAdder(sAdderIn);
 
-    cout << sHalfAdder.sum << endl;
-    cout << sHalfAdder.carry << endl;
+    cout << sAdderOut.sum << endl;
+    cout << sAdderOut.carry << endl;
 
     return 0;
 }
