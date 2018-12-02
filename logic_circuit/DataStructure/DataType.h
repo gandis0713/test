@@ -1,4 +1,4 @@
-#include "DLogicStruct.h"
+#include "Bit.h"
 
 const short CHAR_BIT_SIZE = 8;
 const short SHORT_BIT_SIZE = 16;

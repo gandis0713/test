@@ -1,5 +1,5 @@
-#include "LogicCircuit/NAdder.h"
-#include "DDataType.h"
+#include "LogicCircuit/Combination/NAdder.h"
+#include "DataStructure/DataType.h"
 
 #include <iostream>
 #include <vector>
@@ -21,13 +21,15 @@ int main()
     nNumber_1[2] = 1;
     nNumber_1[3] = 0;
     nNumber_1[4] = 1;
+    nNumber_1[5] = 1;
     
     // set 27
-    nNumber_2[0] = 1;
+    nNumber_2[0] = 0;
     nNumber_2[1] = 1;
     nNumber_2[2] = 0;
     nNumber_2[3] = 1;
     nNumber_2[4] = 1;
+    nNumber_2[5] = 1;
     
     cout << "nNumber_1 : " << nNumber_1.to_ulong() << endl;    
     cout << "nNumber_2 : " << nNumber_2.to_ulong() << endl;

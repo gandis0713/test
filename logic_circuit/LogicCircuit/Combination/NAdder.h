@@ -1,5 +1,4 @@
-#include "../DLogicGate.h"
-#include "../DLogicStruct.h"
+#include "../../DataStructure/InputOutput.h"
 
 struct SAdderOut
 {
