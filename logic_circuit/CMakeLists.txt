@@ -16,6 +16,10 @@ SET ( SRC_FILES
         DataStructure/NumberSystems.h
         LogicCircuit/Combination/NAdder.h
         LogicCircuit/Combination/NAdder.cpp
+        LogicCircuit/Combination/Adder.h
+        LogicCircuit/Combination/Adder.cpp
+        LogicCircuit/Circuit.h
+        LogicCircuit/Circuit.cpp
         LogicGate/ANDGate.h
         LogicGate/ANDGate.cpp
         LogicGate/BASEGate.h
