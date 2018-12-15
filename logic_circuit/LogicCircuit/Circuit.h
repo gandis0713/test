@@ -1,4 +1,4 @@
-#include "../LogicGate/BASEgate.h"
+#include "../LogicGate/BASEGate.h"
 
 class CCircuit
 {
