@@ -5,6 +5,8 @@
 *.pdb
 *.flp
 *.iso
+*.so
+*.a
 *.o
 *.out
 *.s
