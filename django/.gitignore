@@ -1,6 +1,12 @@
-bin/
-include/
-lib/
-share/
-lib*
-*.cfg
+## Django ##
+
+__pycache__/
+*.pyc
+
+
+## Virtual Environment ##
+env/
+
+## Python ##
+__pycache__/
+*.py[cod]
