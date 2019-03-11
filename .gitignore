@@ -1,3 +1,5 @@
+## binary
+
 *.bin
 *.obj
 *.ilk
@@ -13,6 +15,11 @@
 *.i
 *.elf
 *.img
+
+## qt
+*.pro.user
+.qmake.stash
+ui_*.h
 
 build/
 .vscode/
