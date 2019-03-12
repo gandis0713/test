@@ -1,5 +1,5 @@
 #include "../inc/lib1.h"
-#include "../inc/lib2.h"
+// #include "../inc/lib2.h"
 
 #include <iostream>
 
@@ -17,7 +17,7 @@ void setlib1(int n)
     nlib1 = n;
 }
 
-void printlib2()
-{
-    cout << "lib2 : " << getlib2() << endl;
-}
+// void printlib2()
+// {
+//     cout << "lib2 : " << getlib2() << endl;
+// }
