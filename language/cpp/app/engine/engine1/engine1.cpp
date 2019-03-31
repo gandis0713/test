@@ -6,13 +6,15 @@ using namespace std;
 
 static int result = 0;
 
-void Plus(int a)
+int Plus(int a)
 {
-	result = result + a;
+	result += a;
+	return result;
 }
-void Substract(int a)
+int Substract(int a)
 {
-	result = result - a;
+	result -= a;
+	return result;
 }
 
 int GetResult()

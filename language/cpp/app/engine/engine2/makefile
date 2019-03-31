@@ -20,4 +20,4 @@ clean:
 	rm -f $(OBJ)
 
 copy:
-	cp $(TAR) $(LIBPATH)
+	cp -f $(TAR) $(LIBPATH)

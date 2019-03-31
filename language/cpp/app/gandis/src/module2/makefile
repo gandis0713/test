@@ -4,13 +4,14 @@ TAR = lib$(NAME).so
 OBJ = $(NAME).o
 SRC = $(NAME).cpp
 LIBPATH = /home/gandis/lib
+LIB = -lengine1 -lengine2
 
 all: clean build
 
 build: $(TAR) copy
 
 $(TAR): $(OBJ)
-	$(CC) -shared -o $@ $^
+	$(CC) -shared -o $@ $^ -L$(LIBPATH) $(LIB)
 
 $(OBJ): $(SRC)
 	$(CC) -fPIC -c $^
@@ -20,4 +21,4 @@ clean:
 	rm -f $(OBJ)
 
 copy:
-	cp $(TAR) $(LIBPATH)
+	cp -f $(TAR) $(LIBPATH)

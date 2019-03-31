@@ -1,3 +1,3 @@
-void Plus(int a);
-void Substract(int a);
+int Plus(int a);
+int Substract(int a);
 int GetResult();
