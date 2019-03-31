@@ -1,6 +1,7 @@
 #include "../inc/module2.h"
 
 #include "../../../engine/inc/engine1.h"
+#include "../common/people.h"
 
 #include <iostream>
 
@@ -14,4 +15,14 @@ int AddDevice(int a)
 int MinusDevice(int a)
 {
     return Substract(a);
+}
+
+
+void AddNumber(int number)
+{
+    CPeople::GetInstance().AddAge(number);
+}
+int GetNumber()
+{
+    return CPeople::GetInstance().GetAge();
 }

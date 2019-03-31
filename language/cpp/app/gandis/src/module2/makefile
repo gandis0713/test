@@ -11,10 +11,10 @@ all: clean build
 build: $(TAR) copy
 
 $(TAR): $(OBJ)
-	$(CC) -shared -o $@ $^ -L$(LIBPATH) $(LIB)
+	$(CC) -shared -o $@ $^ people.o -L$(LIBPATH) $(LIB)
 
 $(OBJ): $(SRC)
-	$(CC) -fPIC -c $^
+	$(CC) -fPIC -c $^ ../common/people.cpp
 
 clean:
 	rm -f $(TAR)

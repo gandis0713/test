@@ -16,8 +16,3 @@ int Substract(int a)
 	result -= a;
 	return result;
 }
-
-int GetResult()
-{
-	return result;
-}
