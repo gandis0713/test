@@ -1,0 +1,13 @@
+
+Application
+ - Design.
+
+3D
+ - Modeling
+ 	- Broken texture.
+ 	- Manual Segmentation.
+ 	- Soft Tissue Prediction.
+
+ - Rendering
+ 	- ...
+
