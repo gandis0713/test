@@ -7,8 +7,6 @@
 
 #include <QtOpenGL/QGLWidget>
 #include <QOpenGLFunctions_3_0>
-#include <QOpenGLFunctions_3_1>
-#include <QOpenGLFunctions_3_3_Core>
 #include <QDebug>
 #include <QApplication>
 

@@ -6,7 +6,7 @@
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 
-class GLWidget : public QGLWidget, protected QOpenGLFunctions_3_1
+class GLWidget : public QGLWidget, protected QOpenGLFunctions_3_0
 {
     Q_OBJECT
 public:
