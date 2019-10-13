@@ -50,7 +50,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget">
+   <widget class="CListView" name="listWidget">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -82,6 +82,13 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>CListView</class>
+   <extends>QListWidget</extends>
+   <header>clistview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

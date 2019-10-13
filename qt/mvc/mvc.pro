@@ -25,16 +25,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp \
-    cmainwindowcon.cpp \
-    cmodel.cpp
+    maincontroller.cpp \
+    clistview.cpp \
+    clistmodel.cpp
 
 HEADERS += \
-        mainwindow.h \
-    imainwindowobs.h \
-    cmainwindowcon.h \
-    cmodel.h \
-    imaincontrollerobs.h
+    maincontroller.h \
+    clistview.h \
+    clistmodel.h \
+    ilistlistener.h
 
 FORMS += \
         mainwindow.ui
