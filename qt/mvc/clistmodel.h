@@ -13,10 +13,10 @@ public:
     virtual void append(const QString &strNew);
     virtual void removeAt(int nIndex);
 
-    void setListListener(IListListner *pMainWindowListener);
+    void setListListener(IListListner *pListListener);
 
 private:
-    IListListner *m_pMainWindowListener;
+    IListListner *m_pListListener;
 };
 
 #endif // CLISTMODEL_H

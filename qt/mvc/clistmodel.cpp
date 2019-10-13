@@ -1,7 +1,7 @@
 #include "clistmodel.h"
 
 CListModel::CListModel()
-    : m_pMainWindowListener(NULL)
+    : m_pListListener(NULL)
 {
     // do nothing.
 }
@@ -11,23 +11,23 @@ CListModel::~CListModel()
     // do nothing.
 }
 
-void CListModel::setListListener(IListListner *pMainWindowListener)
+void CListModel::setListListener(IListListner *pListListener)
 {
-    m_pMainWindowListener = pMainWindowListener;
+    m_pListListener = pListListener;
 }
 
 void CListModel::append(const QString &strNew)
 {
     QList::append(strNew);
 
-    if(m_pMainWindowListener != NULL)
-        m_pMainWindowListener->OnAdded(strNew);
+    if(m_pListListener != NULL)
+        m_pListListener->OnAdded(strNew);
 }
 
 void CListModel::removeAt(int nIndex)
 {
     QList::removeAt(nIndex);
 
-    if(m_pMainWindowListener != NULL)
-        m_pMainWindowListener->OnDeleted(nIndex);
+    if(m_pListListener != NULL)
+        m_pListListener->OnDeleted(nIndex);
 }
