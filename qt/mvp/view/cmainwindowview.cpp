@@ -1,5 +1,5 @@
 #include "cmainwindowview.h"
-#include "ui_mainwindow.h"
+#include "ui_cmainwindowview.h"
 
 #include "presenter/cmainwindowpresenter.h"
 
