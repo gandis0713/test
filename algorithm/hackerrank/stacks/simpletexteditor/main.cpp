@@ -64,46 +64,55 @@ int main()
         {
             if(vec.size() <= 1)
             {
-                vecTotal.push(vecChar);
-                continue;
+                // do nothing.
+            }
+            else
+            {
+                for(int i = 0; i < vec[1].length(); i++)
+                {
+                    vecChar.push_back(vec[1][i]);
+                }
             }
 
-            for(int i = 0; i < vec[1].length(); i++)
-            {
-                vecChar.push_back(vec[1][i]);
-            }
             vecTotal.push(vecChar);
         }
         else if(type == 2)
         {
             if(vec.size() <= 1)
             {
-                vecTotal.push(vecChar);
-                continue;
+                // do nothing.
+            }
+            else
+            {
+                int cutsize = atoi(vec[1].c_str());
+                if(vecChar.size() < atoi(vec[1].c_str()))
+                    cutsize = vecChar.size();
+
+                vecChar.erase(vecChar.end() - cutsize, vecChar.end());
             }
 
-            int cutsize = atoi(vec[1].c_str());
-            if(vecChar.size() < atoi(vec[1].c_str()))
-                cutsize = vecChar.size();
-
-            vecChar.erase(vecChar.end() - cutsize, vecChar.end());
             vecTotal.push(vecChar);
         }
         else if(type == 3)
         {
-            if(vec.size() <= 1 && vecChar.size() < atoi(vec[1].c_str()))
+            if(vec.size() <= 1)
             {
-                cout << "" << endl;
-                continue;
+                // do nothing.
             }
-
-            if(atoi(vec[1].c_str()) < 1)
+            else
             {
-                cout << "" << endl;
-                continue;
-            }
+                int index = atoi(vec[1].c_str());
+                if(vecChar.size() < index)
+                {
+                    cout << "" << endl;
+                }
+                else
+                {
+                    cout << vecChar[index - 1] << endl;
+                }
 
-            cout << vecChar[atoi(vec[1].c_str()) - 1] << endl;
+
+            }
         }
         else if (type == 4)
         {
@@ -114,7 +123,7 @@ int main()
 
             if(vecTotal.empty())
                 continue;
-                
+
             vecChar = vecTotal.top();
         }
     }
