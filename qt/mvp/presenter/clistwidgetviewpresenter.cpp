@@ -1,23 +1,33 @@
-#include "clistviewpresenter.h"
+#include "clistwidgetviewpresenter.h"
 #include "view/ilistwidgetview.h"
 
-CListViewPresenter::CListViewPresenter(IListWidgetView *pListView)
+CListWidgetViewPresenter::CListWidgetViewPresenter(IListWidgetView *pListView)
     : m_pListView(pListView)
 {
     // do nothing.
 }
 
-CListViewPresenter::~CListViewPresenter()
+CListWidgetViewPresenter::~CListWidgetViewPresenter()
 {
     // do nothing.
 }
 
-void CListViewPresenter::Added(const QString &strNew)
+void CListWidgetViewPresenter::Add(const QString &strNew)
 {
-    m_pListView->Add(strNew);
+    if(m_pListView != nullptr)
+        m_pListView->Add(strNew);
 }
 
-void CListViewPresenter::Deleted(const int &nIndex)
+void CListWidgetViewPresenter::Delete(const int &nIndex)
 {
-    m_pListView->Delete(nIndex);
+    if(m_pListView != nullptr)
+        m_pListView->Delete(nIndex);
+}
+
+int CListWidgetViewPresenter::GetSelectedIndex()
+{
+    if(m_pListView != nullptr)
+        return m_pListView->GetSelectedIndex();
+
+    return -1;
 }

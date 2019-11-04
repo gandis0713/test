@@ -14,8 +14,8 @@ CMainWindowView::CMainWindowView(QWidget *parent) :
                                                       ui->listWidget,
                                                       ui->editNew);
 
-    connect(ui->btnNew, &QPushButton::clicked, this, &CMainWindowView::SlotClieckAdded);
-    connect(ui->btnDelete, &QPushButton::clicked, this, &CMainWindowView::SlotClieckDeleted);
+    connect(ui->btnNew, &QPushButton::clicked, this, &CMainWindowView::Add);
+    connect(ui->btnDelete, &QPushButton::clicked, this, &CMainWindowView::Delete);
 }
 
 CMainWindowView::~CMainWindowView()
@@ -23,13 +23,11 @@ CMainWindowView::~CMainWindowView()
     delete ui;
 }
 
-void CMainWindowView::SlotClieckAdded(bool bState)
+void CMainWindowView::Add()
 {
-    Q_UNUSED(bState);
     m_pMainWindowPresenter->Add();
 }
-void CMainWindowView::SlotClieckDeleted(bool bState)
+void CMainWindowView::Delete()
 {
-    Q_UNUSED(bState);
     m_pMainWindowPresenter->Delete();
 }

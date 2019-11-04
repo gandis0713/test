@@ -18,9 +18,9 @@ public:
     explicit CMainWindowView(QWidget *parent = 0);
     ~CMainWindowView();
 
-private slots:
-    void SlotClieckAdded(bool bState);
-    void SlotClieckDeleted(bool bState);
+private:
+    void Add() override;
+    void Delete() override;
 
 
 private:

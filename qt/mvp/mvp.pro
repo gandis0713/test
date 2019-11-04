@@ -27,23 +27,23 @@ SOURCES += \
         main.cpp \
     model/clistmodel.cpp \
     presenter/cmainwindowpresenter.cpp \
-    presenter/clistviewpresenter.cpp \
     view/clineeditview.cpp \
     presenter/clineeditviewpresenter.cpp \
     view/clistwidgetview.cpp \
-    view/cmainwindowview.cpp
+    view/cmainwindowview.cpp \
+    presenter/clistwidgetviewpresenter.cpp
 
 HEADERS += \
     model/clistmodel.h \
     presenter/cmainwindowpresenter.h \
-    presenter/clistviewpresenter.h \
     view/clineeditview.h \
     view/ilineeditview.h \
     presenter/clineeditviewpresenter.h \
     view/ilistwidgetview.h \
     view/clistwidgetview.h \
     view/imainwindowview.h \
-    view/cmainwindowview.h
+    view/cmainwindowview.h \
+    presenter/clistwidgetviewpresenter.h
 
 FORMS += \
     cmainwindowview.ui

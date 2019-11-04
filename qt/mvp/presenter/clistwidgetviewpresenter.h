@@ -1,21 +1,23 @@
-#ifndef CLISTVIEWPRESENTER_H
-#define CLISTVIEWPRESENTER_H
+#ifndef CLISTWIDGETVIEWPRESENTER_H
+#define CLISTWIDGETVIEWPRESENTER_H
 
 #include <QString>
 
 class IListWidgetView;
 
-class CListViewPresenter
+class CListWidgetViewPresenter
 {
 public:
-    explicit CListViewPresenter(IListWidgetView *pListView);
-    virtual ~CListViewPresenter();
+    explicit CListWidgetViewPresenter(IListWidgetView *pListView);
+    virtual ~CListWidgetViewPresenter();
 
-    void Added(const QString &strNew);
-    void Deleted(const int &nIndex);
+    void Add(const QString &strNew);
+    void Delete(const int &nIndex);
+
+    int GetSelectedIndex();
 
 private:
     IListWidgetView *m_pListView;
 };
 
-#endif // CLISTVIEWPRESENTER_H
+#endif // CLISTWIDGETVIEWPRESENTER_H

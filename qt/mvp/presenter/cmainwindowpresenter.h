@@ -8,6 +8,9 @@ class IMainWindowView;
 class IListWidgetView;
 class ILineEditView;
 
+class CListWidgetViewPresenter;
+class CLineEditViewPresenter;
+
 class CMainWindowPresenter
 {
 public:
@@ -20,10 +23,15 @@ public:
     void Delete();
 
 private:
+    // view
     IMainWindowView   *m_pMainWindow;
-    IListWidgetView     *m_pListView;
-    CListModel     m_listModel;
-    ILineEditView *m_pLineEditView;
+
+    // model
+    CListModel         m_listModel;
+
+    // sub presenter
+    CListWidgetViewPresenter     *m_pListWidgetViewPresenter;
+    CLineEditViewPresenter       *m_pLineEditViewPresenter;
 };
 
 #endif // CMAINWINDOWPRESENTER_H

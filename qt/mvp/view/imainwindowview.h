@@ -4,8 +4,9 @@
 
 class IMainWindowView
 {
-public:
-
+private:
+    virtual void Add() = 0;
+    virtual void Delete() = 0;
 };
 
 #endif // IMAINWINDOW_H

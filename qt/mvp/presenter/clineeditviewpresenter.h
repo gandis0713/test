@@ -12,6 +12,7 @@ public:
     virtual ~CLineEditViewPresenter();
 
     QString GetText();
+    void ClearText();
 
 private:
     ILineEditView *m_pLineEditView;
