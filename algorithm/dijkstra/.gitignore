@@ -1,0 +1,11 @@
+moc_*.cpp
+ui_*.h
+
+Makefile
+*.release
+*.debug
+*.user
+*.stash
+
+debug/
+release/
