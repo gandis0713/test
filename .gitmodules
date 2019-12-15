@@ -1,3 +1,3 @@
-[submodule "opengl/imgui/ext/glfw"]
-	path = opengl/imgui/ext/glfw
+[submodule "opengl/tutorial/ext/glfw"]
+	path = opengl/tutorial/ext/glfw
 	url = https://github.com/glfw/glfw.git
