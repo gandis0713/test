@@ -1,3 +1,4 @@
 
 add_subdirectory(2_4_triangle)
 add_subdirectory(2_4_element_triangle)
+add_subdirectory(2_5_shader)

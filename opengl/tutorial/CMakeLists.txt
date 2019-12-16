@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.0)
 
 project(opengl_example)
 
-include_directories(ext/glad/include
+include_directories(src/drivers
+                    ext/glad/include
                     ext/glfw/include)
 
 option(GLFW_BUILD_DOCS OFF)
