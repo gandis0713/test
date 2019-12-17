@@ -33,6 +33,8 @@ public:
         glUniform1f(glGetUniformLocation(m_nID, name.c_str()), value); 
     }
 
+    inline unsigned int getID() { return m_nID; }
+
 private:
     unsigned int m_nID;
 
