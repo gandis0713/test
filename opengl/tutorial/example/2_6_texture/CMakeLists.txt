@@ -1,17 +1,18 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(shader)
+project(texture)
 
 file(GLOB EXT_SOURCES ${CMAKE_SOURCE_DIR}/ext/glad/src/glad.c)
 file(GLOB SRC_SOURCES ${CMAKE_SOURCE_DIR}/src/drivers/*.cpp)
 file(GLOB PRO_SOURCES main.cpp)
 
-add_executable(${PROJECT_NAME} 
+add_executable(${PROJECT_NAME}
                ${PRO_SOURCES}
                ${SRC_SOURCES}
                ${EXT_SOURCES})
 
 file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/shaders DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file( COPY ${CMAKE_SOURCE_DIR}/resource/2_6 DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/resource)
                
 # add_custom_target(
 #         COPY_SHADER

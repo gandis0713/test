@@ -4,7 +4,8 @@ project(opengl_example)
 
 include_directories(src/drivers
                     ext/glad/include
-                    ext/glfw/include)
+                    ext/glfw/include
+                    ext/stb)
 
 option(GLFW_BUILD_DOCS OFF)
 option(GLFW_BUILD_EXAMPLES OFF)
