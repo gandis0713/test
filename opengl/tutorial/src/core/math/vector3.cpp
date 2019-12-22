@@ -61,15 +61,6 @@ bool Vector3::operator!=(const Vector3& v) const
         || !Math::is_equal_approx(z, v.z);
 }
 
-bool Vector3::operator<=(const Vector3& v) const
-{
-
-}
-
-__INLINE__ bool operator<(const Vector3& v) const;
-__INLINE__ bool operator>=(const Vector3& v) const;
-__INLINE__ bool operator>(const Vector3& v) const;
-
 Vector3 Vector3::operator+(const real_t& v) const
 {
     return Vector3(this->x + v, this->y + v, this->z + v);
