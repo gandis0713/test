@@ -2,6 +2,11 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "shader.h"
+#include "math/vector3.h"
+#include "math/vector4.h"
+#include "math/matrix3.h"
+#include "math/matrix4.h"
+#include "math/math_funcs.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"

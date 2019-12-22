@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 project(opengl_example)
 
 include_directories(src/drivers
+                    src/core
                     ext/glad/include
                     ext/glfw/include
                     ext/stb)
