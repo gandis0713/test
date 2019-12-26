@@ -27,10 +27,29 @@ public:
     __INLINE__ const real_t &operator[](int axis) const;
     __INLINE__ real_t &operator[](int axis);
 
-    Vector4& operator+=(const real_t& value);
-    Vector4& operator-=(const real_t& value);
-    Vector4& operator*=(const real_t& value);
-    Vector4& operator/=(const real_t& value);
+    __INLINE__ Vector4& operator+=(const real_t& v);
+    __INLINE__ Vector4& operator-=(const real_t& v);
+    __INLINE__ Vector4& operator*=(const real_t& v);
+    __INLINE__ Vector4& operator/=(const real_t& v);
+
+    __INLINE__ bool operator==(const Vector4& v) const;
+    __INLINE__ bool operator!=(const Vector4& v) const;
+
+    __INLINE__ Vector4 operator+(const real_t& v) const;
+    __INLINE__ Vector4 operator-(const real_t& v) const;
+    __INLINE__ Vector4 operator*(const real_t& v) const;
+    __INLINE__ Vector4 operator/(const real_t& v) const;
+
+    __INLINE__ Vector4 operator+(const Vector4& v) const;
+    __INLINE__ Vector4 operator-(const Vector4& v) const;
+    __INLINE__ Vector4 operator*(const Vector4& v) const;
+    __INLINE__ Vector4 operator/(const Vector4& v) const;
+    
+    __INLINE__ Vector4 operator-() const;
+
+    __INLINE__ real_t dot(const Vector4 &v) const;
+    __INLINE__ Vector4 cross(const Vector4 &v) const;
+    __INLINE__ real_t length() const;
 };
 
 #endif

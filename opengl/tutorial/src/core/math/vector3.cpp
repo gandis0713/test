@@ -105,3 +105,20 @@ Vector3 Vector3::operator-() const
 {
     return Vector3(-this->x, -this->y, -this->z);
 }
+
+real_t Vector3::dot(const Vector3& v) const
+{
+    return x * v.x + y * v.y + z * v.z;
+}
+
+Vector3 Vector3::cross(const Vector3& v) const
+{
+    return Vector3(x * v.y - y * v.x,
+                   y * v.z - z * v.y,
+                   z * v.x - x * v.z);
+}
+
+real_t Vector3::length() const
+{
+    return Math::sqrt(x * x + y * y + z * z);
+}

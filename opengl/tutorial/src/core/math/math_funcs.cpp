@@ -1,4 +1,15 @@
 #include "math_funcs.h"
+#include <math.h>
+
+float Math::sqrt(float value)
+{
+    return ::sqrtf(value);
+}
+
+double Math::sqrt(double value)
+{
+    return ::sqrt(value);
+}
 
 float Math::absf(float value)
 {
@@ -76,5 +87,13 @@ bool Math::is_equal_approx(const real_t& a, const real_t& b)
     real_t tolerance = EPSILON * abs(a);
     tolerance = tolerance < EPSILON ? EPSILON : tolerance;
 
+    return abs(a - b) < tolerance;
+}
+
+bool Math::is_equal_approx(const real_t& a, const real_t& b, const real_t& tolerance)
+{
+    if(a == b)
+        return true;
+    
     return abs(a - b) < tolerance;
 }

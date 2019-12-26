@@ -45,6 +45,10 @@ public:
     __INLINE__ Vector3 operator/(const Vector3& v) const;
     
     __INLINE__ Vector3 operator-() const;
+
+    __INLINE__ real_t dot(const Vector3 &v) const;
+    __INLINE__ Vector3 cross(const Vector3 &v) const;
+    __INLINE__ real_t length() const;
 };
 
 #endif
