@@ -10,7 +10,7 @@ build:
 	# $(CC) main.cpp -L../static -lstatic -L../shared -lshared -o main
 	# $(CC) main.cpp -static -L../static -I../static -lstatic -o main
 	# $(CC) main.cpp -L../shared -lshared -o main
-	$(CC) main.cpp -L../out -lshared2 -lshared -o main
+	$(CC) main.cpp -L../out -lshared_2 -lshared_1 -o main
 
 clean:
 	rm -f $(EXECUTE)
