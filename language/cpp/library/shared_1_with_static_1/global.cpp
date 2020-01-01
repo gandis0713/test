@@ -12,8 +12,14 @@ int get_shared_1_global_function_with_static_1_global_num()
 
 int& get_shared_1_global_function_with_static_1_global_num_reference()
 {
-    cout << "get_shared_1_global_function_with_static_1_global_num_reference() variable reference : " << &static_1_global_num << endl;
+    cout << "get_shared_1_global_function_with_static_1_global_num_reference() : " << &static_1_global_num << endl;
     return static_1_global_num;
+}
+
+int& get_shared_1_global_function_with_static_1_global_num_reference_by_function()
+{
+    cout << "get_shared_1_global_function_with_static_1_global_num_reference_by_function() : " << &get_static_1_global_num_reference() << endl;
+    return get_static_1_global_num_reference();
 }
 
 void print_shared_1_global_function_with_static_1_global_num()
@@ -29,8 +35,14 @@ int get_shared_1_global_function_with_static_1_static_num()
 
 int& get_shared_1_global_function_with_static_1_static_num_reference()
 {
-    cout << "get_shared_1_global_function_with_static_1_static_num_reference() variable reference : " << &static_1_static_num << endl;
+    cout << "get_shared_1_global_function_with_static_1_static_num_reference() : " << &static_1_static_num << endl;
     return static_1_static_num;
+}
+
+int& get_shared_1_global_function_with_static_1_static_num_reference_by_reference()
+{
+    cout << "get_shared_1_global_function_with_static_1_static_num_reference_by_reference() : " << &get_static_1_static_num_reference() << endl;
+    return get_static_1_static_num_reference();
 }
 
 void print_shared_1_global_function_with_static_1_static_num()
