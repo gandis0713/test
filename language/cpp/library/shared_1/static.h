@@ -1,9 +1,13 @@
-#ifndef STATIC_H
-#define STATIC_H
-// #pragma once
+// #ifndef STATIC_H
+// #define STATIC_H
+#pragma once
 
-static int snum;
+static int shared_1_static_num;
 
-int getsnum();
+int get_shared_1_static_num();
 
-#endif
+int& get_shared_1_static_num_reference();
+
+void print_shared_1_static_num();
+
+// #endif

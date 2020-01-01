@@ -2,8 +2,7 @@ GLOBAL_O = global.o
 STATIC_O = static.o
 LIB = libstatic_1.a
 
-OBJECT = $(GLOBAL_O)
-# OBJECT = $(STATIC_O) $(GLOBAL_O)
+OBJECT = $(STATIC_O) $(GLOBAL_O)
 
 all: clean build copy
 
