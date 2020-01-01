@@ -10,4 +10,11 @@ int& get_shared_1_static_num_reference();
 
 void print_shared_1_static_num();
 
+class shared_1_class
+{
+public:
+    shared_1_class();
+    static shared_1_class& get_instance();
+};
+
 // #endif

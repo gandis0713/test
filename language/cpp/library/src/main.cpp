@@ -9,15 +9,15 @@
 #include "../static_1/static.h"
 #include "../static_2/static.h"
 
-#include "../shared_1_with_static_1/global.h"
-#include "../shared_2_with_static_1/global.h"
-#include "../shared_1_with_static_1/static.h"
-#include "../shared_2_with_static_1/static.h"
+#include "../shared_1_with_lib/global.h"
+#include "../shared_2_with_lib/global.h"
+#include "../shared_1_with_lib/static.h"
+#include "../shared_2_with_lib/static.h"
 
-#include "../static_1_with_static_1/global.h"
-#include "../static_2_with_static_1/global.h"
-#include "../static_1_with_static_1/static.h"
-#include "../static_2_with_static_1/static.h"
+#include "../static_1_with_lib/global.h"
+#include "../static_2_with_lib/global.h"
+#include "../static_1_with_lib/static.h"
+#include "../static_2_with_lib/static.h"
 using namespace std;
 
 
@@ -60,10 +60,12 @@ int main()
     /*cout << */&get_static_2_global_function_with_static_1_static_num_reference()/* << endl*/;
 
     cout << &static_1_class::get_instance() << endl;
-    static_1_with_static_1_class st_1_w_s_1_class;
-    static_2_with_static_1_class st_2_w_s_1_class;
-    shared_1_with_static_1_class sh_1_w_s_1_class;
-    shared_2_with_static_1_class sh_2_w_s_1_class;
+    cout << &shared_1_class::get_instance() << endl;
+    
+    static_1_with_lib_class st_1_w_lib_class;
+    static_2_with_lib_class st_2_w_lib_class;
+    shared_1_with_lib_class sh_1_w_lib_class;
+    shared_2_with_lib_class sh_2_w_lib_class;
 
     
     return 0;

@@ -1,7 +1,7 @@
 GLOBAL_O = global.o
 STATIC_O = static.o
 LIB = libshared_2.so
-# OBJECTS = $(GLOBAL_O)
+
 OBJECTS = $(GLOBAL_O) $(STATIC_O)
 
 all: clean build copy

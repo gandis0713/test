@@ -4,13 +4,13 @@
 
 #include "../static_1/static.h"
 
-class static_1_with_static_1_class
+class static_2_with_lib_class
 {
 public:
-    static_1_with_static_1_class();
+    static_2_with_lib_class();
     static_1_class& get_static_1_class_instance();
 private:
-    static_1_class& _s_1_class;
+    static_1_class& _st_1_class;
 };
 
 

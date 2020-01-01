@@ -21,12 +21,12 @@ void print_static_2_static_num()
 
 static_2_class::static_2_class()
 {
-    cout << "static_2_class" << endl;
+    // cout << "static_2_class" << endl;
 }
 
 static_2_class& static_2_class::get_instance()
 {
-    cout << "static_2_class::get_instance" << endl;
+    // cout << "static_2_class::get_instance" << endl;
     static static_2_class instance;
     return instance;
 }

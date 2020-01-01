@@ -1,6 +1,6 @@
 GLOBAL_O = global.o
 STATIC_O = static.o
-LIB = libstatic_2_with_static_1.a
+LIB = libstatic_1_with_lib.a
 
 OBJECT = $(STATIC_O) $(GLOBAL_O)
 
