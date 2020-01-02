@@ -3,14 +3,17 @@
 #pragma once
 
 #include "../static_1/static.h"
+#include "../shared_1/static.h"
 
 class static_2_with_lib_class
 {
 public:
     static_2_with_lib_class();
     static_1_class& get_static_1_class_instance();
+    shared_1_class& get_shared_1_class_instance();
 private:
     static_1_class& _st_1_class;
+    shared_1_class& _sh_1_class;
 };
 
 

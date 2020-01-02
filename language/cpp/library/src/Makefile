@@ -6,11 +6,15 @@ STATIC = -lstatic_1 -lstatic_2
 SHARED = -lshared_1 -lshared_2
 SHARED_WITH = -lshared_1_with_lib -lshared_2_with_lib
 STATIC_WITH = -lstatic_1_with_lib -lstatic_2_with_lib
+# STATIC = 
+# SHARED = 
+# SHARED_WITH = -lshared_1_with_lib -lshared_2_with_lib
+# STATIC_WITH =
 
 all: clean build
 
 build:
-	$(CC) main.cpp -L../out $(STATIC) $(SHARED) $(SHARED_WITH) $(STATIC_WITH) -o $(EXECUTE)
+	$(CC) main.cpp -o $(EXECUTE) -L../out $(STATIC) $(SHARED) $(SHARED_WITH) $(STATIC_WITH)
 
 clean:
 	rm -f $(EXECUTE)

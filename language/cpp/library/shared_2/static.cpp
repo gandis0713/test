@@ -19,6 +19,7 @@ void print_shared_2_static_num()
     cout << "print_shared_2_static_num() : " << shared_2_static_num << endl;
 }
 
+int shared_2_class::id = 0;
 shared_2_class::shared_2_class()
 {
     // cout << "shared_2_class" << endl;

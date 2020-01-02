@@ -15,6 +15,7 @@ class shared_2_class
 public:
     shared_2_class();
     static shared_2_class& get_instance();
+    static int id;
 };
 
 // #endif

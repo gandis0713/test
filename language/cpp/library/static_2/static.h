@@ -15,6 +15,7 @@ class static_2_class
 public:
     static_2_class();
     static static_2_class& get_instance();
+    static int id;
 };
 
 // #endif

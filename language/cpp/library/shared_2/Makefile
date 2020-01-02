@@ -7,8 +7,8 @@ OBJECTS = $(GLOBAL_O) $(STATIC_O)
 all: clean build copy
 
 build:
-	g++ -c -fPIC global.cpp -o $(GLOBAL_O)
-	g++ -c -fPIC static.cpp -o $(STATIC_O)
+	g++ -c $(SHARED_PIC) global.cpp -o $(GLOBAL_O)
+	g++ -c $(SHARED_PIC) static.cpp -o $(STATIC_O)
 
 	g++ -shared $(OBJECTS) -o $(LIB)
 

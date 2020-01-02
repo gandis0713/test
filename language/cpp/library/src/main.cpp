@@ -27,37 +27,37 @@ int main()
     /*cout << */&get_shared_1_global_num_reference()/* << endl*/;
     // /*cout << */get_shared_2_global_num()/* << endl*/;    
     /*cout << */&get_shared_2_global_num_reference()/* << endl*/;
-    // /*cout << */get_static_1_global_num()/* << endl*/;    
-    /*cout << */&get_static_1_global_num_reference()/* << endl*/;
-    // /*cout << */get_static_2_global_num()/* << endl*/;    
-    /*cout << */&get_static_2_global_num_reference()/* << endl*/;
-
     // /*cout << */get_shared_1_static_num()/* << endl*/;    
     /*cout << */&get_shared_1_static_num_reference()/* << endl*/;
     // /*cout << */get_shared_2_static_num()/* << endl*/;    
     /*cout << */&get_shared_2_static_num_reference()/* << endl*/;
+
+    // /*cout << */get_static_1_global_num()/* << endl*/;    
+    /*cout << */&get_static_1_global_num_reference()/* << endl*/;
+    // /*cout << */get_static_2_global_num()/* << endl*/;    
+    /*cout << */&get_static_2_global_num_reference()/* << endl*/;
     // /*cout << */get_static_1_static_num()/* << endl*/;    
     /*cout << */&get_static_1_static_num_reference()/* << endl*/;
     // /*cout << */get_static_2_static_num()/* << endl*/;    
     /*cout << */&get_static_2_static_num_reference()/* << endl*/;
 
-    // /*cout << */get_shared_1_global_function_with_static_1_global_num()/* << endl*/;
-    /*cout << */&get_shared_1_global_function_with_static_1_global_num_reference()/* << endl*/;
-    // /*cout << */get_shared_1_global_function_with_static_1_static_num()/* << endl*/;
-    /*cout << */&get_shared_1_global_function_with_static_1_static_num_reference()/* << endl*/;
-    // /*cout << */get_shared_2_global_function_with_static_1_global_num()/* << endl*/;
-    /*cout << */&get_shared_2_global_function_with_static_1_global_num_reference()/* << endl*/;
-    // /*cout << */get_shared_2_global_function_with_static_1_static_num()/* << endl*/;
-    /*cout << */&get_shared_2_global_function_with_static_1_static_num_reference()/* << endl*/;
+    // /*cout << */get_shared_1_with_lib_global_function_with_static_1_global_num()/* << endl*/;
+    /*cout << */&get_shared_1_with_lib_global_function_with_static_1_global_num_reference()/* << endl*/;
+    // /*cout << */get_shared_1_with_lib_global_function_with_static_1_static_num()/* << endl*/;
+    /*cout << */&get_shared_1_with_lib_global_function_with_static_1_static_num_reference()/* << endl*/;
+    // /*cout << */get_shared_2_with_lib_global_function_with_static_1_global_num()/* << endl*/;
+    /*cout << */&get_shared_2_with_lib_global_function_with_static_1_global_num_reference()/* << endl*/;
+    // /*cout << */get_shared_2_with_lib_global_function_with_static_1_static_num()/* << endl*/;
+    /*cout << */&get_shared_2_with_lib_global_function_with_static_1_static_num_reference()/* << endl*/;
 
-    // /*cout << */get_static_1_global_function_with_static_1_global_num()/* << endl*/;
-    /*cout << */&get_static_1_global_function_with_static_1_global_num_reference()/* << endl*/;
-    // /*cout << */get_static_1_global_function_with_static_1_static_num()/* << endl*/;
-    /*cout << */&get_static_1_global_function_with_static_1_static_num_reference()/* << endl*/;
-    // /*cout << */get_static_2_global_function_with_static_1_global_num()/* << endl*/;
-    /*cout << */&get_static_2_global_function_with_static_1_global_num_reference()/* << endl*/;
-    // /*cout << */get_static_2_global_function_with_static_1_static_num()/* << endl*/;
-    /*cout << */&get_static_2_global_function_with_static_1_static_num_reference()/* << endl*/;
+    // /*cout << */get_static_1_with_lib_global_function_with_static_1_global_num()/* << endl*/;
+    /*cout << */&get_static_1_with_lib_global_function_with_static_1_global_num_reference()/* << endl*/;
+    // /*cout << */get_static_1_with_lib_global_function_with_static_1_static_num()/* << endl*/;
+    /*cout << */&get_static_1_with_lib_global_function_with_static_1_static_num_reference()/* << endl*/;
+    // /*cout << */get_static_2_with_lib_global_function_with_static_1_global_num()/* << endl*/;
+    /*cout << */&get_static_2_with_lib_global_function_with_static_1_global_num_reference()/* << endl*/;
+    // /*cout << */get_static_2_with_lib_global_function_with_static_1_static_num()/* << endl*/;
+    /*cout << */&get_static_2_with_lib_global_function_with_static_1_static_num_reference()/* << endl*/;
 
     cout << &static_1_class::get_instance() << endl;
     cout << &shared_1_class::get_instance() << endl;
@@ -67,6 +67,8 @@ int main()
     shared_1_with_lib_class sh_1_w_lib_class;
     shared_2_with_lib_class sh_2_w_lib_class;
 
+    cout << &static_1_class::id << endl;
+    cout << &shared_1_class::id << endl;
     
     return 0;
 }

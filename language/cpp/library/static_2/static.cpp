@@ -19,6 +19,7 @@ void print_static_2_static_num()
     cout << "print_static_2_static_num() : " << static_2_static_num << endl;
 }
 
+int static_2_class::id = 0;
 static_2_class::static_2_class()
 {
     // cout << "static_2_class" << endl;
