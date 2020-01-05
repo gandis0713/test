@@ -19,15 +19,27 @@ void print_shared_2_static_num()
     cout << "print_shared_2_static_num() : " << shared_2_static_num << endl;
 }
 
-int shared_2_class::id = 0;
-shared_2_class::shared_2_class()
+class shared_2_cpp_class
 {
-    // cout << "shared_2_class" << endl;
+public:
+    shared_2_cpp_class(){}
+    static shared_2_cpp_class& get_instance()
+    {
+        static shared_2_cpp_class instance;
+        return instance;
+    }
+    static int id;
+};
+int shared_2_cpp_class::id = 0;
+
+int shared_2_header_class::id = 0;
+shared_2_header_class::shared_2_header_class()
+{
+    shared_2_cpp_class::get_instance();
 }
 
-shared_2_class& shared_2_class::get_instance()
+shared_2_header_class& shared_2_header_class::get_instance()
 {
-    // cout << "shared_2_class::get_instance" << endl;
-    static shared_2_class instance;
+    static shared_2_header_class instance;
     return instance;
 }

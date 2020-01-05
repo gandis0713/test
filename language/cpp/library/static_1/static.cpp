@@ -19,15 +19,29 @@ void print_static_1_static_num()
     cout << "print_static_1_static_num() : " << static_1_static_num << endl;
 }
 
-int static_1_class::id = 0;
-static_1_class::static_1_class()
+class static_1_cpp_class
 {
-    // cout << "static_1_class" << endl;
+public:
+    static_1_cpp_class(){}
+    static static_1_cpp_class& get_instance()
+    {
+        static static_1_cpp_class instance;
+        return instance;
+    }
+    static int id;
+};
+int static_1_cpp_class::id = 0;
+
+int static_1_header_class::id = 0;
+static_1_header_class::static_1_header_class()
+    : _st_1_c_class(static_1_cpp_class::get_instance())
+{
+
 }
 
-static_1_class& static_1_class::get_instance()
+static_1_header_class& static_1_header_class::get_instance()
 {
-    // cout << "static_1_class::get_instance" << endl;
-    static static_1_class instance;
+    static static_1_header_class instance;
     return instance;
 }
+

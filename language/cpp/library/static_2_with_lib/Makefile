@@ -3,7 +3,7 @@ STATIC_O = static.o
 OUT = libstatic_2_with_lib.a
 
 OBJECT = $(STATIC_O) $(GLOBAL_O)
-LIBS = -lstatic_1 -lshared_1
+LIBS = -lstatic_1
 
 all: clean build copy
 
