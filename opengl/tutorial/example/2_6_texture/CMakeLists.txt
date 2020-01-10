@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg")
+SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -pg")
+
 project(texture)
 
 file(GLOB EXT_SOURCES ${CMAKE_SOURCE_DIR}/ext/glad/src/glad.c)

@@ -63,59 +63,52 @@ bool Vector4::operator!=(const Vector4& v) const
 
 Vector4 Vector4::operator+(const real_t& v) const
 {
-    return Vector4(this->x + v, this->y + v, this->z + v);
+    return Vector4(this->x + v, this->y + v, this->z + v, this->w + v);
 }
 
 Vector4 Vector4::operator-(const real_t& v) const
 {
-    return Vector4(this->x - v, this->y - v, this->z - v);
+    return Vector4(this->x - v, this->y - v, this->z - v, this->w - v);
 }
 
 Vector4 Vector4::operator*(const real_t& v) const
 {
-    return Vector4(this->x * v, this->y * v, this->z * v);
+    return Vector4(this->x * v, this->y * v, this->z * v, this->w * v);
 }
 
 Vector4 Vector4::operator/(const real_t& v) const
 {
-    return Vector4(this->x / v, this->y / v, this->z / v);
+    return Vector4(this->x / v, this->y / v, this->z / v, this->w / v);
 }
 
 Vector4 Vector4::operator+(const Vector4& v) const
 {
-    return Vector4(this->x + v.x, this->y + v.y, this->z + v.z);
+    return Vector4(this->x + v.x, this->y + v.y, this->z + v.z, this->w + v.w);
 }
 
 Vector4 Vector4::operator-(const Vector4& v) const
 {
-    return Vector4(this->x - v.x, this->y - v.y, this->z - v.z);
+    return Vector4(this->x - v.x, this->y - v.y, this->z - v.z, this-> w - v.w);
 }
 
 Vector4 Vector4::operator*(const Vector4& v) const
 {
-    return Vector4(this->x * v.x, this->y * v.y, this->z * v.z);
+    return Vector4(this->x * v.x, this->y * v.y, this->z * v.z, this->w * v.w);
 }
 
 Vector4 Vector4::operator/(const Vector4& v) const
 {
-    return Vector4(this->x / v.x, this->y / v.y, this->z / v.z);
+    return Vector4(this->x / v.x, this->y / v.y, this->z / v.z, this->w / v.w);
 }
 
 Vector4 Vector4::operator-() const
 {
-    return Vector4(-this->x, -this->y, -this->z);
+    return Vector4(-this->x, -this->y, -this->z, -this->w);
 }
 
 real_t Vector4::dot(const Vector4& v) const
 {
-    return x * v.x + y * v.y + z * v.z;
-}
-
-Vector4 Vector4::cross(const Vector4& v) const
-{
-    return Vector4(x * v.y - y * v.x,
-                   y * v.z - z * v.y,
-                   z * v.x - x * v.z);
+    return x * v.x + y * v.y + z * v.z + w * v.w;
 }
 
 real_t Vector4::length() const

@@ -48,7 +48,6 @@ public:
     __INLINE__ Vector4 operator-() const;
 
     __INLINE__ real_t dot(const Vector4 &v) const;
-    __INLINE__ Vector4 cross(const Vector4 &v) const;
     __INLINE__ real_t length() const;
 };
 
