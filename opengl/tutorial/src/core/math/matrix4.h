@@ -15,14 +15,44 @@
 class Matrix4
 {
 protected:
-    Vector4 _mat[4];
+    Vector4 _element[4];
 
 public:
-    explicit Matrix4(){}
-    virtual ~Matrix4(){}
+    explicit Matrix4();
+    explicit Matrix4(const Vector4& row0,
+                     const Vector4& row1,
+                     const Vector4& row2,
+                     const Vector4& row3);
+    virtual ~Matrix4();
 
-    __INLINE__ const Vector4& operator[](int axis) const;
-    __INLINE__ Vector4& operator[](int axis);
+    void set(const Vector4& row0,
+             const Vector4& row1,
+             const Vector4& row2,
+             const Vector4& row3);
+
+    const Vector4& operator[](int axis) const;
+    Vector4& operator[](int axis);
 };
+
+__INLINE__ void Matrix4::set(const Vector4& row0,
+                             const Vector4& row1,
+                             const Vector4& row2,
+                             const Vector4& row3)
+{
+    _element[0] = row0;
+    _element[1] = row1;
+    _element[2] = row2;
+    _element[3] = row3;   
+}
+
+__INLINE__ const Vector4& Matrix4::operator[](int axis) const 
+{
+    return _element[axis];
+}
+
+__INLINE__ Vector4& Matrix4::operator[](int axis)
+{
+    return _element[axis];
+}
 
 #endif

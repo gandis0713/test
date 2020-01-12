@@ -6,8 +6,8 @@
 class CameraMatrix : public Matrix4
 {
 public:
-    explicit CameraMatrix();
-    virtual ~CameraMatrix();
+    explicit CameraMatrix(){}
+    virtual ~CameraMatrix(){}
 };
 
 

@@ -2,8 +2,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "shader.h"
-#include "math/vector3.h"
-#include "math/vector4.h"
+// #include "math/vector3.h"
+// #include "math/vector4.h"
 #include "math/matrix3.h"
 #include "math/matrix4.h"
 #include "math/math_funcs.h"
@@ -25,7 +25,28 @@ void processInput(GLFWwindow *window)
 }
 
 int main()
-{
+{    
+    Matrix3 mat3;
+
+    for(int i = 0; i < 3; i++)
+    {
+        std::cout << i << ", " << 0 << ", " << &mat3[i].x << std::endl;
+        std::cout << i << ", " << 1 << ", " << &mat3[i].y << std::endl;
+        std::cout << i << ", " << 2 << ", " << &mat3[i].z << std::endl;
+        std::cout << std::endl;
+    }
+
+    Matrix4 mat4;
+
+    for(int i = 0; i < 4; i++)
+    {
+        std::cout << i << ", " << 0 << ", " << &mat4[i].x << std::endl;
+        std::cout << i << ", " << 1 << ", " << &mat4[i].y << std::endl;
+        std::cout << i << ", " << 2 << ", " << &mat4[i].z << std::endl;
+        std::cout << i << ", " << 3 << ", " << &mat4[i].w << std::endl;
+        std::cout << std::endl;
+    }
+
     /*
     ** Initialize glfw
     */

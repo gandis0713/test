@@ -14,6 +14,7 @@ include_directories(src/drivers
 option(GLFW_BUILD_DOCS OFF)
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
+
 add_subdirectory(ext/glfw)
 
 add_subdirectory(example)
