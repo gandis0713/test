@@ -4,29 +4,56 @@ import frag_shader from "./renderers/shaders/default_frag.glsl";
 
 import { load_shader, init_shader } from "./renderers/common/shaders";
 
-var gl;
-const canvas = "gl_canvas";
+var gl_context = [];
+const id_body = "gl_body";
 
-function init_context(canvas) {
+function init_context() {
     
-    var can_ele = document.getElementById(canvas);
+    var body_ele = document.getElementById(id_body);
+    var canvases_ele = body_ele.getElementsByTagName("canvas");
 
-    gl = can_ele.getContext("webgl");
-    if(gl === null)
+    for(var index = 0; index < canvases_ele.length; index++)
     {
-        console.log("gl is null instance.");
-        return;
+        gl_context[index] = canvases_ele[index].getContext("webgl");
+        if(gl_context[index] === null)
+        {
+            console.log("The context [" + index + "] for gl is null instance.");
+            return;
+        }
+    }
+}
+
+function init_view()
+{
+    for(var index in gl_context)
+    {
+        if(gl_context[index] === null)
+        {
+            console.log("The context [" + index + "] for gl is null instance.");
+            return;
+        }
+
+        gl_context[index].clearColor(0.0, 0.0, 0.0, 1.0);
+        gl_context[index].clear(gl_context[index].COLOR_BUFFER_BIT);   
+    }
+}
+
+function initialize()
+{
+    init_context();
+
+    for(var index in gl_context)
+    {        
+        if(gl_context[index] === null)
+        {
+            console.log("The context [" + index + "] for gl is null instance.");
+            return;
+        }
+
+        init_shader(gl_context[index], vert_shader, frag_shader);
     }
 
+    init_view();
 }
 
-function init_view() {
-
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);   
-
-}
-
-init_context(canvas);
-init_shader(gl, vert_shader, frag_shader);
-init_view();
+initialize();
