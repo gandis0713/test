@@ -1,24 +1,23 @@
-function person(name, job)
+var obj_function = function()
 {
-    this.name = name;
-    this.job = job;
-}
-person.prototype.name = null;
-person.prototype.job = null;
-person.prototype.intro = function()
+    this.func = function()
+    {
+        return "charles function";
+    }
+} // define function
+obj_function.prototype.name = "charles";
+var obj1 = 
 {
-    return "my job is " + this.job;
-}
+    'func': function()
+    {
+        return "charles";
+    }
+}; // use literally string
+var obj2 = new Object(); // use constructor
+var obj3 = new obj_function();
+var obj4 = new obj_function();
 
-function charles(name, job)
-{
-    this.name = name;
-    this.job = job;
-}
-charles.prototype = new person();
-
-var person1 = new person("None", "None");
-var person2 = new charles("charles", "Software Developer");
-
-console.log(person1.intro());
-console.log(person2.intro());
+console.log(obj1.func());
+console.log(obj2);
+console.log(obj3.func());
+console.log(obj_function.prototype.name);
