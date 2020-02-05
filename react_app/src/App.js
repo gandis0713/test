@@ -1,34 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+// import logo from './logo.svg';
+// import './App.css';
 
-function Header() {
-  return (
-    <header>
-      <h1>
-       Charles React!
-      </h1>
-    </header>
-  );
-}
-
-function Navigator() {
-  return (
-    <nav>
-      <ul>
-        <li><a href="1.html">HTML</a></li>
-        <li><a href="2.html">CSS</a></li>
-        <li><a href="3.html">JavaScript</a></li>
-      </ul>
-    </nav>
-  );
-}
+import Header from './component/header';
+import Content from './component/content';
 
 function App() {
+
+  const [contents, setContents] = useState([
+    {
+      id: 1,
+      value: "HTML"
+    },
+    {
+      id: 2,
+      value: "CSS"
+    },
+    {
+      id: 3,
+      value: "JavaScript"
+    }
+  ]);
+
   return (
     <div className="App">
-      <Header></Header>
-      <Navigator></Navigator>
+        <Header name="Welcome to React Application"></Header>
+        <Content list={contents}></Content>
     </div>
   );
 }
