@@ -21,7 +21,7 @@ const useStyles = makeStyles (
         },
         drawerPaper: {
           width: 240,
-        },
+        }
       }
     )
   )
@@ -40,7 +40,7 @@ function Tab3D () {
         return;
     }
     
-    gl.clearColor(1.0, 0.0, 0.0, 1.0);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
   }
 
@@ -67,7 +67,7 @@ function Tab3D () {
         </Drawer>
         <div>          
           <div className={classes.toolbar}/>
-          <canvas id="gl_canvas" height="1000" width="1000"></canvas>
+          <canvas id="gl_canvas" height="540" width="960"></canvas>
         </div>
       </div>
   );
