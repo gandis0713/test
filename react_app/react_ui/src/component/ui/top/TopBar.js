@@ -11,24 +11,25 @@ import Button from '@material-ui/core/Button';
 import Link from 'react-router-dom/Link';
 
 const useStyles = makeStyles(theme => ({
-  appbar: {
+  appBar: {
     flexGrow: 1,
+    zIndex: theme.zIndex.drawer + 1,
   },
   tabs: {
     flexGrow: 1,
   }
 }));
 
-export const TabInfo = {
-  _patient: {
+export const Top = {
+  tabPatient: {
     name: 'Patient',
     path: '/patient'
   },
-  _2D: {
+  tab2D: {
     name: '2D',
     path: '/2D'
   },
-  _3D: {
+  tab3D: {
     name: '3D',
     path: '/3D'
   },
@@ -38,14 +39,14 @@ function TopBar () {
 
   const classes = useStyles();
 
-  const [tabIndex, setTabIndex] = useState(-1);
+  const [tabIndex, setTabIndex] = useState(2);
   const changeTab = function(event, index) {
     setTabIndex(Number(index));
   }
 
   return (
     <div>
-      <AppBar className={classes.appbar}>
+      <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -57,17 +58,17 @@ function TopBar () {
             value={tabIndex}
             onChange={changeTab}>
             <Tab 
-              label={TabInfo._patient.name}
+              label={Top.tabPatient.name}
               component={Link}
-              to={TabInfo._patient.path}/>
+              to={Top.tabPatient.path}/>
             <Tab
-              label={TabInfo._2D.name}
+              label={Top.tab2D.name}
               component={Link}
-              to={TabInfo._2D.path}/>
+              to={Top.tab2D.path}/>
             <Tab
-              label={TabInfo._3D.name}
+              label={Top.tab3D.name}
               component={Link}
-              to={TabInfo._3D.path}/>
+              to={Top.tab3D.path}/>
           </Tabs>
           <Button color="inherit">Login</Button>
         </Toolbar>
