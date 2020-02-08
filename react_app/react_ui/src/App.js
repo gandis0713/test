@@ -1,56 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
 
-import TopBar from './component/top/TopBar';
+import withRouter from 'react-router-dom/withRouter';
+import Switch from 'react-router-dom/Switch';
+import Route from 'react-router-dom/Route';
 
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <Typography
-      component="div"
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && <Box p={3}>{children}</Box>}
-    </Typography>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.any.isRequired,
-  value: PropTypes.any.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`,
-  };
-}
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
+import TopBar from './component/ui/top/TopBar';
+import {TabInfo} from './component/ui/top/TopBar';
+import Container from './component/ui/container/container';
 
 function App() {
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <TopBar/>
+    <div>
+      <TopBar/>      
+      <Switch>
+        <Route path={TabInfo._patient.path}  component={Container}></Route>
+        <Route exact path={TabInfo._2D.path} component={Container}></Route>
+        <Route exact path={TabInfo._3D.path} component={Container}></Route>
+      </Switch>
     </div>
   );
 }
 
-export default App;
+export default withRouter(App);
