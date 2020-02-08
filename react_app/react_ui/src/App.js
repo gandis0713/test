@@ -6,16 +6,16 @@ import Route from 'react-router-dom/Route';
 
 import TopBar from './component/ui/top/TopBar';
 import {TabInfo} from './component/ui/top/TopBar';
-import Container from './component/ui/container/container';
+import TabPatient from './component/ui/tab/TabPatient';
 
 function App() {
   return (
     <div>
       <TopBar/>      
       <Switch>
-        <Route path={TabInfo._patient.path}  component={Container}></Route>
-        <Route exact path={TabInfo._2D.path} component={Container}></Route>
-        <Route exact path={TabInfo._3D.path} component={Container}></Route>
+        <Route path={TabInfo._patient.path}  component={TabPatient}></Route>
+        <Route exact path={TabInfo._2D.path} component={TabPatient}></Route>
+        <Route exact path={TabInfo._3D.path} component={TabPatient}></Route>
       </Switch>
     </div>
   );
