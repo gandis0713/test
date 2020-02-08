@@ -1,8 +1,6 @@
 import React from 'react';
 
-import withRouter from 'react-router-dom/withRouter';
-import Switch from 'react-router-dom/Switch';
-import Route from 'react-router-dom/Route';
+import { withRouter, Switch, Route } from 'react-router-dom';
 
 import TopBar from './component/ui/top/TopBar';
 import {Top} from './component/ui/top/TopBar';

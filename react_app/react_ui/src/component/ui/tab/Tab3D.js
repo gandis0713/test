@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { makeStyles, createStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
 import Drawer from '@material-ui/core/Drawer';
+
+import { OBJParse } from '../../../common/utils/OBJParser';
 
 const useStyles = makeStyles (
   theme => (
@@ -26,27 +27,34 @@ const useStyles = makeStyles (
   )
 );
 
-function Init() {
-  const canvas = document.getElementById("can_1");
-  // Initialize the GL context
-  const gl = canvas.getContext("webgl");
+function Tab3D () {
 
-  // Only continue if WebGL is available and working
-  if (gl === null) {
-      alert("Unable to initialize WebGL. Your browser or machine may not support it.");
-      return;
+  const classes = useStyles();
+
+  const initGL = function(e) {
+    const canvas = document.getElementById("gl_canvas");
+    const gl = canvas.getContext("webgl");
+
+    if (gl === null) {
+        alert("Unable to initialize WebGL. Your browser or machine may not support it.");
+        return;
+    }
+    
+    gl.clearColor(1.0, 0.0, 0.0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
   }
 
-  // Set clear color to black, fully opaque
-  gl.clearColor(1.0, 0.0, 0.0, 1.0);
-  // Clear the color buffer with specified clear color
-  gl.clear(gl.COLOR_BUFFER_BIT);
-}
+  var openFile = function(event) {
+    var file = event.target.files[0];
+    OBJParse(file, OBJCallBack);
+  };
 
+  var OBJCallBack = function(data) {
+    alert("Load Finish");
+    console.log(data);
+  }
 
-
-function Tab3D () {
-  const classes = useStyles();
+  useEffect(initGL);
 
   return (
       <div className={classes.root}>
@@ -55,14 +63,14 @@ function Tab3D () {
           variant="permanent"
           classes={{ paper: classes.drawerPaper }} >          
           <div className={classes.toolbar}/>
-          <Button>Button</Button>
+          <input type='file' accept='*.stl' onChange={openFile}/>
         </Drawer>
-        <canvas id="can_1" width="640" height="480"></canvas>
-        <script src={Init()}></script>
+        <div>          
+          <div className={classes.toolbar}/>
+          <canvas id="gl_canvas" height="1000" width="1000"></canvas>
+        </div>
       </div>
   );
 }
-
-
 
 export default Tab3D;
