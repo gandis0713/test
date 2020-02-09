@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
+const OpenBrowser = require('react-dev-utils/openBrowser');
 
 module.exports = {
   entry: "./src/index.js",
@@ -52,3 +53,8 @@ module.exports = {
     new CleanWebpackPlugin()
   ]
 }
+
+var host = 'http://localhost:';
+var port = module.exports.devServer.port;
+
+OpenBrowser(host + port)

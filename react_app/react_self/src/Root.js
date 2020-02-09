@@ -1,10 +1,13 @@
 import React from 'react';
-import './style.scss';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
 
-const Root = () => {
-  return (
-    <h3 className="title">Hello, React</h3>
-  );
+function Root() {
+    return (
+        <BrowserRouter>
+            <App/>
+        </BrowserRouter>
+    );
 }
 
 export default Root;
