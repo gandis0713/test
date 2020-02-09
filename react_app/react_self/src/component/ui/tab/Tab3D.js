@@ -63,6 +63,7 @@ function Tab3D () {
           variant="permanent"
           classes={{ paper: classes.drawerPaper }} >          
           <div className={classes.toolbar}/>
+          <p>3D Panel</p>
           <input type='file' accept='*.stl' onChange={openFile}/>
         </Drawer>
         <div>          
