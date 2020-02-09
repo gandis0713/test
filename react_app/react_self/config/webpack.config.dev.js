@@ -14,7 +14,7 @@ module.exports = {
     index: "index.html",
     port: 3000
   },
-  mode: "none",
+  mode: "development",
   module: {
     rules: [
       {

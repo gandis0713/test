@@ -6,7 +6,7 @@ const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 module.exports = {
   entry: "./src/index.js",
   output: {
-    filename: "bundle.js",
+    filename: "bundle_[contenthash].js",
     path: path.resolve(__dirname + "/build")
   },
   devServer: {
@@ -14,7 +14,7 @@ module.exports = {
     index: "index.html",
     port: 3000
   },
-  mode: "none",
+  mode: "production",
   module: {
     rules: [
       {

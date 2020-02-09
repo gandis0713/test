@@ -1,0 +1,9 @@
+$titleColor: #2196f3;
+$titleSize: 52px;
+$titleAlign: center;
+
+.title {
+  color: $titleColor;
+  font-size: $titleSize;
+  text-align: $titleAlign;
+}
