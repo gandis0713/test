@@ -10,16 +10,14 @@ const useStyles = makeStyles (
         root: {
           display: "flex"
         },
-        toolbar: theme.mixins.toolbar,
         drawer: {
-          [theme.breakpoints.up('sm')]: {
-            width: 240,
-            flexShrink: 0,
-          },
+          width: 240,
+          flexShrink: 0,
         },
         drawerPaper: {
           width: 240,
-        }
+        },
+        toolbar: theme.mixins.toolbar
       }
     )
   )
@@ -32,12 +30,17 @@ function TabPatient () {
   return (
       <div className={classes.root}>
         <Drawer
+          className={classes.drawer}
           anchor="left"
           variant="permanent"
           classes={{ paper: classes.drawerPaper }} >          
           <div className={classes.toolbar}/>
           <p>Patient Panel</p>
         </Drawer>
+        <div>
+          <div className={classes.toolbar}/>
+          <p>Patient View</p>
+        </div>
       </div>
   );
 }

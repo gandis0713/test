@@ -3,6 +3,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 const OpenBrowser = require('react-dev-utils/openBrowser');
+const vtkRules = require('vtk.js/Utilities/config/dependency.js').webpack.core.rules;
 
 module.exports = {
   entry: "./src/index.js",
@@ -40,7 +41,7 @@ module.exports = {
           }
         ]
       }
-    ]
+    ].concat(vtkRules)
   },
   plugins: [
     new HtmlWebPackPlugin({

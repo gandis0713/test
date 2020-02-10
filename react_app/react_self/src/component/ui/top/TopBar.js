@@ -11,8 +11,11 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
-  appBar: {
+  root: {
     flexGrow: 1,
+  },
+  appBar: {
+    display: "relative",
     zIndex: theme.zIndex.drawer + 1,
   },
   tabs: {
@@ -33,6 +36,10 @@ export const Top = {
     name: '3D',
     path: '/3D'
   },
+  tabVTK: {
+    name: 'VTK',
+    path: '/VTK'
+  },
 };
 
 function TopBar () {
@@ -45,8 +52,8 @@ function TopBar () {
   }
 
   return (
-    <div>
-      <AppBar className={classes.appBar}>
+    <div className={classes.root}>
+      <AppBar  position="fixed"  className={classes.appBar}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -69,6 +76,10 @@ function TopBar () {
               label={Top.tab3D.name}
               component={Link}
               to={Top.tab3D.path}/>
+            <Tab
+              label={Top.tabVTK.name}
+              component={Link}
+              to={Top.tabVTK.path}/>
           </Tabs>
           <Button color="inherit">Login</Button>
         </Toolbar>

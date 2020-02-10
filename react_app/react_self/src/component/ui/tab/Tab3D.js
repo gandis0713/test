@@ -12,16 +12,14 @@ const useStyles = makeStyles (
         root: {
           display: "flex"
         },
-        toolbar: theme.mixins.toolbar,
         drawer: {
-          [theme.breakpoints.up('sm')]: {
-            width: 240,
-            flexShrink: 0,
-          },
+          width: 240,
+          flexShrink: 0,
         },
         drawerPaper: {
           width: 240,
-        }
+        },
+        toolbar: theme.mixins.toolbar
       }
     )
   )
@@ -59,6 +57,7 @@ function Tab3D () {
   return (
       <div className={classes.root}>
         <Drawer
+          className={classes.drawer}
           anchor="left"
           variant="permanent"
           classes={{ paper: classes.drawerPaper }} >          
