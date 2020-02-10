@@ -8,12 +8,14 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     filename: "bundle_[contenthash].js",
-    path: path.resolve(__dirname + "/build")
+    path: path.resolve(__dirname + "/build"),
+    publicPath: '/'
   },
   devServer: {
     contentBase: path.resolve("./build"),
     index: "index.html",
-    port: 3000
+    port: 3000,
+    historyApiFallback: true,
   },
   mode: "production",
   module: {
