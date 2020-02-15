@@ -1,5 +1,3 @@
-import 'vtk.js/Sources/favicon';
-
 import vtkActor from 'vtk.js/Sources/Rendering/Core/Actor';
 import vtkConeSource from 'vtk.js/Sources/Filters/Sources/ConeSource';
 import vtkMapper from 'vtk.js/Sources/Rendering/Core/Mapper';
@@ -21,6 +19,8 @@ import React, {useEffect} from 'react';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 
+import ReadDicomSeries from '../../../common/utils/DicomReader'
+
 const useStyles = makeStyles (
   theme => (
     createStyles (
@@ -41,12 +41,17 @@ const useStyles = makeStyles (
   )
 );
 
+const testSeriesDirectory = '/home/gandis/Desktop/git/prototype/react_app/react_self/data/dicom/'
+const fileNames = ['DCT0001.dcm', 'DCT0002.dcm', 'DCT0003.dcm']
+
 function TabVTK () {
 
   const classes = useStyles();
 
   const createCone = function() {
     
+    ReadDicomSeries(testSeriesDirectory, fileNames)
+
     const renderWindow = vtkRenderWindow.newInstance();
     const renderer = vtkRenderer.newInstance({ background: [0.2, 0.3, 0.4] });
     renderWindow.addRenderer(renderer);
@@ -90,7 +95,6 @@ function TabVTK () {
 
     const { width, height } = container.getBoundingClientRect();
     openglRenderWindow.setSize(width, height);
-    openglRenderWindow.set
 
     // ----------------------------------------------------------------------------
     // Setup an interactor to handle mouse events
@@ -101,11 +105,11 @@ function TabVTK () {
     interactor.initialize();
     interactor.bindEvents(container);
 
-    // ----------------------------------------------------------------------------
-    // Setup interactor style to use
-    // ----------------------------------------------------------------------------
+    // // ----------------------------------------------------------------------------
+    // // Setup interactor style to use
+    // // ----------------------------------------------------------------------------
 
-    interactor.setInteractorStyle(vtkInteractorStyleTrackballCamera.newInstance());
+    // interactor.setInteractorStyle(vtkInteractorStyleTrackballCamera.newInstance());
   }
 
   useEffect(createCone)
