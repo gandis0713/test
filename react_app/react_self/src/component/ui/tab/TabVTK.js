@@ -44,9 +44,6 @@ const useStyles = makeStyles (
   )
 );
 
-const dicomSeriesDirectory = '/data/dicom/'
-const fileNames = ['DCT0001.dcm', 'DCT0002.dcm', 'DCT0003.dcm']
-
 function TabVTK () {
 
   const classes = useStyles();
@@ -186,7 +183,7 @@ function TabVTK () {
 
         // create a synthetic volume with multiple components
         // const id = vtkImageData.newInstance();
-        id.setExtent(0, 99, 0, 99, 0, 199);
+        // id.setExtent(0, 99, 0, 99, 0, 199);
 
         let newArray;
         dataType = (dataType + 1) % 3;
@@ -258,7 +255,22 @@ function TabVTK () {
     interactor.requestAnimation(actor);
   }
 
-  const openFile = function() {    
+  const openFile = function() {
+
+    const dicomSeriesDirectory = '/data/dicom/'
+    var fileNames = new Array;
+
+    for(let i = 1; i < 10; i++) {
+      
+      fileNames.push('DCT000' + String(i) + '.dcm')
+    }
+    for(let i = 10; i < 100; i++) {
+      fileNames.push('DCT00' + String(i) + '.dcm')
+    }
+    for(let i = 100; i < 400; i++) {
+      fileNames.push('DCT0' + String(i) + '.dcm')
+    }
+
     ReadDicomSeries(dicomSeriesDirectory, fileNames, callback)
   }
 
