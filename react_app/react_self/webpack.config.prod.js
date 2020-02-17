@@ -1,24 +1,23 @@
 const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const {CleanWebpackPlugin} = require("clean-webpack-plugin");
-const OpenBrowser = require('react-dev-utils/openBrowser');
+const CopyWebPackPlugin = require('copy-webpack-plugin');
 const vtkRules = require('vtk.js/Utilities/config/dependency.js').webpack.core.rules;
 
 module.exports = {
   entry: "./src/index.js",
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname + "/public"),
+    path: path.resolve(__dirname + "/build"),
     publicPath: '/'
   },
   devServer: {
-    contentBase: path.resolve("./public"),
+    contentBase: path.resolve("./build"),
     index: "index.html",
     port: 3000,
     historyApiFallback: true,
   },
-  mode: "development",
+  mode: "production",
   module: {
     rules: [
       {
@@ -53,11 +52,15 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'style.css'
     }),
-    new CleanWebpackPlugin()
+    new CopyWebPackPlugin([
+      {
+        from: path.join(__dirname, 'node_modules', 'itk', 'WebWorkers'),
+        to: path.join(__dirname, 'build', 'itk', 'WebWorkers')
+      },
+      {
+        from: path.join(__dirname, 'node_modules', 'itk', 'ImageIOs'),
+        to: path.join(__dirname, 'build', 'itk', 'ImageIOs')
+      }
+    ])
   ]
 }
-
-var host = 'http://localhost:';
-var port = module.exports.devServer.port;
-
-OpenBrowser(host + port)

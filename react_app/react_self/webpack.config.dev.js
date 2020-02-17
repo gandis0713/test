@@ -1,13 +1,13 @@
 const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const {CleanWebpackPlugin} = require("clean-webpack-plugin");
+const CopyWebPackPlugin = require('copy-webpack-plugin');
 const vtkRules = require('vtk.js/Utilities/config/dependency.js').webpack.core.rules;
 
 module.exports = {
   entry: "./src/index.js",
   output: {
-    filename: "bundle_[contenthash].js",
+    filename: "bundle.js",
     path: path.resolve(__dirname + "/build"),
     publicPath: '/'
   },
@@ -17,7 +17,7 @@ module.exports = {
     port: 3000,
     historyApiFallback: true,
   },
-  mode: "production",
+  mode: "development",
   module: {
     rules: [
       {
@@ -52,6 +52,15 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'style.css'
     }),
-    new CleanWebpackPlugin()
+    new CopyWebPackPlugin([
+      {
+        from: path.join(__dirname, 'node_modules', 'itk', 'WebWorkers'),
+        to: path.join(__dirname, 'build', 'itk', 'WebWorkers')
+      },
+      {
+        from: path.join(__dirname, 'node_modules', 'itk', 'ImageIOs'),
+        to: path.join(__dirname, 'build', 'itk', 'ImageIOs')
+      }
+    ])
   ]
 }
