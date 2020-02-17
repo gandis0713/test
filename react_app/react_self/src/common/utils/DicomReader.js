@@ -2,7 +2,9 @@ import axios from 'axios'
 
 import readImageDICOMFileSeries from 'itk/readImageDICOMFileSeries'
 
-export default function ReadDicomSeries(Directory, FileNames) {
+import vtkITKHelper from 'vtk.js/Sources/Common/DataModel/ITKHelper';
+
+export default function ReadDicomSeries(Directory, FileNames, callback) {
 
   if (window.File && window.FileReader && window.FileList && window.Blob) {
     console.log("Great success! All the File APIs are supported.");
@@ -26,8 +28,8 @@ export default function ReadDicomSeries(Directory, FileNames) {
   }).catch(error => {console.log('promiss all then error'); console.log(error)});
   
   const promissallthenthen = promissallthen.then(function ({ image, webWorker }) {
-    webWorker.terminate()
+    webWorker.terminate()   
+    console.log(image.imageType.dimension) 
+    callback(vtkITKHelper.convertItkToVtkImage(image));
   })
-  
-  return promissallthenthen
 }
