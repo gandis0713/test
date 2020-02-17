@@ -15,8 +15,7 @@ export default function ReadDicomSeries(Directory, FileNames) {
   const fileNames = FileNames
   const fetchFiles = fileNames.map(function (file) {
     const path = testSeriesDirectory + file
-    console.log(path)
-    const axiosget = axios.get(path).catch(error => {console.log('axios get error');  console.log(error)});
+    const axiosget = axios.get(path, { responseType: 'blob' }).catch(error => {console.log('axios get error');  console.log(error)});
     return axiosget.then(function (response) {
       const jsFile = new window.File([response.data], file)
       return jsFile

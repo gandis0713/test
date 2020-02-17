@@ -41,7 +41,7 @@ const useStyles = makeStyles (
   )
 );
 
-const testSeriesDirectory = '/home/gandis/Desktop/git/prototype/react_app/react_self/data/dicom/'
+const dicomSeriesDirectory = '/'
 const fileNames = ['DCT0001.dcm', 'DCT0002.dcm', 'DCT0003.dcm']
 
 function TabVTK () {
@@ -50,7 +50,7 @@ function TabVTK () {
 
   const createCone = function() {
     
-    ReadDicomSeries(testSeriesDirectory, fileNames)
+    ReadDicomSeries(dicomSeriesDirectory, fileNames)
 
     const renderWindow = vtkRenderWindow.newInstance();
     const renderer = vtkRenderer.newInstance({ background: [0.2, 0.3, 0.4] });
