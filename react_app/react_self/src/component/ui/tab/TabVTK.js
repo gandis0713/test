@@ -14,16 +14,18 @@ import vtkVolumeMapper from 'vtk.js/Sources/Rendering/Core/VolumeMapper';
 // Standard rendering code setup
 // ----------------------------------------------------------------------------
 
+import axios from 'axios'
 
 import Button from '@material-ui/core/Button';
-
-
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 
-import ReadDicomSeries from '../../../common/utils/DicomReader'
+import ReadDicomSeries from '../../../common/utils/DicomReader';
+import { TransferFunction } from '../../../common/volume/transferfunction';
 
 const useStyles = makeStyles (
   theme => (
@@ -39,6 +41,12 @@ const useStyles = makeStyles (
         },
         drawerPaper: {
           width: 240,
+        },
+        framedBox: {
+          borderWidth: 2,
+          borderColor: '#3f51b5',
+          borderStyle: 'solid',
+          marginTop: 0
         }
       }
     )
@@ -48,24 +56,38 @@ const useStyles = makeStyles (
 function TabVTK () {
 
   const classes = useStyles();
+  let actor;
+  let renderWindow;
+  let mapper;
+  let renderer;
 
-  const callback = function(id) {
-    console.log("finish")
+  const callback = function(imageData) {
 
-    const container = document.getElementById('VTK');
+    mapper.setSampleDistance(0.2);
+    actor.getProperty().setScalarOpacityUnitDistance(0, 0.2);
+    
+    mapper.setInputData(imageData);
+    
+    renderer.resetCamera();
+
+    alert("Success load dicom")
+  }
+
+  const mounted = () => {
+
+    const container = document.getElementById('3d');
     const renderWindowContainer = document.createElement('div');
     container.appendChild(renderWindowContainer);
 
     // create what we will view
-    const renderWindow = vtkRenderWindow.newInstance();
-    const renderer = vtkRenderer.newInstance();
+    renderWindow = vtkRenderWindow.newInstance();
+    renderer = vtkRenderer.newInstance();
     renderWindow.addRenderer(renderer);
     renderer.setBackground(0.0, 0.0, 0.0);
 
-    const actor = vtkVolume.newInstance();
+    actor = vtkVolume.newInstance();
 
-    const mapper = vtkVolumeMapper.newInstance();
-    mapper.setSampleDistance(0.7);
+    mapper = vtkVolumeMapper.newInstance();
     actor.setMapper(mapper);
 
     // now create something to view it, in this case webgl
@@ -82,38 +104,11 @@ function TabVTK () {
     interactor.bindEvents(renderWindowContainer);
     interactor.setInteractorStyle(vtkInteractorStyleTrackballCamera.newInstance());
 
-    renderer.addVolume(actor);
-
-    const ofun = vtkPiecewiseFunction.newInstance();
-    ofun.addPoint(-3024, 0.1);
-    ofun.addPoint(-637.62, 0.1);
-    ofun.addPoint(700, 0.5);
-    ofun.addPoint(3071, 0.9);
-
-
-    const ctfun = vtkColorTransferFunction.newInstance();
-    ctfun.addRGBPoint(-3024, 0, 0, 0);
-    ctfun.addRGBPoint(-637.62, 0, 0, 0);
-    ctfun.addRGBPoint(700, 1, 1, 1);
-    ctfun.addRGBPoint(3071, 1, 1, 1);
-    
-    actor.getProperty().setRGBTransferFunction(0, ctfun);
-    actor.getProperty().setScalarOpacity(0, ofun);
-    actor.getProperty().setScalarOpacityUnitDistance(0, 3.0);
-    actor.getProperty().setInterpolationTypeToLinear();
-    actor.getProperty().setShade(true);
-    actor.getProperty().setAmbient(0.1);
-    actor.getProperty().setDiffuse(0.9);
-    actor.getProperty().setSpecular(0.2);
-    actor.getProperty().setSpecularPower(10.0);
-
-    mapper.setInputData(id);
-    renderer.resetCamera();
+    renderer.addVolume(actor);    
     renderer.getActiveCamera().elevation(20);
-    renderWindow.render();
   }
 
-  const openFile = function() {
+  const loadDicom = function() {
 
     const dicomSeriesDirectory = '/data/dicom/'
     var fileNames = new Array;
@@ -125,12 +120,37 @@ function TabVTK () {
     for(let i = 10; i < 100; i++) {
       fileNames.push('DCT00' + String(i) + '.dcm')
     }
-    for(let i = 100; i < 400; i++) {
-      fileNames.push('DCT0' + String(i) + '.dcm')
-    }
+    // for(let i = 100; i < 400; i++) {
+    //   fileNames.push('DCT0' + String(i) + '.dcm')
+    // }
 
     ReadDicomSeries(dicomSeriesDirectory, fileNames, callback)
   }
+
+  const openDicoms = function(event) {
+    let data = new FormData;
+    for(let i = 0; i < event.target.files.length; i++) {
+      data.append(event.target.files[i].name, event.target.files[i]);
+    }
+    axios.post('/data/dicom', event.target.files[0], {}).then(res => {
+      console.log(res.statusText)
+    }).catch(res => {
+      console.log(res)
+    })
+  }
+
+  const changeColoring = function(event) {
+
+    actor.getProperty().setRGBTransferFunction(0, TransferFunction.get(event.currentTarget.value).Color());
+    actor.getProperty().setScalarOpacity(0, TransferFunction.get(event.currentTarget.value).Opacity());
+
+    const shade = event.currentTarget.value === 'Bone'
+    actor.getProperty().setShade(shade);
+
+    renderWindow.render();
+  }
+
+  useEffect(mounted);
 
   return (
       <div className={classes.root}>
@@ -141,11 +161,36 @@ function TabVTK () {
           classes={{ paper: classes.drawerPaper }} >          
           <div className={classes.toolbar}/>
           <p>VTK Panel</p>
-          <Button onClick={openFile}>Load Dicom</Button>
+          <input type='file' multiple onChange={openDicoms}/>
+          <p>Dicom Load</p>
+          <Button onClick={loadDicom}>Load Dicom</Button>          
+          <p>Coloring</p>
+          <Button value='Teeth' onClick={changeColoring}>Teeth</Button>
+          <Button value='Bone' onClick={changeColoring}>Bone</Button>
         </Drawer>   
         <div>          
           <div className={classes.toolbar}/>
-          <div id="VTK"/>
+          <Box display="flex" flex="1" height="1000px" width='1000px'>
+            <Grid container spacing={0}>
+              <Grid item xs={6}>
+                <Box height='500' width="500" className={classes.framedBox}>
+                  <div id='3d'/>
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box className={classes.framedBox} height="250px" width='250px'>
+                  <div id='axial'/>
+                </Box>
+                <Box className={classes.framedBox} height="250px" width='250px'>
+                  <div id='saggital'/>
+                </Box>
+                <Box className={classes.framedBox} height="250px" width='250px'>
+                  <div id='coronal'/>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+          
         </div>     
       </div>
   );

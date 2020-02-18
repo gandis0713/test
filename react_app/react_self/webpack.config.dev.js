@@ -16,6 +16,8 @@ module.exports = {
     index: "index.html",
     port: 3000,
     historyApiFallback: true,
+    publicPath: 'http://localhost:3000/',
+    writeToDisk: true,
   },
   mode: "development",
   module: {
