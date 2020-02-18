@@ -26,6 +26,10 @@ import Grid from '@material-ui/core/Grid';
 
 import ReadDicomSeries from '../../../common/utils/DicomReader';
 import { TransferFunction } from '../../../common/volume/transferfunction';
+import view3D from '../../render/MPR3D'
+import viewAxial from '../../render/MPRAxial'
+import viewCoronal from '../../render/MPRCoronal'
+import viewSaggital from '../../render/MPRSaggital'
 
 const useStyles = makeStyles (
   theme => (
@@ -56,56 +60,34 @@ const useStyles = makeStyles (
 function TabVTK () {
 
   const classes = useStyles();
-  let actor;
-  let renderWindow;
-  let mapper;
-  let renderer;
+
+  var viewMPR3D;
+  var viewMPRAxial;
+  var viewMPRCoronal;
+  var viewMPRSaggital;
 
   const callback = function(imageData) {
-
-    mapper.setSampleDistance(0.2);
-    actor.getProperty().setScalarOpacityUnitDistance(0, 0.2);
-    
-    mapper.setInputData(imageData);
-    
-    renderer.resetCamera();
+    viewMPR3D.setImageData(imageData);
+    viewMPR3D.setColoring('Teeth')
+    viewMPRAxial.setImageData(imageData);
+    viewMPRAxial.setColoring('Teeth')
+    viewMPRCoronal.setImageData(imageData);
+    viewMPRCoronal.setColoring('Teeth')
+    viewMPRSaggital.setImageData(imageData);
+    viewMPRSaggital.setColoring('Teeth')
 
     alert("Success load dicom")
   }
 
   const mounted = () => {
-
-    const container = document.getElementById('3d');
-    const renderWindowContainer = document.createElement('div');
-    container.appendChild(renderWindowContainer);
-
-    // create what we will view
-    renderWindow = vtkRenderWindow.newInstance();
-    renderer = vtkRenderer.newInstance();
-    renderWindow.addRenderer(renderer);
-    renderer.setBackground(0.0, 0.0, 0.0);
-
-    actor = vtkVolume.newInstance();
-
-    mapper = vtkVolumeMapper.newInstance();
-    actor.setMapper(mapper);
-
-    // now create something to view it, in this case webgl
-    const glwindow = vtkOpenGLRenderWindow.newInstance();
-    glwindow.setContainer(renderWindowContainer);
-    renderWindow.addView(glwindow);
-    glwindow.setSize(800, 800);
-
-    // Interactor
-    const interactor = vtkRenderWindowInteractor.newInstance();
-    interactor.setStillUpdateRate(0.01);
-    interactor.setView(glwindow);
-    interactor.initialize();
-    interactor.bindEvents(renderWindowContainer);
-    interactor.setInteractorStyle(vtkInteractorStyleTrackballCamera.newInstance());
-
-    renderer.addVolume(actor);    
-    renderer.getActiveCamera().elevation(20);
+    viewMPR3D = new view3D();
+    viewMPR3D.createViewer(document.getElementById('3d'));
+    viewMPRAxial = new viewAxial();
+    viewMPRAxial.createViewer(document.getElementById('axial'));
+    viewMPRCoronal = new viewCoronal();
+    viewMPRCoronal.createViewer(document.getElementById('coronal'));
+    viewMPRSaggital = new viewSaggital();
+    viewMPRSaggital.createViewer(document.getElementById('saggital'));
   }
 
   const loadDicom = function() {
@@ -120,9 +102,9 @@ function TabVTK () {
     for(let i = 10; i < 100; i++) {
       fileNames.push('DCT00' + String(i) + '.dcm')
     }
-    // for(let i = 100; i < 400; i++) {
-    //   fileNames.push('DCT0' + String(i) + '.dcm')
-    // }
+    for(let i = 100; i < 400; i++) {
+      fileNames.push('DCT0' + String(i) + '.dcm')
+    }
 
     ReadDicomSeries(dicomSeriesDirectory, fileNames, callback)
   }
@@ -140,14 +122,10 @@ function TabVTK () {
   }
 
   const changeColoring = function(event) {
-
-    actor.getProperty().setRGBTransferFunction(0, TransferFunction.get(event.currentTarget.value).Color());
-    actor.getProperty().setScalarOpacity(0, TransferFunction.get(event.currentTarget.value).Opacity());
-
-    const shade = event.currentTarget.value === 'Bone'
-    actor.getProperty().setShade(shade);
-
-    renderWindow.render();
+    viewMPR3D.setColoring(event.currentTarget.value);
+    viewMPRAxial.setColoring(event.currentTarget.value);
+    viewMPRCoronal.setColoring(event.currentTarget.value);
+    viewMPRSaggital.setColoring(event.currentTarget.value);
   }
 
   useEffect(mounted);
