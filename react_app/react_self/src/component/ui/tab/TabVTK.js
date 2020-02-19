@@ -30,6 +30,7 @@ import view3D from '../../render/MPR3D'
 import viewAxial from '../../render/MPRAxial'
 import viewCoronal from '../../render/MPRCoronal'
 import viewSaggital from '../../render/MPRSaggital'
+import Slider from '@material-ui/core/Slider';
 
 const useStyles = makeStyles (
   theme => (
@@ -67,14 +68,41 @@ function TabVTK () {
   var viewMPRSaggital;
 
   const callback = function(imageData) {
+    
+    console.log(imageData.getExtent())
+    console.log(imageData.getDimensions())
+    console.log(imageData.getBounds())
+    console.log(imageData.getDirection())
+    console.log(imageData.getCenter())
     viewMPR3D.setImageData(imageData);
     viewMPR3D.setColoring('Teeth')
     viewMPRAxial.setImageData(imageData);
-    viewMPRAxial.setColoring('Teeth')
     viewMPRCoronal.setImageData(imageData);
-    viewMPRCoronal.setColoring('Teeth')
     viewMPRSaggital.setImageData(imageData);
-    viewMPRSaggital.setColoring('Teeth')
+
+    let sliceAxial = document.getElementById('axialslice');
+    let axialRange = viewMPRAxial.getSliceRange()
+    sliceAxial.min = axialRange[0];
+    sliceAxial.max = axialRange[1];
+    sliceAxial.value = viewMPRAxial.getSlice();
+    console.log(axialRange)
+    console.log(viewMPRAxial.getSlice())
+    
+    sliceAxial = document.getElementById('coronalslice');
+    axialRange = viewMPRCoronal.getSliceRange()
+    sliceAxial.min = axialRange[0];
+    sliceAxial.max = axialRange[1];
+    sliceAxial.value = viewMPRCoronal.getSlice();
+    console.log(axialRange)
+    console.log(viewMPRCoronal.getSlice())
+    
+    sliceAxial = document.getElementById('saggitalslice');
+    axialRange = viewMPRSaggital.getSliceRange()
+    sliceAxial.min = axialRange[0];
+    sliceAxial.max = axialRange[1];
+    sliceAxial.value = viewMPRSaggital.getSlice();
+    console.log(axialRange)
+    console.log(viewMPRSaggital.getSlice())
 
     alert("Success load dicom")
   }
@@ -123,12 +151,24 @@ function TabVTK () {
 
   const changeColoring = function(event) {
     viewMPR3D.setColoring(event.currentTarget.value);
-    viewMPRAxial.setColoring(event.currentTarget.value);
-    viewMPRCoronal.setColoring(event.currentTarget.value);
-    viewMPRSaggital.setColoring(event.currentTarget.value);
   }
 
   useEffect(mounted);
+
+  const changeAxialAxis = (event) => {
+    console.log(event.target.value)
+    viewMPRAxial.setSlice(event.target.value)
+  }
+
+  const changeCoronalAxis = (event) => {
+    console.log(event.target.value)
+    viewMPRCoronal.setSlice(event.target.value)
+  }
+  const changeSaggitalAxis = (event) => {
+    console.log(event.target.value)
+    viewMPRSaggital.setSlice(event.target.value)
+  }
+
 
   return (
       <div className={classes.root}>
@@ -145,6 +185,13 @@ function TabVTK () {
           <p>Coloring</p>
           <Button value='Teeth' onClick={changeColoring}>Teeth</Button>
           <Button value='Bone' onClick={changeColoring}>Bone</Button>
+          <p>Axis</p>
+          <p>Axial</p>
+          <input type='range' step='0.2' id='axialslice' onChange={changeAxialAxis}/>
+          <p>Coronal</p>
+          <input type='range' step='0.2' id='coronalslice' onChange={changeCoronalAxis}/>
+          <p>Saggital</p>
+          <input type='range' step='0.2' id='saggitalslice' onChange={changeSaggitalAxis}/>
         </Drawer>   
         <div>          
           <div className={classes.toolbar}/>

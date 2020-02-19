@@ -9,6 +9,7 @@ import vtkRenderWindowInteractor from 'vtk.js/Sources/Rendering/Core/RenderWindo
 import vtkRenderer from 'vtk.js/Sources/Rendering/Core/Renderer';
 import vtkVolume from 'vtk.js/Sources/Rendering/Core/Volume';
 import vtkVolumeMapper from 'vtk.js/Sources/Rendering/Core/VolumeMapper';
+import vtkInteractorStyleMPRSlice from 'vtk.js/Sources/Interaction/Style/InteractorStyleMPRSlice';
 
 import { TransferFunction } from '../../common/volume/transferfunction';
 
@@ -18,6 +19,7 @@ function viewSaggital() {
   let renderWindow;
   let mapper;
   let renderer;
+  let istyle;
 
   this.createViewer = (container) => {
     const renderWindowContainer = document.createElement('div');
@@ -40,27 +42,16 @@ function viewSaggital() {
     renderWindow.addView(glwindow);
     glwindow.setSize(1000, 1000);
 
-    // Interactor
+    istyle = vtkInteractorStyleMPRSlice.newInstance();
+
     const interactor = vtkRenderWindowInteractor.newInstance();
     interactor.setStillUpdateRate(0.01);
     interactor.setView(glwindow);
     interactor.initialize();
-    interactor.bindEvents(renderWindowContainer);
-    interactor.setInteractorStyle(vtkInteractorStyleTrackballCamera.newInstance());
+    interactor.setInteractorStyle(istyle);
 
-    renderer.addVolume(actor);    
-    renderer.getActiveCamera().elevation(20);
-  }
-
-  this.setColoring = (mode) => {
-    console.log(mode)
-    actor.getProperty().setRGBTransferFunction(0, TransferFunction.get(mode).Color());
-    actor.getProperty().setScalarOpacity(0, TransferFunction.get(mode).Opacity());
-
-    const shade = mode === 'Bone'
-    actor.getProperty().setShade(shade);
-
-    renderWindow.render();
+    renderer.addVolume(actor);   
+    renderWindow.render(); 
   }
 
   this.setImageData = (imageData) => {
@@ -68,8 +59,27 @@ function viewSaggital() {
     actor.getProperty().setScalarOpacityUnitDistance(0, 0.2);
     
     mapper.setInputData(imageData);
+
+    istyle.setVolumeMapper(mapper);
+    istyle.setSliceNormal(1, 0, 0);
+    const range = istyle.getSliceRange();
+    istyle.setSlice((range[0] + range[1]) / 2);
     
     renderer.resetCamera();
+    renderWindow.render();
+  }
+
+  this.getSliceRange = () => {
+    return istyle.getSliceRange()
+  }
+
+  this.getSlice = () => {
+    return istyle.getSlice()
+  }
+
+  this.setSlice = (value) => {
+    istyle.setSlice(Number(value));
+    renderWindow.render();
   }
 }
 
