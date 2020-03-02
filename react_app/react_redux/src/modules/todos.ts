@@ -39,7 +39,7 @@ export type Todo = {
   text: string;
   done: boolean;
 };
-type TodosState = Todo[];
+export type TodosState = Todo[];
 
 // 초깃값 설정
 const initialState: TodosState = [
@@ -79,5 +79,24 @@ const todos = createReducer<TodosState, TodosAction>(initialState, {
   [REMOVE_TODO]: (state, { payload: id }) =>
     state.filter(todo => todo.id !== id)
 });
+
+// const todos = createReducer(initialState)
+// .handleType(
+//   ADD_TODO,
+//   (state: TodosState, action: any) =>     
+//   state.concat({
+//     id: Math.max(...state.map(todo => todo.id)) + 1,
+//     text: action.payload,
+//     done: false
+//   })
+// ).handleType(
+//   TOGGLE_TODO,
+//   (state: TodosState, action: any) =>     
+//   state.map(todo => (todo.id === action.payload ? { ...todo, done: !todo.done } : todo))
+// ).handleType(
+//   REMOVE_TODO,
+//   (state: TodosState, action: any) =>     
+//   state.filter(todo => todo.id !== action.payload)
+// );
 
 export default todos;
