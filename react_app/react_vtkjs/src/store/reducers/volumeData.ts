@@ -1,52 +1,71 @@
-// import { handleActions } from "redux-actions";
-import { ActionType, createReducer } from 'typesafe-actions';
-import { actionTypes, OpenCTActions } from '../actions/volumeData';
+import { localOpenCTActionType } from '../actions/volumeData';
 
-export interface OpenCTState {
+export interface LoaclOpenCTState {
   files: FileList | null;
   status: string;
   error: string;
-  progress: number;
 }
 
-const initialState: OpenCTState = {
+export const initialState = {
   files: null,
-  status: 'init',
-  error: '',
-  progress: 0
+  status: '',
+  error: ''
 };
 
-const openCTReducer = createReducer(initialState).handleType(
-  actionTypes.OPEN_CT,
-  (state, action) => ({
-    files: action.payload,
-    status: 'init',
-    error: '',
-    progress: 0
-  })
-);
-// const openCTReducer = createReducer<OpenCTState, OpenCTActions>(initialState, {
-//   [actionTypes.OPEN_CT]: (state, { payload }) => {
-//     var newState: OpenCTState = {
-//       files: payload.files,
-//       status: 'init',
-//       error: '',
-//       progress: 0
-//     };
-//     return newState;
-//   }
-// });
+const localOpenCTReducer = function(state: LoaclOpenCTState, action: any) {
+  switch (action.type) {
+    case localOpenCTActionType.CT_SELECTED:
+      return {
+        ...state,
+        files: action.payload,
+        status: localOpenCTActionType.CT_SELECTED,
+        error: ''
+      };
+    case localOpenCTActionType.LOAD_CT_START:
+      return {
+        ...state,
+        files: action.payload,
+        status: localOpenCTActionType.LOAD_CT_START,
+        error: ''
+      };
+    case localOpenCTActionType.LOAD_CT_SUCCEED:
+      return {
+        ...state,
+        files: action.payload,
+        status: localOpenCTActionType.LOAD_CT_SUCCEED,
+        error: ''
+      };
+    case localOpenCTActionType.LOAD_CT_FAILED:
+      return {
+        ...state,
+        files: action.payload,
+        status: localOpenCTActionType.LOAD_CT_FAILED,
+        error: ''
+      };
+    default:
+      break;
+  }
+};
 
-// [ADD_TODO]: (state, { payload: text }) =>
-// state.concat({
-//   id: Math.max(...state.map(todo => todo.id)) + 1,
-//   text,
-//   done: false
-// }),
-// [TOGGLE_TODO]: (state, { payload: id }) =>
-// state.map(todo => (todo.id === id ? { ...todo, done: !todo.done } : todo)),
-// [REMOVE_TODO]: (state, { payload: id }) =>
-// state.filter(todo => todo.id !== id)
+export default localOpenCTActionType;
+
+// import { handleActions } from "redux-actions";
+// import { actionTypes } from "../actions/volumeData";
+
+// export interface OpenCTState {
+//   files: FileList | null;
+//   status: string;
+//   error: string;
+//   progress: number;
+// }
+
+// const initialState: OpenCTState = {
+//   files: null,
+//   status: "init",
+//   error: "",
+//   progress: 0
+// };
+
 // const openCTReducer = handleActions(
 //   {
 //     [actionTypes.SELECT_CT]: (state: OpenCTState, action) => {
@@ -55,8 +74,8 @@ const openCTReducer = createReducer(initialState).handleType(
 //         return {
 //           ...state,
 //           files: action.payload.files,
-//           status: 'CT selected',
-//           error: '',
+//           status: "CT selected",
+//           error: "",
 //           progress: 0
 //         };
 //       }
@@ -67,21 +86,21 @@ const openCTReducer = createReducer(initialState).handleType(
 //       console.log(`open CT`);
 //       return {
 //         ...state,
-//         status: 'open CT'
+//         status: "open CT"
 //       };
 //     },
 //     [actionTypes.OPEN_CT_START]: (state: OpenCTState) => {
 //       console.log(`open CT started`);
 //       return {
 //         ...state,
-//         status: 'Open CT started'
+//         status: "Open CT started"
 //       };
 //     },
 //     [actionTypes.OPEN_CT_PROGRESS]: (state: OpenCTState, action) => {
 //       console.log(`open CT in progress...`);
 //       return {
 //         ...state,
-//         status: 'Open CT in progress...',
+//         status: "Open CT in progress...",
 //         progress: action.payload.progress
 //       };
 //     },
@@ -89,14 +108,14 @@ const openCTReducer = createReducer(initialState).handleType(
 //       console.log(`open CT success`);
 //       return {
 //         ...state,
-//         status: 'Open CT success'
+//         status: "Open CT success"
 //       };
 //     },
 //     [actionTypes.OPEN_CT_FAILURE]: (state: OpenCTState, action) => {
 //       console.log(`open CT failure`);
 //       return {
 //         ...state,
-//         status: 'Open CT failure',
+//         status: "Open CT failure",
 //         error: action.payload.error
 //       };
 //     }
@@ -104,4 +123,4 @@ const openCTReducer = createReducer(initialState).handleType(
 //   initialState
 // );
 
-export default openCTReducer;
+// export default openCTReducer;
