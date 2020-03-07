@@ -2,20 +2,20 @@ import { createAction } from 'redux-actions';
 import { stringify } from 'querystring';
 
 export const localOpenCTActionType = {
-  CT_SELECTED: 'CT_SELECTED',
-  LOAD_CT_START: 'LOAD_CT_START',
-  LOAD_CT_SUCCEED: 'LOAD_CT_SUCCEED',
-  LOAD_CT_FAILED: 'LOAD_CT_FAILED'
+  CT_SELECTED: 'local/CT_SELECTED',
+  LOAD_CT_START: 'local/LOAD_CT_START',
+  LOAD_CT_SUCCEED: 'local/LOAD_CT_SUCCEED',
+  LOAD_CT_FAILED: 'local/LOAD_CT_FAILED'
 };
 
-export const LocalSelectCTAction = function(file: FileList) {
+export const localSelectCTAction = function(file: FileList) {
   return {
     type: localOpenCTActionType.CT_SELECTED,
     payload: file
   };
 };
 
-export const LocalLoadCTStartAction = function(file: FileList) {
+export const localLoadCTStartAction = function(file: FileList) {
   return {
     type: localOpenCTActionType.LOAD_CT_START,
     payload: file
@@ -29,7 +29,7 @@ export const localLoadCTSucceedAction = function(imageData: any) {
   };
 };
 
-export const loadCTFailedAction = function(imageData: any | null = null) {
+export const localLoadCTFailedAction = function(imageData: any | null = null) {
   return {
     type: localOpenCTActionType.LOAD_CT_FAILED,
     payload: imageData

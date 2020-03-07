@@ -1,23 +1,24 @@
-import React, { ReactElement } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
+import React, { ReactElement } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 
-import { Switch, Redirect, Route, Link as RouterLink } from "react-router-dom";
+import { Switch, Redirect, Route, Link as RouterLink } from 'react-router-dom';
 
-import SimpleImage from "./SimpleImage";
-import SimpleSphere from "./SimpleSphere";
+import SimpleImage from './SimpleImage';
+import SimpleSphere from './SimpleSphere';
+import SimpleVolume from './SimpleVolume';
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
   root: {
-    display: "flex"
+    display: 'flex'
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1
@@ -35,8 +36,8 @@ const useStyles = makeStyles(theme => ({
   },
   framedBox: {
     borderWidth: 2,
-    borderColor: "#3f51b5",
-    borderStyle: "solid",
+    borderColor: '#3f51b5',
+    borderStyle: 'solid',
     marginTop: 0
   },
   toolbar: theme.mixins.toolbar
@@ -70,6 +71,9 @@ function Main(): React.ReactElement {
             <ListItem button key={1} component={RouterLink} to="/image">
               Simple Image
             </ListItem>
+            <ListItem button key={2} component={RouterLink} to="/volume">
+              Simple Volume
+            </ListItem>
           </List>
           <Divider />
           <List />
@@ -86,6 +90,11 @@ function Main(): React.ReactElement {
               exact
               path="/image"
               component={(): ReactElement => <SimpleImage />}
+            />
+            <Route
+              exact
+              path="/volume"
+              component={(): ReactElement => <SimpleVolume />}
             />
             <Redirect path="*" to="/" />
           </Switch>

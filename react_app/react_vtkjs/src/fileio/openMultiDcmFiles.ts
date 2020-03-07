@@ -1,10 +1,14 @@
 import readImageDICOMFileSeries from 'itk/readImageDICOMFileSeries';
 import vtkITKHelper from 'vtk.js/Sources/Common/DataModel/ITKHelper';
+import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
-const openMultiImageFiles = (files: FileList): any => {
+const openMultiDcmFiles = (
+  files: FileList,
+  worker: Worker | null = null
+): vtkImageData => {
   console.log(files);
   return new Promise((resolve, reject) => {
-    readImageDICOMFileSeries(null, files)
+    readImageDICOMFileSeries(worker, files)
       .then(function conv({ image, webWorker }) {
         webWorker.terminate();
         const imageData = vtkITKHelper.convertItkToVtkImage(image);
@@ -18,4 +22,4 @@ const openMultiImageFiles = (files: FileList): any => {
   });
 };
 
-export default openMultiImageFiles;
+export default openMultiDcmFiles;
