@@ -18,34 +18,39 @@ const localLoadCTReducer = function(
 ) {
   switch (action.type) {
     case localOpenCTActionType.CT_SELECTED:
+      console.log(localOpenCTActionType.CT_SELECTED);
       return {
         ...state,
-        files: action.payload,
-        status: localOpenCTActionType.CT_SELECTED,
-        error: ''
+        files: action.payload.files,
+        status: action.payload.status,
+        error: action.payload.error
       };
     case localOpenCTActionType.LOAD_CT_START:
+      console.log(localOpenCTActionType.LOAD_CT_START);
       return {
         ...state,
-        files: action.payload,
-        status: localOpenCTActionType.LOAD_CT_START,
-        error: ''
+        files: action.payload.files,
+        status: action.payload.status,
+        error: action.payload.error
       };
     case localOpenCTActionType.LOAD_CT_SUCCEED:
+      console.log(localOpenCTActionType.LOAD_CT_SUCCEED);
       return {
         ...state,
-        files: action.payload,
-        status: localOpenCTActionType.LOAD_CT_SUCCEED,
-        error: ''
+        files: action.payload.files,
+        status: action.payload.status,
+        error: action.payload.error
       };
     case localOpenCTActionType.LOAD_CT_FAILED:
+      console.log(localOpenCTActionType.LOAD_CT_FAILED);
       return {
         ...state,
-        files: action.payload,
-        status: localOpenCTActionType.LOAD_CT_FAILED,
-        error: ''
+        files: action.payload.files,
+        status: action.payload.status,
+        error: action.payload.error
       };
     default:
+      console.log('initialize');
       return state;
   }
 };

@@ -1,16 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useCallback } from 'react';
 import {
-  localSelectCTAction,
+  localCTSelectedAction,
   localLoadCTStartAction,
   localLoadCTSucceedAction,
   localLoadCTFailedAction
 } from '../actions/volumeData';
 import { LocalLoadCTState, LocalLoadCTReducer } from '../reducers/volumeData';
+import { RootState } from '../index';
 
 export function useLocalLoadCTState(): LocalLoadCTState {
   const localLoadCTState: LocalLoadCTState = useSelector(
-    (state: LocalLoadCTReducer) => state
+    (state: RootState) => state.localOpenCTReducer
   );
   return localLoadCTState;
 }
@@ -18,7 +19,7 @@ export function useLocalLoadCTState(): LocalLoadCTState {
 export function useLocalSelectCTAction(): Function {
   const dispatch = useDispatch();
   const onSelect = useCallback(
-    (files: FileList) => dispatch(localSelectCTAction(files)),
+    (files: FileList) => dispatch(localCTSelectedAction(files)),
     [dispatch]
   );
 
@@ -26,11 +27,24 @@ export function useLocalSelectCTAction(): Function {
 }
 export function useLocalOpenCTStartAction(): Function {
   const dispatch = useDispatch();
-  const onLoad = useCallback(
-    (files: FileList) => {
-      dispatch(localLoadCTStartAction(files));
-    },
-    [dispatch]
-  );
+  const onLoad = useCallback(() => {
+    dispatch(localLoadCTStartAction());
+  }, [dispatch]);
+  return onLoad;
+}
+
+export function useLocalOpenCTSucceedAction(): Function {
+  const dispatch = useDispatch();
+  const onLoad = useCallback(() => {
+    dispatch(localLoadCTSucceedAction());
+  }, [dispatch]);
+  return onLoad;
+}
+
+export function useLocalOpenCTFailedAction(): Function {
+  const dispatch = useDispatch();
+  const onLoad = useCallback(() => {
+    dispatch(localLoadCTFailedAction());
+  }, [dispatch]);
   return onLoad;
 }

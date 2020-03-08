@@ -1,6 +1,3 @@
-import { createAction } from 'redux-actions';
-import { stringify } from 'querystring';
-
 export const localOpenCTActionType = {
   CT_SELECTED: 'local/CT_SELECTED',
   LOAD_CT_START: 'local/LOAD_CT_START',
@@ -8,31 +5,58 @@ export const localOpenCTActionType = {
   LOAD_CT_FAILED: 'local/LOAD_CT_FAILED'
 };
 
-export const localSelectCTAction = function(file: FileList) {
+export const localCTSelectedAction = (file: FileList) => {
   return {
     type: localOpenCTActionType.CT_SELECTED,
-    payload: file
+    payload: {
+      files: file,
+      status: localOpenCTActionType.CT_SELECTED,
+      error: 0
+    }
   };
 };
 
-export const localLoadCTStartAction = function(file: FileList) {
+export const localCTSelectCanceledAction = (file: FileList) => {
+  return {
+    type: localOpenCTActionType.CT_SELECTED,
+    payload: {
+      files: file,
+      status: localOpenCTActionType.CT_SELECTED,
+      error: 0
+    }
+  };
+};
+
+export const localLoadCTStartAction = () => {
   return {
     type: localOpenCTActionType.LOAD_CT_START,
-    payload: file
+    payload: {
+      files: null,
+      status: localOpenCTActionType.LOAD_CT_START,
+      error: 0
+    }
   };
 };
 
-export const localLoadCTSucceedAction = function(imageData: any) {
+export const localLoadCTSucceedAction = function() {
   return {
     type: localOpenCTActionType.LOAD_CT_SUCCEED,
-    payload: imageData
+    payload: {
+      files: null,
+      status: localOpenCTActionType.LOAD_CT_SUCCEED,
+      error: 1
+    }
   };
 };
 
-export const localLoadCTFailedAction = function(imageData: any | null = null) {
+export const localLoadCTFailedAction = function() {
   return {
     type: localOpenCTActionType.LOAD_CT_FAILED,
-    payload: imageData
+    payload: {
+      files: null,
+      status: localOpenCTActionType.LOAD_CT_FAILED,
+      error: -1
+    }
   };
 };
 

@@ -10,7 +10,54 @@ import vtkImageData from 'vtk.js/Sources/Common/DataModel/ImageData';
 
 import openMultiDcmFiles from '../fileio/openMultiDcmFiles';
 
+import CircularProgress from '@material-ui/core/CircularProgress';
+import Button from '@material-ui/core/Button';
+import { green } from '@material-ui/core/colors';
+import { makeStyles } from '@material-ui/core/styles';
+
+import { localOpenCTActionType } from '../store/actions/volumeData';
+import {
+  useLocalLoadCTState,
+  useLocalSelectCTAction,
+  useLocalOpenCTStartAction,
+  useLocalOpenCTSucceedAction,
+  useLocalOpenCTFailedAction
+} from '../store/hooks/volumeData';
+import { LocalLoadCTState } from '../store/reducers/volumeData';
+
+const useStyles: any = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative'
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700]
+    }
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12
+  }
+}));
 function SimpleVolume(): React.ReactElement {
+  const classes: any = useStyles();
+
+  const localLoadCTState: LocalLoadCTState = useLocalLoadCTState();
+  const onCTSelected: Function = useLocalSelectCTAction();
+  const onLoadCTStart: Function = useLocalOpenCTStartAction();
+  const onLoadCTSucceed: Function = useLocalOpenCTSucceedAction();
+  const onLoadCTFailed: Function = useLocalOpenCTFailedAction();
+
   const [renderer, SetRenderer] = useState();
   const [renderWindow, SetRenderWindow] = useState();
   const [mapper, SetMapper] = useState();
@@ -79,22 +126,25 @@ function SimpleVolume(): React.ReactElement {
     renderer.resetCamera();
   }
 
-  function getDcmFiles(e: React.ChangeEvent<HTMLInputElement>): void {
-    const webWorker = new Worker('itk/WebWorkers/ImageIO.worker.js');
-    webWorker.addEventListener('message', (event: Event): void => {
-      console.log(event);
-    });
-
-    const { files } = e.target;
-    console.log(files);
-    if (files) {
-      openMultiDcmFiles(files, webWorker)
+  function onLoadLocalCT() {
+    if (localLoadCTState.files) {
+      onLoadCTStart();
+      openMultiDcmFiles(localLoadCTState.files, null)
         .then((imageData: vtkImageData) => {
           renderVolume(imageData);
+          onLoadCTSucceed();
         })
         .catch(error => {
           console.log(error);
+          onLoadCTFailed();
         });
+    }
+  }
+
+  function getDcmFiles(e: React.ChangeEvent<HTMLInputElement>): void {
+    const { files } = e.target;
+    if (files && files.length > 0) {
+      onCTSelected(files);
     }
   }
 
@@ -102,6 +152,11 @@ function SimpleVolume(): React.ReactElement {
     width: '600px',
     height: '600px',
     position: 'relative'
+  };
+
+  const buttonRootStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center'
   };
 
   return (
@@ -112,6 +167,31 @@ function SimpleVolume(): React.ReactElement {
           Select Dcm Files:
           <input type="file" accept=".dcm" onChange={getDcmFiles} multiple />
         </p>
+        <div style={buttonRootStyle}>
+          <div className={classes.wrapper}>
+            <Button
+              variant="contained"
+              color="primary"
+              className={classes.buttonSuccess}
+              disabled={
+                localOpenCTActionType.CT_SELECTED !== localLoadCTState.status &&
+                (localLoadCTState.files !== null &&
+                localLoadCTState.files !== undefined
+                  ? localLoadCTState.files.length > 0
+                    ? false
+                    : true
+                  : true)
+              }
+              onClick={onLoadLocalCT}
+            >
+              Load CT
+            </Button>
+            {localOpenCTActionType.LOAD_CT_START ===
+              localLoadCTState.status && (
+              <CircularProgress size={24} className={classes.buttonProgress} />
+            )}
+          </div>
+        </div>
         <div ref={container} style={style} />
       </div>
     </div>
