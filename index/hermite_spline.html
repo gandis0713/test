@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <title>Hermite Spline</title>
+  <script type="text/javascript">
+    const resolution = 24;
+    function spline1D(p1, p2, p3, p4, u) {
+
+      const u2 = u * u;
+      const u3 = u * u2;
+
+      const H1 = ( 2 * u3 - 3 * u2 + 1 ) * p1;
+      const H2 = ( -2 * u3 + 3 * u2 ) * p2;  
+      const H3 = ( u3 - 2 * u2 + u ) * p3;
+      const H4 = ( u3 - u2 ) * p4; 
+
+      const v =  H1 + H2 + H3 + H4;
+
+      return v;
+    }
+    function draw(){
+      let canvas = document.getElementById('spline');
+      if (canvas.getContext){
+        var ctx = canvas.getContext('2d');
+
+        const px = [[ 300, 100], [400,   0], [300,   0], [400, 100]];
+        const py = [[ 100,   0], [200, 100], [300, 100], [400,   0]];
+
+        ctx.beginPath();
+
+        const count = resolution / (px.length - 1);
+
+        for(let i = 0; i < px.length - 1; i++) {
+          for(let j = 0; j < resolution; j++) {
+            const u = j / (resolution - 1);
+
+            const x = spline1D(px[i][0], px[i+1][0], px[i][1], px[i+1][1], u);
+            const y = spline1D(py[i][0], py[i+1][0], py[i][1], py[i+1][1], u);
+            
+            console.log("u : ", u);
+            console.log("x : ", x, ", y : ", y);
+            
+            ctx.lineTo(x, y);
+          } 
+          console.log("");       
+        }
+
+        ctx.stroke();
+      }
+    }
+  </script>
+  <style type="text/css">
+    canvas { border: 1px solid black; }
+  </style>
+  <body onload="draw()">
+    <canvas id="spline" width="640" height="480"></canvas>
+  </body>
+</html>

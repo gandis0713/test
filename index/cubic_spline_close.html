@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <title>Cubic Spline</title>
+  <script type="text/javascript">
+
+    function CubicSpline1D(arrayData) {
+      this.arrayData = arrayData;
+      
+      this.coeffiA = [];
+      this.coeffiB = [];
+      this.coeffiC = [];
+      this.coeffiD = [];
+
+      this.getSplineValue = function(index, t) {
+
+        const t1 = t;
+        const t2 = t1 * t1;
+        const t3 = t1 * t2;
+
+        const value = this.coeffiA[index] * t3 + this.coeffiB[index] * t2 + this.coeffiC[index] * t1 + this.coeffiD[index];
+
+        return value;
+      }
+
+      this.init = function() {
+        
+        const nSize = this.arrayData.length;
+
+        let mcC = [];
+        let mcD = [];
+        
+        let unD = [];
+        
+        mcC[0] = 1.0 / 4.0;
+        
+        for(let i = 1; i < nSize - 1; i++)
+        {
+          mcC[i] = 1.0 / ( 4.0 - mcC[ i - 1 ] );
+        }
+        
+        mcC[nSize - 1] = 1.0 / ( 4.0 - mcC[nSize - 2] );
+        
+        mcD[0] = 3.0 * ( this.arrayData[1] - this.arrayData[nSize - 1] ) * mcC[0];
+        
+        for(let i = 1; i < nSize - 1; i++)
+        {
+          mcD[i] = ( 3.0 * ( this.arrayData[i + 1] - this.arrayData[i - 1] ) - mcD[i - 1]) * mcC[i];
+        }
+        
+        mcD[nSize - 1] = ( 3.0 * ( this.arrayData[0] - this.arrayData[nSize - 2] ) - mcD[nSize - 2] ) * mcC[nSize - 1];
+        
+        unD[nSize - 1] = mcD[nSize - 1];
+        
+        for(let i = nSize - 2; i >= 0; i--)
+        {
+          unD[i] = mcD[i] - mcC[i] * unD[i + 1];
+        }
+        
+        for(let i = 0; i < nSize - 1; i++)
+        {
+          this.coeffiA.push(2 * ( this.arrayData[i] - this.arrayData[i + 1] ) + unD[i] + unD[i + 1]);
+          this.coeffiB.push(3 * ( this.arrayData[i + 1] - this.arrayData[i] ) - 2* unD[i] - unD[i + 1]);
+          this.coeffiC.push(unD[i]);
+          this.coeffiD.push(this.arrayData[i]);
+        }
+
+        this.coeffiA.push(2 * ( this.arrayData[nSize - 1] - this.arrayData[0] ) + unD[nSize - 1] + unD[0]);
+        this.coeffiB.push(3 * ( this.arrayData[0] - this.arrayData[nSize - 1] ) - 2* unD[nSize - 1] - unD[0]);
+        this.coeffiC.push(unD[nSize - 1]);
+        this.coeffiD.push(this.arrayData[nSize - 1]);
+      } 
+    }
+
+    function draw(){ 
+
+      const canvas = document.getElementById('spline');
+      if (canvas.getContext){
+        var ctx = canvas.getContext('2d');
+        ctx.beginPath();
+
+        const resolution = 20;
+
+        const px = [100, 200, 200, 100];
+        const py = [100, 100, 200, 200];        
+
+        const splineX = new CubicSpline1D(px);
+        const splineY = new CubicSpline1D(py);
+
+        splineX.init();
+        splineY.init();
+
+        for(let i = 0; i < px.length; i++) {
+          for(let j = 0; j <= resolution; j++) {
+            
+            const t = j / resolution;
+            const x = splineX.getSplineValue(i, t);
+            const y = splineY.getSplineValue(i, t);
+
+            console.log("t : ", t);
+            console.log("x : ", x, ", y : ", y);
+
+            ctx.lineTo(x, y);
+          }
+        }
+
+        ctx.stroke();
+      }
+    }
+  </script>
+  <style type="text/css">
+    canvas { border: 1px solid black; }
+  </style>
+  <body onload="draw()">
+    <canvas id="spline" width="640" height="480"></canvas>
+  </body>
+</html>
