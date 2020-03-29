@@ -7,17 +7,20 @@
     function KochanekSpline1D() {
 
       this.data = [];
-      this.intervals = [];
-      this.resolution = 32;
-
-      this.tension = 0;
-      this.bias = 0;
-      this.continuity = 0;
 
       this.coeffiA = [];
       this.coeffiB = [];
       this.coeffiC = [];
       this.coeffiD = [];
+
+      this.resolution = 32;
+      this.type = 0; // 1 is open, 0 is close; 
+
+      this.tension = 0;
+      this.bias = 0;
+      this.continuity = 0;
+
+      this.intervals = [];
 
       this.setData = function(data) {
         this.data = data;
@@ -50,6 +53,11 @@
       }
 
       this.build = function() {
+
+        if(this.data.length < 2) {
+          console.log("data is not enough in kochanek spline.");
+          return;
+        }
         
         let pre;
         let cur;
@@ -111,8 +119,6 @@
         p1[N] = next;
         d0[N] = (n1 / (n0 + n1)) * (1 - this.tension) * ( (1 - this.continuity) * (1 - this.bias) * ( next - cur ) + (1 + this.continuity) * (1 + this.bias) * ( cur - pre ) );
         d1[N] = (n0 / (n0 + n1)) * (1 - this.tension) * ( (1 + this.continuity) * (1 - this.bias) * ( next - cur ) + (1 - this.continuity) * (1 + this.bias) * ( cur - pre ) );
-        
-
 
         // set coefficiant  
         for(let i = 0; i < N; i++) {  
@@ -126,14 +132,16 @@
           this.coeffiD[i] = cur;
         }
         
-        // set coefficiant at end point.
-        cur = this.data[N];
-        next = this.data[0];
+        // set coefficiant for end point.
+        if(this.data.length > 2) {
+          cur = this.data[N];
+          next = this.data[0];
 
-        this.coeffiA[N] = 2 * cur - 2 * next + d0[N] + d1[0];
-        this.coeffiB[N] = -3 * cur + 3 * next - 2 * d0[N] - d1[0];
-        this.coeffiC[N] = d0[N];
-        this.coeffiD[N] = cur;
+          this.coeffiA[N] = 2 * cur - 2 * next + d0[N] + d1[0];
+          this.coeffiB[N] = -3 * cur + 3 * next - 2 * d0[N] - d1[0];
+          this.coeffiC[N] = d0[N];
+          this.coeffiD[N] = cur;
+        }
       }
 
       this.getData = function() {
@@ -167,10 +175,11 @@
       if (canvas.getContext){
         var ctx = canvas.getContext('2d');
 
-        const px = [300, 400, 400, 300];
-        const py = [100, 100, 200, 200];
+        const px = [300, 400, 300, 100];
+        const py = [100, 200, 300, 200];
 
         ctx.beginPath();
+        ctx.lineWidth = 3;
 
         const splineX = new KochanekSpline1D();
         splineX.setData(px);
@@ -187,7 +196,8 @@
 
           ctx.lineTo(x, y);    
         }
-
+        
+        ctx.strokeStyle = '#ff0000';
         ctx.stroke();
       }
     }
