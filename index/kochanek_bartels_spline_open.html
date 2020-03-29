@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <title>Hermite Spline</title>
+  <script type="text/javascript">
+
+    function KochanekSpline1D(arrayData) {
+
+      this.arrayData = arrayData;
+
+      this.getSplineValue = function(index, u) {
+
+        const t = 0;
+        const b = 0;
+        const c = 0;
+
+        const t1 = u;
+        const t2 = t1 * t1;
+        const t3 = t1 * t2;
+
+        // const pre = index === 0 ? this.arrayData[index] : this.arrayData[index - 1];
+        // const cur = this.arrayData[index];
+        // const next = this.arrayData[index + 1];
+        // const next2 = this.arrayData.length <= index + 2 ? this.arrayData[index + 1] : this.arrayData[index + 2];
+
+        // const d0 = 0.5 * (1 - t) * ( (1 + b) * (1 + c) * ( cur - pre ) + (1 - b) * (1 - c) * ( next - cur ) );
+        // const d1 = 0.5 * (1 - t) * ( (1 + b) * (1 - c) * ( next - cur ) + (1 - b) * (1 + c) * ( next2 - next ) );
+
+        const pre = index === 0 ? this.arrayData[index] : this.arrayData[index - 1];
+        const cur = this.arrayData[index];
+        const next = this.arrayData[index + 1];
+        
+        const d0 = 0.5 * (1 - t) * ( (1 - b) * (1 - c) * ( next - cur ) + (1 + b) * (1 + c) * ( cur - pre ) );
+        const d1 = 0.5 * (1 - t) * ( (1 + b) * (1 - c) * ( next - cur ) + (1 - b) * (1 + c) * ( cur - pre ) );
+
+        const V1 = ( 2 * t3 - 3 * t2 + 1 ) * cur;
+        const V2 = ( -2 * t3 + 3 * t2 ) * next;  
+        const V3 = ( t3 - 2 * t2 + t1 ) * d0;
+        const V4 = ( t3 - t2 ) * d1; 
+
+        const V =  V1 + V2 + V3 + V4;
+
+        return V;
+      }
+
+    }
+    function draw(){
+      let canvas = document.getElementById('spline');
+      if (canvas.getContext){
+        var ctx = canvas.getContext('2d');
+
+        const resolution = 20;
+
+        const px = [300, 400, 400, 300];
+        const py = [100, 100, 200, 200];
+
+        ctx.beginPath();
+
+        const splineX = new KochanekSpline1D(px);
+        const splineY = new KochanekSpline1D(py);
+
+        for(let i = 0; i < px.length; i++) {
+          for(let j = 0; j < resolution; j++) {
+            const u = j / (resolution - 1);
+
+            const x = splineX.getSplineValue(i, u);
+            const y = splineY.getSplineValue(i, u);
+            
+            console.log("u : ", u);
+            console.log("x : ", x, ", y : ", y);
+            
+            ctx.lineTo(x, y);
+          } 
+          console.log("");       
+        }
+
+        ctx.stroke();
+      }
+    }
+  </script>
+  <style type="text/css">
+    canvas { border: 1px solid black; }
+  </style>
+  <body onload="draw()">
+    <canvas id="spline" width="640" height="480"></canvas>
+  </body>
+</html>
