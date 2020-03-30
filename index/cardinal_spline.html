@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <title>Kochanek Bartels Spline</title>
+  <script type="text/javascript">
+
+    const splineType = {
+      open: 1,
+      close: 0
+    }
+
+    function CardinalSpline1D() {
+
+      this.data = [];
+
+      this.coeffiA = [];
+      this.coeffiB = [];
+      this.coeffiC = [];
+      this.coeffiD = [];
+
+      this.resolution = 32;
+      this.type = splineType.open;
+
+      this.tension = 0;
+
+      this.intervals = [];
+
+      this.setData = function(data) {
+        this.data = data;
+        this.build();
+      }
+
+      this.setResolution = function(resolution) {
+        this.resolution = resolution;
+        this.build();
+      }
+
+      this.setType = function(type) {
+        this.type = type;
+        this.build();
+      }
+
+      this.setIntervals = function(intervals) {
+        this.intervals = intervals;
+        this.build();
+      }      
+
+      this.setTension = function(tension) {
+        this.tension = tension;
+        this.build();
+      }
+
+      this.build = function() {
+
+        if(this.data.length < 2) {
+          console.log("data is not enough in kochanek spline.");
+          return;
+        }
+        
+        this.coeffiA = [];
+        this.coeffiB = [];
+        this.coeffiC = [];
+        this.coeffiD = [];
+
+        let p1 = [];
+        let p2 = [];
+        let p3 = [];
+        let p4 = [];
+
+        const N = this.data.length - 1;
+
+        for(let i = 0; i < N; i++) {
+          p1[i] = (i === 0) ? this.data[0] : this.data[i - 1];
+          p2[i] = this.data[i];
+          p3[i] = this.data[i + 1];
+          p4[i] = i >= (N - 1) ? this.data[i + 1] : this.data[i + 2];
+        }
+
+        for(let i = 0; i < N; i++) {
+          this.coeffiA[i] = 0.5 * (-p1[i] + 3*p2[i] - 3*p3[i] + p4[i]);
+          this.coeffiB[i] = 0.5 * (2*p1[i] - 5*p2[i] + 4*p3[i] - p4[i]);
+          this.coeffiC[i] = 0.5 * (-p1[i] + p3[i]);
+          this.coeffiD[i] = 0.5 * (2*p2[i]);
+        }
+      }
+
+      this.getData = function() {
+        return this.arrayData;
+      }
+
+      this.getSpline = function() {
+
+        let spline = [];
+
+        for(let i = 0; i < this.data.length; i++) {
+          for(let j = 0; j < this.resolution; j++) {
+
+            const t1 = j / ( this.resolution - 1 );
+            const t2 = t1 * t1;
+            const t3 = t1 * t2;
+
+            const value = this.coeffiA[i] * t3 + this.coeffiB[i] * t2 + this.coeffiC[i] * t1 + this.coeffiD[i];
+
+            spline.push(value);
+
+          }
+        }
+
+        return spline;
+      }
+
+    }
+    function draw(){
+      let canvas = document.getElementById('spline');
+      if (canvas.getContext){
+        var ctx = canvas.getContext('2d');
+
+        // const px = [300, 400, 400];
+        // const py = [100, 100, 400];
+        const px = [300, 400];
+        const py = [100, 200];
+
+        ctx.beginPath();
+        ctx.lineWidth = 3;
+
+        const splineX = new CardinalSpline1D();
+        splineX.setData(px);
+        splineX.setType(splineType.open);
+        const splineY = new CardinalSpline1D();
+        splineY.setData(py);
+        splineY.setType(splineType.open);
+
+        const splineXData = splineX.getSpline();
+        const splineYData = splineY.getSpline();
+
+        for(let i = 0; i < splineXData.length; i++) {
+          
+          const x = splineXData[i];
+          const y = splineYData[i];
+
+          console.log("x : ", x);
+          console.log("y : ", y);
+
+          ctx.lineTo(x, y);    
+        }
+
+        ctx.strokeStyle = '#ff0000';
+        ctx.stroke();
+      }
+    }
+  </script>
+  <style type="text/css">
+    canvas { border: 1px solid black; }
+  </style>
+  <body onload="draw()">
+    <canvas id="spline" width="640" height="480"></canvas>
+  </body>
+</html>
