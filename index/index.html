@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <title>Splines</title>
+  <script src="src/define.js"></script>
+  <script src="src/splines/splines.js"></script>
+  <script src="src/splines/kochanek_bartels.js"></script>
+  <script>
+    function draw(){
+    let canvas = document.getElementById('splines');
+    if (canvas.getContext){
+      var ctx = canvas.getContext('2d');
+
+      const px = [300, 400, 300, 100];
+      const py = [100, 200, 300, 200];
+
+      ctx.beginPath();
+      ctx.lineWidth = 3;
+
+      const splineX = new KochanekSpline1D();
+      const splineY = new KochanekSpline1D();
+
+      const splines = new Splines();
+      splines.addSpline()
+
+      const splineXData = splineX.getSpline();
+      const splineYData = splineY.getSpline();
+
+      for(let i = 0; i < splineXData.length; i++) {
+        
+        const x = splineXData[i];
+        const y = splineYData[i];
+
+        ctx.lineTo(x, y);    
+      }
+
+      ctx.strokeStyle = '#ffff00';
+      ctx.stroke();
+    }
+  </script>
+  <body onload="draw()">
+    <canvas id="splines" width="960" height="720"></canvas>
+  </body>
+</html>
