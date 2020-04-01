@@ -5,7 +5,7 @@ var app = {
       output: [[[]]]
     },
     spec: {
-      close: true,
+      close: false,
       resolution: 32,
       intervals: [0, 0.25, 0.5, 0.75, 1],
     
@@ -16,6 +16,4 @@ var app = {
   }
 }
 
-const splineType = {
-  kochanek: 0
-}
+const splineType = [[0, '#ff0000', 'kochanek'], [1, '#0000ff', 'natural']];

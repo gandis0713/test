@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="UTF-8">
+  <title>Splines</title>
+  <script src="src/define.js"></script>
+  <script src="src/splines/splines.js"></script>
+  <script src="src/splines/kochanek_bartels.js"></script>
+  <script src="src/splines/natural_cubic.js"></script>
+  <script>
+    function draw(){
+    let canvas = document.getElementById('splines');
+    if (canvas.getContext){
+      var ctx = canvas.getContext('2d');
+
+      app.spline.output = new Array();
+
+      const numberOfSpline = 2;
+      const dimensionOfSpline = 2;
+
+      for(let i = 0; i < numberOfSpline; i++) {
+        app.spline.output[i] = new Array();
+        for(let j = 0; j < dimensionOfSpline; j++) {
+          app.spline.output[i][j] = new Array();
+        }
+      }
+
+      const splines = new Splines();
+      splines.setSpline(0, new NaturalCubicSpline2D(app.spline.data.input, app.spline.output[0], app.spline.spec));
+      splines.setSpline(1, new KochanekSpline2D(app.spline.data.input, app.spline.output[1], app.spline.spec));
+
+      for(let i = 0; i < numberOfSpline; i++) {
+        
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        for(let j = 0; j < app.spline.output[0][0].length; j++) {
+          
+          const x = app.spline.output[i][0][j];
+          const y = app.spline.output[i][1][j];
+
+          ctx.lineTo(x, y);
+        }
+        ctx.strokeStyle = splineType[i][1];
+        ctx.stroke();
+      }
+
+    }
+  }
+  </script>  
+  <style type="text/css">
+    canvas { border: 1px solid black; }
+  </style>
+  <body onload="draw()">
+    <canvas id="splines" width="960" height="720"></canvas>
+  </body>
+</html>

@@ -8,7 +8,6 @@ function KochanekSpline2D(input, output, spec ) {
       this.spline[i].build();
     }
   }
-
 }
 
 function KochanekSpline1D(input, output, spec) {
