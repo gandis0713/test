@@ -11,33 +11,33 @@
     if (canvas.getContext){
       var ctx = canvas.getContext('2d');
 
-      const px = [300, 400, 300, 100];
-      const py = [100, 200, 300, 200];
-
       ctx.beginPath();
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2;
+      app.spline.output = new Array();
+      app.spline.output[0] = new Array();
+      app.spline.output[1] = new Array();
 
-      const splineX = new KochanekSpline1D();
-      const splineY = new KochanekSpline1D();
+      const spline = new KochanekSpline2D(app.spline.data.input, app.spline.output, app.spline.spec);
 
       const splines = new Splines();
-      splines.addSpline()
+      splines.setSpline(0, spline);
 
-      const splineXData = splineX.getSpline();
-      const splineYData = splineY.getSpline();
-
-      for(let i = 0; i < splineXData.length; i++) {
+      for(let i = 0; i < app.spline.output[0].length; i++) {
         
-        const x = splineXData[i];
-        const y = splineYData[i];
+        const x = app.spline.output[0][i];
+        const y = app.spline.output[1][i];
 
-        ctx.lineTo(x, y);    
+        ctx.lineTo(x, y);
       }
 
-      ctx.strokeStyle = '#ffff00';
+      ctx.strokeStyle = '#ff0000';
       ctx.stroke();
     }
-  </script>
+  }
+  </script>  
+  <style type="text/css">
+    canvas { border: 1px solid black; }
+  </style>
   <body onload="draw()">
     <canvas id="splines" width="960" height="720"></canvas>
   </body>

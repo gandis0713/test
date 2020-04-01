@@ -1,25 +1,20 @@
-function Splines({data}) {
+function Splines() {
 
-  this.splines = [];
+  this.splines = new Map();
   
-  this.addSpline = function(spline) {
-    this.splines.push(spline);
+  this.setSpline = function(type, spline) {
+    this.splines.set(type, spline);
+    this.build(type);
+  }
+  this.build = function(type) {
+    this.splines.get(type).build();
   }
 
   this.build = function() {
 
-    const N = data.length - 1;
-    const intervalLength = close === false ? N : N + 1;
-    
-    if(intervals.length === 0) {
-      for(let i = 0; i <= intervalLength; i++) {
-        intervals[i] =  i / intervalLength;
-      }
-    }
-
-    for(let i = 0; i < this.splines.length; i++) {
-      this.splines[i].build();
-    }
+    this.splines.forEach(function(value, key) {
+      value.build();
+    });
   }   
 
 }
