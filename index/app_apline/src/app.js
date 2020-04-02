@@ -13,6 +13,10 @@ var app = {
       bias: [0, 0, 0, 0],
       continuity: [0, 0, 0, 0]
     }
+  },
+  state: {
+    isDragging: false,
+    selectedIndex: -1
   }
 }
 

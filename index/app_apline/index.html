@@ -2,20 +2,58 @@
 <html>
   <meta charset="UTF-8">
   <title>Splines</title>
-  <script src="src/define.js"></script>
+  <script src="src/app.js"></script>
   <script src="src/splines/splines.js"></script>
   <script src="src/splines/kochanek_bartels.js"></script>
   <script src="src/splines/natural_cubic.js"></script>
   <script>
-    function draw(){
-    let canvas = document.getElementById('splines');
-    if (canvas.getContext){
-      var ctx = canvas.getContext('2d');
+    var canvas;
+    var ctx;
+    var splines;
+    function GetMousePos(event)
+    {
+      var rect = event.target.getBoundingClientRect();
+        console.log("GetMousePos : ", rect);
+      var pos =
+      [
+        event.clientX - rect.left,
+        event.clientY - rect.top
+      ];
+      return pos;
+    }
 
-      app.spline.output = new Array();
+    function IsCollision(points, pos) {
+      for(let i = 0; i < points[0].length; i++) {
+        const dist = Math.sqrt(Math.pow(points[0][i] - pos[0], 2) + Math.pow(points[1][i] - pos[1], 2));
+        if(dist < 6) 
+          return i;
+      }
+      return -1;
+    }
+    function onMouseMove(event) {
+      if(app.state.isDragging) {
+        const pos = GetMousePos(event);
+        app.spline.data.input[0][app.state.selectedIndex] = pos[0];
+        app.spline.data.input[1][app.state.selectedIndex] = pos[1];
+        
+        draw();
+      }
+    }
+    function onMouseDown(event) {
+      const index = IsCollision(app.spline.data.input, GetMousePos(event));
+      app.state.selectedIndex = index;
+      app.state.isDragging = true;
+      
+    }
+    function onMouseUp(event) {
+      app.state.isDragging = false;
+    }
 
+    function draw() {
       const numberOfSpline = 2;
       const dimensionOfSpline = 2;
+      app.spline.output = new Array();
+
 
       for(let i = 0; i < numberOfSpline; i++) {
         app.spline.output[i] = new Array();
@@ -23,11 +61,14 @@
           app.spline.output[i][j] = new Array();
         }
       }
-
-      const splines = new Splines();
+      
+      splines = new Splines();
       splines.setSpline(0, new NaturalCubicSpline2D(app.spline.data.input, app.spline.output[0], app.spline.spec));
       splines.setSpline(1, new KochanekSpline2D(app.spline.data.input, app.spline.output[1], app.spline.spec));
 
+      ctx.fillStyle   = "#000000";
+	    ctx.fillRect(0, 0, 960, 720);
+      
       for(let i = 0; i < numberOfSpline; i++) {
         
         ctx.beginPath();
@@ -43,13 +84,33 @@
         ctx.stroke();
       }
 
+      for(let i = 0; i < app.spline.data.input[0].length; i++) {
+        ctx.beginPath();
+        ctx.arc(app.spline.data.input[0][i], app.spline.data.input[1][i], 5, 0, 2 * Math.PI);
+        
+        ctx.fillStyle = '#FF8888';
+        ctx.fill();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = '#888888';
+        ctx.stroke();
+      }
+    }
+    function onLoad(){
+    canvas = document.getElementById('splines');
+    if (canvas.getContext){
+      ctx = canvas.getContext('2d');
+      
+      canvas.addEventListener('mousemove', onMouseMove, false);
+      canvas.addEventListener('mousedown', onMouseDown, false);
+      canvas.addEventListener('mouseup', onMouseUp, false);
+      draw();
     }
   }
   </script>  
   <style type="text/css">
     canvas { border: 1px solid black; }
   </style>
-  <body onload="draw()">
+  <body onload="onLoad()">
     <canvas id="splines" width="960" height="720"></canvas>
   </body>
 </html>
