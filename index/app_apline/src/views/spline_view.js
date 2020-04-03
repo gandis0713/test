@@ -3,6 +3,9 @@ function SplineView(viewName, splines) {
   this.canvas = null;
   this.ctx = null;
 
+  this.pointFillSize = 7;
+  this.pointStrokeSize = 2;
+
   this.GetMousePos = function(event) {
     var rect = event.target.getBoundingClientRect();
     var pos =
@@ -16,7 +19,7 @@ function SplineView(viewName, splines) {
   this.IsCollision = function(points, pos) {
     for(let i = 0; i < points[0].length; i++) {
       const dist = Math.sqrt(Math.pow(points[0][i] - pos[0], 2) + Math.pow(points[1][i] - pos[1], 2));
-      if(dist < 6) 
+      if(dist < ((this.pointFillSize + (this.pointStrokeSize / 2)) * 1.3)) 
         return i;
     }
     return -1;
@@ -82,11 +85,11 @@ function SplineView(viewName, splines) {
 
     for(let i = 0; i < app.spline.data.input[0].length; i++) {
       this.ctx.beginPath();
-      this.ctx.arc(app.spline.data.input[0][i], app.spline.data.input[1][i], 5, 0, 2 * Math.PI);
+      this.ctx.arc(app.spline.data.input[0][i], app.spline.data.input[1][i], this.pointFillSize, 0, 2 * Math.PI);
       
       this.ctx.fillStyle = '#FF8888';
       this.ctx.fill();
-      this.ctx.lineWidth = 2;
+      this.ctx.lineWidth = this.pointStrokeSize;
       this.ctx.strokeStyle = '#888888';
       this.ctx.stroke();
     }

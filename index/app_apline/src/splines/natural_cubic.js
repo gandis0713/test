@@ -32,17 +32,19 @@ function NaturalCubicSpline1D(input, output, spec) {
     let mcD = [];
     
     let unD = [];
+
+    const b1 = spec.close === true ? 4.0 : 2.0;
     
-    mcC[0] = 1.0 / 2.0;
+    mcC[0] = 1.0 / b1;
     
     for(let i = 1; i < N - 1; i++)
     {
       mcC[i] = 1.0 / ( 4.0 - mcC[ i - 1 ] );
     }
     
-    mcC[N - 1] = 1.0 / ( 2.0 - mcC[N - 2] );
+    mcC[N - 1] = 1.0 / ( b1 - mcC[N - 2] );
     
-    mcD[0] = 3.0 * ( input[1] - input[0] ) / 2.0;;
+    mcD[0] = 3.0 * ( input[1] - input[0] ) * mcC[0];
     
     for(let i = 1; i < N - 1; i++)
     {
@@ -64,6 +66,13 @@ function NaturalCubicSpline1D(input, output, spec) {
       this.coeffiB.push(3 * ( input[i + 1] - input[i] ) - 2* unD[i] - unD[i + 1]);
       this.coeffiC.push(unD[i]);
       this.coeffiD.push(input[i]);
+    }
+
+    if(spec.close === true) {
+      this.coeffiA.push(2 * ( input[N - 1] - input[0] ) + unD[N - 1] + unD[0]);
+      this.coeffiB.push(3 * ( input[0] - input[N - 1] ) - 2* unD[N - 1] - unD[0]);
+      this.coeffiC.push(unD[N - 1]);
+      this.coeffiD.push(input[N - 1]);
     }
 
     // create spline.
