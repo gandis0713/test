@@ -1,9 +1,11 @@
 
-function SplineController(app) {
+function SplineController(spline) {
   
-  // member
+  // view
   this.splineScreen = null;
   this.splinePanel = null;
+
+  // model
   this.splines = null;
 
   // init
@@ -34,73 +36,73 @@ function SplineController(app) {
     }
     
     this.splines.build();
-    this.splineScreen.draw(app.spline.input.data, app.spline.output, app.spline.visual);
+    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
   }
 
   // event
   this.closeCheckBoxEventListener = function(checked) { 
-    app.spline.spec.close = checked;
+    spline.spec.close = checked;
     
     this.splines.build();
-    this.splineScreen.draw(app.spline.input.data, app.spline.output, app.spline.visual);  
+    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);  
   }
 
   this.tensionSliderEventListener = function(value) {
-    app.spline.spec.tension[app.spline.state.selectedPointIndex] = value;
+    spline.spec.tension[spline.state.selectedPointIndex] = value;
     
     this.splines.build();
-    this.splineScreen.draw(app.spline.input.data, app.spline.output, app.spline.visual);
+    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
   }
 
   this.biasSliderEventListener = function(value) { 
-    app.spline.spec.bias[app.spline.state.selectedPointIndex] = value;
+    spline.spec.bias[spline.state.selectedPointIndex] = value;
     
     this.splines.build();
-    this.splineScreen.draw(app.spline.input.data, app.spline.output, app.spline.visual);
+    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
   }
 
   this.continuitySliderEventListener = function(value) {
-    app.spline.spec.continuity[app.spline.state.selectedPointIndex] = value;
+    spline.spec.continuity[spline.state.selectedPointIndex] = value;
     
     this.splines.build();
-    this.splineScreen.draw(app.spline.input.data, app.spline.output, app.spline.visual);
+    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
   }
 
   this.resolutionSliderEventListener = function(value) {
-    app.spline.spec.resolution = value;
+    spline.spec.resolution = value;
     
     this.splines.build();
-    this.splineScreen.draw(app.spline.input.data, app.spline.output, app.spline.visual);
+    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
   }
 
   this.mouseMoveEventListener = function(pos) {
-    if(app.spline.state.isDragging) {
-      app.spline.input.data[0][app.spline.state.selectedPointIndex] = pos[0];
-      app.spline.input.data[1][app.spline.state.selectedPointIndex] = pos[1];
+    if(spline.state.isDragging) {
+      spline.input.data[0][spline.state.selectedPointIndex] = pos[0];
+      spline.input.data[1][spline.state.selectedPointIndex] = pos[1];
 
       this.splines.build();
       
-      this.splineScreen.draw(app.spline.input.data, app.spline.output, app.spline.visual);
+      this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
     }
   }
 
   this.mouseDownEventListener = function(pos) {
-    const index = this.IsCollision(app.spline.input.data, pos);
+    const index = this.IsCollision(spline.input.data, pos);
     if(index >= 0) {
-      app.spline.state.selectedPointIndex = index;
-      app.spline.state.isDragging = true;
+      spline.state.selectedPointIndex = index;
+      spline.state.isDragging = true;
     }
   }
 
   this.mouseUpEventListener = function(pos) {
-    app.spline.state.isDragging = false;
+    spline.state.isDragging = false;
   }
 
   // logic
   this.IsCollision = function(points, pos) {
     for(let i = 0; i < points[0].length; i++) {
       const dist = Math.sqrt(Math.pow(points[0][i] - pos[0], 2) + Math.pow(points[1][i] - pos[1], 2));
-      if(dist < ((app.spline.visual.pointSize + (app.spline.visual.pointStroke / 2)) * 1.3)) 
+      if(dist < ((spline.visual.pointSize + (spline.visual.pointStroke / 2)) * 1.3)) 
         return i;
     }
     return -1;

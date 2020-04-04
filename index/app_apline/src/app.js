@@ -32,7 +32,7 @@ function App() {
 
   this.start = function() {
     
-    const splineController = new SplineController(app);
+    const splineController = new SplineController(app.spline);
     
     // create model
     const splines = new Splines(app.spline);

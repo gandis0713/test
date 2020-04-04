@@ -60,7 +60,6 @@ function SplinePanel() {
     this.body.style.border = "1px solid black" 
     this.body.style.marginLeft = 20 + 'px';
     this.body.style.marginTop = 10 + 'px';
-
     
     const table = document.createElement('table');
     table.style.width = "100%";
