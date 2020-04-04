@@ -1,4 +1,4 @@
-function SplinePanel(parentElementName, spec, state) {
+function SplinePanel() {
 
   this.parent = null;
   this.body = null;
@@ -9,13 +9,47 @@ function SplinePanel(parentElementName, spec, state) {
   this.biasSliderEventListener = null;
   this.continuitySliderEventListener = null;
 
+  this.cb_spec_close = null;
+  this.sl_tension = null;
+  this.sl_bias = null;
+  this.sl_continuity = null;
+  this.sl_resolution = null;
+
   this.lb_close_value = null;
   this.lb_tension_value = null;
   this.lb_bias_value = null;
   this.lb_continuity_value = null;
+  this.lb_resolution_value = null;
 
+  // set function
+  this.setClose = function(checked) {
+    this.lb_close_value.innerText = checked;
+    this.cb_spec_close.checked = checked;
+  }
+
+  this.setTension = function(value) {
+    this.lb_tension_value.innerText = value;
+    this.sl_tension.value = value;
+  }
+
+  this.setBias = function(value) {
+    this.lb_bias_value.innerText = value;
+    this.sl_bias.value = value;
+  }
+
+  this.setContinuity = function(value) {
+    this.lb_continuity_value.innerText = value;
+    this.sl_continuity.value = value;
+  }
+
+  this.setResolution = function(value) {
+    this.lb_resolution_value.innerText = value;
+    this.sl_resolution.value = value;
+  }
+
+  // UI
   this.create = function() {
-    this.parent = document.getElementById(parentElementName);
+    this.parent = document.body;
 
     this.body = document.createElement('div');
     this.body.style.position = "absolute";
@@ -48,20 +82,21 @@ function SplinePanel(parentElementName, spec, state) {
     this.createSpecTension();
     this.createSpecBias();
     this.createSpecContinuity();
+    this.createSpecResolution();
   }
 
   this.createSpecClose = function() {
 
-    const cb_spec_close = document.createElement('input');
-    cb_spec_close.type = 'checkbox';
-    cb_spec_close.checked = spec.close;
-    cb_spec_close.addEventListener('change', this.closeCheckBoxChangeEventListener.bind(this), false);
+    this.cb_spec_close = document.createElement('input');
+    this.cb_spec_close.type = 'checkbox';
+    this.cb_spec_close.checked = false;
+    this.cb_spec_close.addEventListener('change', this.closeCheckBoxChangeEventListener.bind(this), false);
 
     const lb_close_name = document.createElement('label');
     lb_close_name.innerText = 'Close';
     
     this.lb_close_value = document.createElement('label');
-    this.lb_close_value.innerText = spec.close;
+    this.lb_close_value.innerText = false;
 
     const row = this.tbody.insertRow(this.tbody.rows.length);
 
@@ -71,7 +106,7 @@ function SplinePanel(parentElementName, spec, state) {
     cell1.appendChild(lb_close_name);
     cell1.style.border = "1px solid black";
     cell1.style.width = "10%";
-    cell2.appendChild(cb_spec_close);
+    cell2.appendChild(this.cb_spec_close);
     cell2.style.border = "1px solid black";
     cell2.style.width = "90%";
     cell3.appendChild(this.lb_close_value);
@@ -81,19 +116,19 @@ function SplinePanel(parentElementName, spec, state) {
   }
 
   this.createSpecTension = function() {
-    const sl_tension = document.createElement('input');
-    sl_tension.type = "range";
-    sl_tension.min = -1;
-    sl_tension.max = 1;
-    sl_tension.step = 0.01;
-    sl_tension.value = spec.tension;
-    sl_tension.addEventListener('input', this.tensionSliderChangeEventListener.bind(this), false);
+    this.sl_tension = document.createElement('input');
+    this.sl_tension.type = "range";
+    this.sl_tension.min = -1;
+    this.sl_tension.max = 1;
+    this.sl_tension.step = 0.01;
+    this.sl_tension.value = 0;
+    this.sl_tension.addEventListener('input', this.tensionSliderChangeEventListener.bind(this), false);
 
     const lb_tension_name = document.createElement('label');
     lb_tension_name.innerText = 'Tension';
 
     this.lb_tension_value = document.createElement('label');
-    this.lb_tension_value.innerText = spec.tension[state.selectedPointIndex];    
+    this.lb_tension_value.innerText = 0;    
     
     const row = this.tbody.insertRow(this.tbody.rows.length);
 
@@ -104,7 +139,7 @@ function SplinePanel(parentElementName, spec, state) {
     cell1.appendChild(lb_tension_name);
     cell1.style.border = "1px solid black";
     cell1.style.width = "10%";
-    cell2.appendChild(sl_tension);
+    cell2.appendChild(this.sl_tension);
     cell2.style.border = "1px solid black";
     cell2.style.width = "90%";
     cell3.appendChild(this.lb_tension_value);
@@ -113,19 +148,19 @@ function SplinePanel(parentElementName, spec, state) {
   }
 
   this.createSpecBias = function() {
-    const sl_bias = document.createElement('input');
-    sl_bias.type = "range";
-    sl_bias.min = -1;
-    sl_bias.max = 1;
-    sl_bias.step = 0.01;
-    sl_bias.value = spec.bias;
-    sl_bias.addEventListener('input', this.biasSliderChangeEventListener.bind(this), false);
+    this.sl_bias = document.createElement('input');
+    this.sl_bias.type = "range";
+    this.sl_bias.min = -1;
+    this.sl_bias.max = 1;
+    this.sl_bias.step = 0.01;
+    this.sl_bias.value = 0;
+    this.sl_bias.addEventListener('input', this.biasSliderChangeEventListener.bind(this), false);
 
     const lb_bias_name = document.createElement('label');
     lb_bias_name.innerText = 'Bias';
 
     this.lb_bias_value = document.createElement('label');
-    this.lb_bias_value.innerText = spec.bias[state.selectedPointIndex];    
+    this.lb_bias_value.innerText = 0;    
     
     const row = this.tbody.insertRow(this.tbody.rows.length);
 
@@ -136,7 +171,7 @@ function SplinePanel(parentElementName, spec, state) {
     cell1.appendChild(lb_bias_name);
     cell1.style.border = "1px solid black";
     cell1.style.width = "10%";
-    cell2.appendChild(sl_bias);
+    cell2.appendChild(this.sl_bias);
     cell2.style.border = "1px solid black";
     cell2.style.width = "90%";
     cell3.appendChild(this.lb_bias_value);
@@ -145,19 +180,19 @@ function SplinePanel(parentElementName, spec, state) {
   }
 
   this.createSpecContinuity = function() {
-    const sl_continuity = document.createElement('input');
-    sl_continuity.type = "range";
-    sl_continuity.min = -1;
-    sl_continuity.max = 1;
-    sl_continuity.step = 0.01;
-    sl_continuity.value = spec.continuity;
-    sl_continuity.addEventListener('input', this.continuitySliderChangeEventListener.bind(this), false);
+    this.sl_continuity = document.createElement('input');
+    this.sl_continuity.type = "range";
+    this.sl_continuity.min = -1;
+    this.sl_continuity.max = 1;
+    this.sl_continuity.step = 0.01;
+    this.sl_continuity.value = 0;
+    this.sl_continuity.addEventListener('input', this.continuitySliderChangeEventListener.bind(this), false);
 
     const lb_continuity_name = document.createElement('label');
     lb_continuity_name.innerText = 'Continuity';
 
     this.lb_continuity_value = document.createElement('label');
-    this.lb_continuity_value.innerText = spec.continuity[state.selectedPointIndex];    
+    this.lb_continuity_value.innerText = 0;    
     
     const row = this.tbody.insertRow(this.tbody.rows.length);
 
@@ -168,15 +203,53 @@ function SplinePanel(parentElementName, spec, state) {
     cell1.appendChild(lb_continuity_name);
     cell1.style.border = "1px solid black";
     cell1.style.width = "10%";
-    cell2.appendChild(sl_continuity);
+    cell2.appendChild(this.sl_continuity);
     cell2.style.border = "1px solid black";
     cell2.style.width = "90%";
     cell3.appendChild(this.lb_continuity_value);
     cell3.style.border = "1px solid black";
     cell3.style.width = "10%";
-  }  
+  }
+
+  this.createSpecResolution = function() {
+    this.sl_resolution = document.createElement('input');
+    this.sl_resolution.type = "range";
+    this.sl_resolution.min = 2;
+    this.sl_resolution.max = 50;
+    this.sl_resolution.step = 1;
+    this.sl_resolution.value = 32;
+    this.sl_resolution.addEventListener('input', this.resolutionSliderChangeEventListener.bind(this), false);
+
+    const lb_resolution_name = document.createElement('label');
+    lb_resolution_name.innerText = 'Resolution';
+
+    this.lb_resolution_value = document.createElement('label');
+    this.lb_resolution_value.innerText = 32;    
+    
+    const row = this.tbody.insertRow(this.tbody.rows.length);
+
+    const cell1 = row.insertCell(0);
+    const cell2 = row.insertCell(1); 
+    const cell3 = row.insertCell(2); 
+
+    cell1.appendChild(lb_resolution_name);
+    cell1.style.border = "1px solid black";
+    cell1.style.width = "10%";
+    cell2.appendChild(this.sl_resolution);
+    cell2.style.border = "1px solid black";
+    cell2.style.width = "90%";
+    cell3.appendChild(this.lb_resolution_value);
+    cell3.style.border = "1px solid black";
+    cell3.style.width = "10%";
+  }
+
+
+
+
+  // event
 
   this.closeCheckBoxChangeEventListener = function(event) {
+    console.log(event.target.checked);
     this.lb_close_value.innerText = event.target.checked;
     this.closeCheckBoxEventListener(event.target.checked);
   }
@@ -210,7 +283,18 @@ function SplinePanel(parentElementName, spec, state) {
 
   this.setContinuitySliderEventListener = function(eventListener) {
     this.continuitySliderEventListener = eventListener;
-  } 
+  }
+
+  this.resolutionSliderChangeEventListener = function(event) {
+    this.lb_resolution_value.innerText = event.target.value;
+    this.resolutionSliderEventListener(parseFloat(event.target.value));
+  }
+
+  this.setResolutionSliderEventListener = function(eventListener) {
+    this.resolutionSliderEventListener = eventListener;
+  }
+
+  
 
   this.create();
 }

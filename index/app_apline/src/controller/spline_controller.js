@@ -20,13 +20,14 @@ function SplineController(app) {
     this.splinePanel.setTensionSliderEventListener(this.tensionSliderEventListener.bind(this));
     this.splinePanel.setBiasSliderEventListener(this.biasSliderEventListener.bind(this));
     this.splinePanel.setContinuitySliderEventListener(this.continuitySliderEventListener.bind(this));
+    this.splinePanel.setResolutionSliderEventListener(this.resolutionSliderEventListener.bind(this));
   }
 
   this.setSplines = function(splines) {
     this.splines = splines;
   }
 
-  this.start = function() {    
+  this.drawSpline = function() {    
 
     if(!this.splines || !this.splineScreen || !this.splinePanel) {
       return;
@@ -60,6 +61,13 @@ function SplineController(app) {
 
   this.continuitySliderEventListener = function(value) {
     app.spline.spec.continuity[app.spline.state.selectedPointIndex] = value;
+    
+    this.splines.build();
+    this.splineScreen.draw(app.spline.input.data, app.spline.output, app.spline.visual);
+  }
+
+  this.resolutionSliderEventListener = function(value) {
+    app.spline.spec.resolution = value;
     
     this.splines.build();
     this.splineScreen.draw(app.spline.input.data, app.spline.output, app.spline.visual);

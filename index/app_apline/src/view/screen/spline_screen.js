@@ -1,4 +1,4 @@
-function SplineScreen(parentElementName) {
+function SplineScreen() {
 
   this.canvas = null;
   this.ctx = null;
@@ -86,7 +86,6 @@ function SplineScreen(parentElementName) {
   }
 
   this.create = function() {
-    const body = document.getElementById(parentElementName);
     this.canvas = document.createElement('canvas');
     this.canvas.width = this.width;
     this.canvas.height = this.height;
@@ -98,7 +97,7 @@ function SplineScreen(parentElementName) {
       this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this), false);
     }
 
-    body.appendChild(this.canvas);
+    document.body.appendChild(this.canvas);
   }
 
   this.create();

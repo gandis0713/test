@@ -2,7 +2,6 @@
 <html>
   <meta charset="UTF-8">
   <title>Splines</title>
-
   <script src="src/model/spline/splines.js"></script>
   <script src="src/model/spline/kochanek_bartels.js"></script>
   <script src="src/model/spline/natural_cubic.js"></script>
@@ -13,25 +12,11 @@
   <script>
     function onLoad(){
 
-      const app = new App('app');
+      const app = new App();
       app.start();
       
     }
-    function handleClick(cb) {
-      console.log(cb.checked);
-      app.spline.spec.close = cb.checked;
-      // splineView.draw();
-    }
-    function handleChange(range) {
-      console.log(range);
-      app.spline.spec.tension[1] = range.value;
-      // splineView.draw();
-    }
   </script>
-  <body id="app" onload="onLoad()">
-    <!-- <div>
-      <label><input type="checkbox" name="color" value="blue" onclick="handleClick(this)" checked> Close </label>
-      <label><input class="range" type="range" min="-1" max="1" value="0" class="slider" step="0.1" oninput="handleChange(this)"> tension </label>  
-    </div> -->
+  <body onload="onLoad()">
   </body>
 </html>
