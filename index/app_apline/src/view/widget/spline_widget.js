@@ -1,4 +1,4 @@
-function SplineView(viewName, splines) {
+function SplineWidget(viewName, splines) {
 
   this.canvas = null;
   this.ctx = null;

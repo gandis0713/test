@@ -2,25 +2,41 @@
 <html>
   <meta charset="UTF-8">
   <title>Splines</title>
-  <script src="src/app.js"></script>
-  <script src="src/splines/splines.js"></script>
-  <script src="src/splines/kochanek_bartels.js"></script>
-  <script src="src/splines/natural_cubic.js"></script>
-  <script src="src/views/spline_view.js"></script>
+  <head>
+    <link rel="stylesheet" type="text/css" href="index.css">
+  </head>
+  <script src="src/controller/spline_controller.js"></script>
+  <script src="src/model/spline/splines.js"></script>
+  <script src="src/model/spline/kochanek_bartels.js"></script>
+  <script src="src/model/spline/natural_cubic.js"></script>
+  <script src="src/view/widget/spline_widget.js"></script>
   <script>
     var splineView = null;
     var splines = null;
     function onLoad(){
 
-      splineView = new SplineView("splines", splines);
+      splineView = new SplineWidget("splines", splines);
       splineView.draw();
 
     }
-  </script>  
-  <style type="text/css">
-    canvas { border: 1px solid black; }
-  </style>
+    function handleClick(cb) {
+      console.log(cb.checked);
+      app.spline.spec.close = cb.checked;
+      splineView.draw();
+    }
+    function handleChange(range) {
+      console.log(range);
+      app.spline.spec.tension[1] = range.value;
+      splineView.draw();
+    }
+  </script>
   <body onload="onLoad()">
-    <canvas id="splines" width="960" height="720"></canvas>
-  </body>
+    <div>
+      <canvas id="splines" width="600" height="600"></canvas>
+    </div>
+    <div>
+      <label><input type="checkbox" name="color" value="blue" onclick="handleClick(this)" checked> Close </label>
+      <label><input class="range" type="range" min="-1" max="1" value="0" class="slider" step="0.1" oninput="handleChange(this)"> tension </label>  
+    </div>
+</body>
 </html>

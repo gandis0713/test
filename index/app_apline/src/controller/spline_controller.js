@@ -5,7 +5,7 @@ var app = {
       output: [[[]]]
     },
     spec: {
-      close: false,
+      close: true,
       resolution: 32,
       intervals: [0, 0.25, 0.5, 0.75, 1],
     

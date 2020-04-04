@@ -39,10 +39,10 @@ function NaturalCubicSpline1D(input, output, spec) {
     
     for(let i = 1; i < N - 1; i++)
     {
-      mcC[i] = 1.0 / ( 4.0 - mcC[ i - 1 ] );
+      mcC[i] = 1.0 / ( 4.0 );
     }
     
-    mcC[N - 1] = 1.0 / ( b1 - mcC[N - 2] );
+    mcC[N - 1] = 1.0 / ( b1 );
     
     mcD[0] = 3.0 * ( input[1] - input[0] ) * mcC[0];
     
