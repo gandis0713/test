@@ -1,7 +1,10 @@
-function SplineWidget(viewName, splines) {
+function SplineScreen(parentElementName, splines) {
 
   this.canvas = null;
   this.ctx = null;
+
+  this.width = 600;
+  this.height = 600;
 
   this.pointFillSize = 7;
   this.pointStrokeSize = 2;
@@ -95,8 +98,11 @@ function SplineWidget(viewName, splines) {
     }
   }
 
-  this.createView = function() {
-    this.canvas = document.getElementById(viewName);
+  this.create = function() {
+    const body = document.getElementById(parentElementName);
+    this.canvas = document.createElement('canvas');
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
     if (this.canvas.getContext){
       this.ctx = this.canvas.getContext('2d');
       
@@ -104,8 +110,10 @@ function SplineWidget(viewName, splines) {
       this.canvas.addEventListener('mousedown', this.onMouseDown.bind(this), false);
       this.canvas.addEventListener('mouseup', this.onMouseUp.bind(this), false);
     }
+
+    body.appendChild(this.canvas);
   }
 
-  this.createView();
+  this.create();
 
 }
