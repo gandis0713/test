@@ -1,16 +1,21 @@
-function KochanekSpline2D(input, output, spec ) {
+function KochanekSpline2D() {
 
-  this.spline = [new KochanekSpline1D(input[0], output[0], spec), new KochanekSpline1D(input[1], output[1], spec)];
+  this.spline = [];
+
+  this.create = function(input, spec, output) {
+    output[0] = [];
+    output[1] = [];
+    this.spline[0] = new KochanekSpline1D(input.data[0], spec, output[0]);
+    this.spline[1] = new KochanekSpline1D(input.data[1], spec, output[1]);
+  }
 
   this.build = function() {
-    const N = this.spline.length;
-    for(let i = 0; i < N; i++) {
-      this.spline[i].build();
-    }
+    this.spline[0].build();
+    this.spline[1].build();
   }
 }
 
-function KochanekSpline1D(input, output, spec) {
+function KochanekSpline1D(input, spec, output) {
 
   this.coeffiA = [];
   this.coeffiB = [];
@@ -28,6 +33,8 @@ function KochanekSpline1D(input, output, spec) {
     this.coeffiB = [];
     this.coeffiC = [];
     this.coeffiD = [];
+
+    output.length = 0;
     
     let pre;
     let cur;

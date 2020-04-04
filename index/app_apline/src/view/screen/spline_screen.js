@@ -1,13 +1,10 @@
-function SplineScreen(parentElementName, splines) {
+function SplineScreen(parentElementName) {
 
   this.canvas = null;
   this.ctx = null;
 
   this.width = 600;
   this.height = 600;
-
-  this.pointFillSize = 7;
-  this.pointStrokeSize = 2;
 
   this.mouseMoveEventListener = null;
   this.mouseDownEventListener = null;
@@ -23,23 +20,7 @@ function SplineScreen(parentElementName, splines) {
     return pos;
   }
 
-  this.IsCollision = function(points, pos) {
-    for(let i = 0; i < points[0].length; i++) {
-      const dist = Math.sqrt(Math.pow(points[0][i] - pos[0], 2) + Math.pow(points[1][i] - pos[1], 2));
-      if(dist < ((this.pointFillSize + (this.pointStrokeSize / 2)) * 1.3)) 
-        return i;
-    }
-    return -1;
-  }
-
   this.onMouseMove = function(event) {
-    // if(app.state.isDragging) {
-    //   const pos = this.GetMousePos(event);
-    //   app.spline.data.input[0][app.state.selectedIndex] = pos[0];
-    //   app.spline.data.input[1][app.state.selectedIndex] = pos[1];
-      
-    //   this.draw();
-    // }
     if(this.mouseMoveEventListener === null) {
       return;
     }
@@ -48,11 +29,6 @@ function SplineScreen(parentElementName, splines) {
   }
 
   this.onMouseDown = function(event) {
-    // const index = this.IsCollision(app.spline.data.input, this.GetMousePos(event));
-    // if(index >= 0) {
-    //   app.state.selectedIndex = index;
-    //   app.state.isDragging = true;    
-    // }
     if(this.mouseDownEventListener === null) {
       return;
     }
@@ -61,7 +37,6 @@ function SplineScreen(parentElementName, splines) {
   }
 
   this.onMouseUp = function(event) {
-    // app.state.isDragging = false;
     if(this.mouseUpEventListener === null) {
       return;
     }
@@ -79,35 +54,18 @@ function SplineScreen(parentElementName, splines) {
     this.mouseUpEventListener = eventListener;
   }
 
-  this.draw = function() {
-
-    const numberOfSpline = 2;
-    const dimensionOfSpline = 2;
-    app.spline.output = new Array();
-
-
-    for(let i = 0; i < numberOfSpline; i++) {
-      app.spline.output[i] = new Array();
-      for(let j = 0; j < dimensionOfSpline; j++) {
-        app.spline.output[i][j] = new Array();
-      }
-    }
-    
-    splines = new Splines();
-    splines.setSpline(0, new NaturalCubicSpline2D(app.spline.data.input, app.spline.output[0], app.spline.spec));
-    splines.setSpline(1, new KochanekSpline2D(app.spline.data.input, app.spline.output[1], app.spline.spec));
-
-    this.ctx.fillStyle   = "#000000";
+  this.draw = function(points, splines, visual) {  
+    this.ctx.fillStyle = "#000000";
     this.ctx.fillRect(0, 0, 600, 600);
     
-    for(let i = 0; i < numberOfSpline; i++) {
+    for(let i = 0; i < splines.data[0].length; i++) {
       
       this.ctx.beginPath();
       this.ctx.lineWidth = 2;
-      for(let j = 0; j < app.spline.output[0][0].length; j++) {
+      for(let j = 0; j < splines.data[0][0].length; j++) {
         
-        const x = app.spline.output[i][0][j];
-        const y = app.spline.output[i][1][j];
+        const x = splines.data[i][0][j];
+        const y = splines.data[i][1][j];
 
         this.ctx.lineTo(x, y);
       }
@@ -115,13 +73,13 @@ function SplineScreen(parentElementName, splines) {
       this.ctx.stroke();
     }
 
-    for(let i = 0; i < app.spline.data.input[0].length; i++) {
+    for(let i = 0; i < points[0].length; i++) {
       this.ctx.beginPath();
-      this.ctx.arc(app.spline.data.input[0][i], app.spline.data.input[1][i], this.pointFillSize, 0, 2 * Math.PI);
+      this.ctx.arc(points[0][i], points[1][i], visual.pointSize, 0, 2 * Math.PI);
       
       this.ctx.fillStyle = '#FF8888';
       this.ctx.fill();
-      this.ctx.lineWidth = this.pointStrokeSize;
+      this.ctx.lineWidth = visual.pointStroke;
       this.ctx.strokeStyle = '#888888';
       this.ctx.stroke();
     }

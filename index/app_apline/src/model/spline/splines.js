@@ -1,20 +1,19 @@
-function Splines() {
+function Splines(spline) {
 
-  this.splines = new Map();
+  this.splines = [];
+  spline.output.data = [];
   
-  this.setSpline = function(type, spline) {
-    this.splines.set(type, spline);
-    this.build(type);
-  }
-  this.build = function(type) {
-    this.splines.get(type).build();
+  this.create = function(type, splineObject) {
+    spline.output.data[type] = [];
+
+    splineObject.create(spline.input, spline.spec, spline.output.data[type]);
+    splineObject.build();
+
+    this.splines[type] = splineObject;
   }
 
   this.build = function() {
-
-    this.splines.forEach(function(value, key) {
-      value.build();
-    });
-  }   
-
+    this.splines[0].build();
+    this.splines[1].build();
+  }
 }

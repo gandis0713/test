@@ -1,9 +1,0 @@
-:root {
-  --canvas-width: 600;
-  --canvas-height: 600;
-}
-
-
-canvas { border: 1px solid black; }
-label {position: absolute; left: var(--canvas-width + 20px)}
-.range {position: absolute; left: var(--canvas-width + 20px); top: 30px}
