@@ -56,7 +56,7 @@ function SplinePanel(parentElementName) {
     lb_close.style.height = '50%';
     lb_close.appendChild(this.closeCheckBox);
     lb_close.innerHTML += "close";
-    lb_close.addEventListener('change', this.clickCheckBox.bind(this), false);
+    lb_close.addEventListener('change', this.closeCheckBoxChangeEventListener.bind(this), false);
 
     div_spline_mode.appendChild(lb_spline_type);
     div_spline_mode.appendChild(lb_close);
@@ -68,18 +68,18 @@ function SplinePanel(parentElementName) {
 
   }  
 
-  this.clickCheckBox = function(event) {
-    this.callbackCheckBox(event.target.checked);
+  this.closeCheckBoxChangeEventListener = function(event) {
+    this.closeCheckBoxEventListener(event.target.checked);
   }
 
-  this.addCheckBoxCallback = function(callback) {
-    this.callbackCheckBox = callback;
+  this.setCloseCheckBoxEventListener = function(eventListener) {
+    this.closeCheckBoxEventListener = eventListener;
   }  
   
   this.parent = null;
   this.body = null;
 
-  this.callbackCheckBox = null;
+  this.closeCheckBoxEventListener = null;
   this.closeCheckBox = null;
 
   this.create();

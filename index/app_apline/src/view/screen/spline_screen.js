@@ -9,6 +9,10 @@ function SplineScreen(parentElementName, splines) {
   this.pointFillSize = 7;
   this.pointStrokeSize = 2;
 
+  this.mouseMoveEventListener = null;
+  this.mouseDownEventListener = null;
+  this.mouseUpEventListener = null;
+
   this.GetMousePos = function(event) {
     var rect = event.target.getBoundingClientRect();
     var pos =
@@ -29,25 +33,50 @@ function SplineScreen(parentElementName, splines) {
   }
 
   this.onMouseMove = function(event) {
-    if(app.state.isDragging) {
-      const pos = this.GetMousePos(event);
-      app.spline.data.input[0][app.state.selectedIndex] = pos[0];
-      app.spline.data.input[1][app.state.selectedIndex] = pos[1];
+    // if(app.state.isDragging) {
+    //   const pos = this.GetMousePos(event);
+    //   app.spline.data.input[0][app.state.selectedIndex] = pos[0];
+    //   app.spline.data.input[1][app.state.selectedIndex] = pos[1];
       
-      this.draw();
+    //   this.draw();
+    // }
+    if(this.mouseMoveEventListener === null) {
+      return;
     }
+    const pos = this.GetMousePos(event);
+    this.mouseMoveEventListener(pos)
   }
 
   this.onMouseDown = function(event) {
-    const index = this.IsCollision(app.spline.data.input, this.GetMousePos(event));
-    if(index >= 0) {
-      app.state.selectedIndex = index;
-      app.state.isDragging = true;    
+    // const index = this.IsCollision(app.spline.data.input, this.GetMousePos(event));
+    // if(index >= 0) {
+    //   app.state.selectedIndex = index;
+    //   app.state.isDragging = true;    
+    // }
+    if(this.mouseDownEventListener === null) {
+      return;
     }
+    const pos = this.GetMousePos(event);
+    this.mouseDownEventListener(pos)
   }
 
   this.onMouseUp = function(event) {
-    app.state.isDragging = false;
+    // app.state.isDragging = false;
+    if(this.mouseUpEventListener === null) {
+      return;
+    }
+    const pos = this.GetMousePos(event);
+    this.mouseUpEventListener(pos)
+  }
+
+  this.setMouseMoveEventListener = function(eventListener) {
+    this.mouseMoveEventListener = eventListener;
+  }
+  this.setMouseDownEventListener = function(eventListener) {
+    this.mouseDownEventListener = eventListener;
+  }
+  this.setMouseUpEventListener = function(eventListener) {
+    this.mouseUpEventListener = eventListener;
   }
 
   this.draw = function() {
@@ -69,7 +98,7 @@ function SplineScreen(parentElementName, splines) {
     splines.setSpline(1, new KochanekSpline2D(app.spline.data.input, app.spline.output[1], app.spline.spec));
 
     this.ctx.fillStyle   = "#000000";
-    this.ctx.fillRect(0, 0, 960, 720);
+    this.ctx.fillRect(0, 0, 600, 600);
     
     for(let i = 0; i < numberOfSpline; i++) {
       
