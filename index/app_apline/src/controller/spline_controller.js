@@ -8,6 +8,9 @@ function SplineController(spline) {
   // model
   this.splines = null;
 
+  // event variable
+  this.isDragging = false;
+
   // init
   this.setScreen = function(screen) {
     this.splineScreen = screen;
@@ -98,7 +101,7 @@ function SplineController(spline) {
   }
 
   this.mouseMoveEventListener = function(pos) {
-    if(spline.state.isDragging) {
+    if(this.isDragging) {
       spline.input.data[0][spline.state.selectedPointIndex] = pos[0];
       spline.input.data[1][spline.state.selectedPointIndex] = pos[1];
 
@@ -111,7 +114,7 @@ function SplineController(spline) {
     if(indexPoint >= 0) {
       spline.state.selectedPointIndex = indexPoint;
       spline.state.selectedLineIndex = -1;
-      spline.state.isDragging = true;
+      this.isDragging = true;
       
       this.splinePanel.setTension(spline.spec.tension[spline.state.selectedPointIndex]);
       this.splinePanel.setBias(spline.spec.bias[spline.state.selectedPointIndex]);
@@ -135,7 +138,7 @@ function SplineController(spline) {
   }
 
   this.mouseUpEventListener = function(pos) {
-    spline.state.isDragging = false;
+    this.isDragging = false;
     this.drawSpline();
   }
 

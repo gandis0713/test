@@ -73,10 +73,10 @@ function SplinePanel() {
     this.body.style.position = "absolute";
     this.body.style.left = 600 + 'px';
     this.body.style.top = 0 + 'px';
-    this.body.style.width = 300 + 'px';
+    this.body.style.width = 400 + 'px';
     this.body.style.height = 600 + 'px';
     this.body.style.border = "1px solid black" 
-    this.body.style.marginLeft = 20 + 'px';
+    this.body.style.marginLeft = 15 + 'px';
     this.body.style.marginTop = 10 + 'px';
 
 
@@ -140,13 +140,13 @@ function SplinePanel() {
     const cell3 = row.insertCell(2);   
     cell1.appendChild(lb_close_name);
     cell1.style.border = "1px solid black";
-    cell1.style.width = "10%";
+    cell1.style.width = "25%";
     cell2.appendChild(this.cb_spec_close);
     cell2.style.border = "1px solid black";
-    cell2.style.width = "90%";
+    cell2.style.width = "50%";
     cell3.appendChild(this.lb_close_value);
     cell3.style.border = "1px solid black";
-    cell3.style.width = "10%";
+    cell3.style.width = "25%";
 
   }
 
@@ -173,13 +173,13 @@ function SplinePanel() {
 
     cell1.appendChild(lb_tension_name);
     cell1.style.border = "1px solid black";
-    cell1.style.width = "10%";
+    cell1.style.width = "25%";
     cell2.appendChild(this.sl_tension);
     cell2.style.border = "1px solid black";
-    cell2.style.width = "90%";
+    cell2.style.width = "50%";
     cell3.appendChild(this.lb_tension_value);
     cell3.style.border = "1px solid black";
-    cell3.style.width = "10%";
+    cell3.style.width = "25%";
   }
 
   this.createSpecBias = function() {
@@ -205,13 +205,13 @@ function SplinePanel() {
 
     cell1.appendChild(lb_bias_name);
     cell1.style.border = "1px solid black";
-    cell1.style.width = "10%";
+    cell1.style.width = "25%";
     cell2.appendChild(this.sl_bias);
     cell2.style.border = "1px solid black";
-    cell2.style.width = "90%";
+    cell2.style.width = "50%";
     cell3.appendChild(this.lb_bias_value);
     cell3.style.border = "1px solid black";
-    cell3.style.width = "10%";
+    cell3.style.width = "25%";
   }
 
   this.createSpecContinuity = function() {
@@ -237,13 +237,13 @@ function SplinePanel() {
 
     cell1.appendChild(lb_continuity_name);
     cell1.style.border = "1px solid black";
-    cell1.style.width = "10%";
+    cell1.style.width = "25%";
     cell2.appendChild(this.sl_continuity);
     cell2.style.border = "1px solid black";
-    cell2.style.width = "90%";
+    cell2.style.width = "50%";
     cell3.appendChild(this.lb_continuity_value);
     cell3.style.border = "1px solid black";
-    cell3.style.width = "10%";
+    cell3.style.width = "25%";
   }
 
   this.createSpecResolution = function() {
@@ -269,13 +269,13 @@ function SplinePanel() {
 
     cell1.appendChild(lb_resolution_name);
     cell1.style.border = "1px solid black";
-    cell1.style.width = "10%";
+    cell1.style.width = "25%";
     cell2.appendChild(this.sl_resolution);
     cell2.style.border = "1px solid black";
-    cell2.style.width = "90%";
+    cell2.style.width = "50%";
     cell3.appendChild(this.lb_resolution_value);
     cell3.style.border = "1px solid black";
-    cell3.style.width = "10%";
+    cell3.style.width = "25%";
   }
 
 
