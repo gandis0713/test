@@ -65,24 +65,35 @@ function SplineScreen() {
         continue;
       }
 
-      this.ctx.beginPath();
-      this.ctx.lineWidth = 2;
       for(let j = 0; j < spline.output.data[0][0].length; j++) {
         
-        const x = spline.output.data[i][0][j];
-        const y = spline.output.data[i][1][j];
+        this.ctx.beginPath();
+        this.ctx.lineWidth = 2;
+        for(let k = 0; k < spline.output.data[0][0][j].length; k++) {
+          const x = spline.output.data[i][0][j][k];
+          const y = spline.output.data[i][1][j][k];
+          this.ctx.lineTo(x, y);
+        }        
 
-        this.ctx.lineTo(x, y);
+        if(spline.state.selectedLineIndex === j) {
+          this.ctx.strokeStyle = spline.visual.color[i][2];
+        }
+        else {
+          this.ctx.strokeStyle = spline.visual.color[i][0];
+        }
+
+        this.ctx.stroke();
       }
-      this.ctx.strokeStyle = spline.visual.color[i];
-      this.ctx.stroke();
+
+
+
     }
 
     for(let i = 0; i < spline.input.data[0].length; i++) {
       this.ctx.beginPath();
       this.ctx.arc(spline.input.data[0][i], spline.input.data[1][i], spline.visual.pointSize, 0, 2 * Math.PI);
-      
-      this.ctx.fillStyle = '#FF8888';
+
+      this.ctx.fillStyle = spline.state.selectedPointIndex === i ? '#ffffff' : '#00ff00';
       this.ctx.fill();
       this.ctx.lineWidth = spline.visual.pointStroke;
       this.ctx.strokeStyle = '#888888';

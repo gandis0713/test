@@ -47,51 +47,44 @@ function SplineController(spline) {
   this.closeCheckBoxEventListener = function(checked) { 
     spline.spec.close = checked;
     
-    this.splines.build();
-    this.splineScreen.draw(spline);  
+    this.drawSpline(); 
   }
 
   this.tensionSliderEventListener = function(value) {
     spline.spec.tension[spline.state.selectedPointIndex] = value;
     
-    this.splines.build();
-    this.splineScreen.draw(spline);
+    this.drawSpline();
   }
 
   this.biasSliderEventListener = function(value) { 
     spline.spec.bias[spline.state.selectedPointIndex] = value;
     
-    this.splines.build();
-    this.splineScreen.draw(spline);
+    this.drawSpline();
   }
 
   this.continuitySliderEventListener = function(value) {
     spline.spec.continuity[spline.state.selectedPointIndex] = value;
     
-    this.splines.build();
-    this.splineScreen.draw(spline);
+    this.drawSpline();
   }
 
   this.resolutionSliderEventListener = function(value) {
     spline.spec.resolution = value;
     
-    this.splines.build();
-    this.splineScreen.draw(spline);
+    this.drawSpline();
   }
 
     // Type
   this.naturalCheckBoxEventListener = function(checked) { 
     spline.visual.show[0] = checked;
     
-    this.splines.build();
-    this.splineScreen.draw(spline);  
+    this.drawSpline();
   }
 
   this.kochanekCheckBoxEventListener = function(checked) { 
     spline.visual.show[1] = checked;
     
-    this.splines.build();
-    this.splineScreen.draw(spline);  
+    this.drawSpline();
   }
 
   this.mouseMoveEventListener = function(pos) {
@@ -99,30 +92,61 @@ function SplineController(spline) {
       spline.input.data[0][spline.state.selectedPointIndex] = pos[0];
       spline.input.data[1][spline.state.selectedPointIndex] = pos[1];
 
-      this.splines.build();
-      
-      this.splineScreen.draw(spline);
+      this.drawSpline();
     }
   }
 
   this.mouseDownEventListener = function(pos) {
-    const index = this.IsCollision(spline.input.data, pos);
-    if(index >= 0) {
-      spline.state.selectedPointIndex = index;
+    const indexPoint = this.IsCollisionPoints(spline.input.data, pos);
+    if(indexPoint >= 0) {
+      spline.state.selectedPointIndex = indexPoint;
+      spline.state.selectedLineIndex = -1;
       spline.state.isDragging = true;
+      this.drawSpline();
+      return;
     }
+
+    const indexLine = this.IsCollisionLines(spline.output.data, pos);
+    if(indexLine >= 0) {
+      spline.state.selectedLineIndex = indexLine;
+      spline.state.selectedPointIndex = -1;
+      this.drawSpline();
+      return;
+    }
+    
+    spline.state.selectedPointIndex = -1;
+    spline.state.selectedLineIndex = -1;
+    
+    this.drawSpline();
   }
 
   this.mouseUpEventListener = function(pos) {
     spline.state.isDragging = false;
+    this.drawSpline();
   }
 
   // logic
-  this.IsCollision = function(points, pos) {
+  this.IsCollisionPoints = function(points, pos) {
     for(let i = 0; i < points[0].length; i++) {
       const dist = Math.sqrt(Math.pow(points[0][i] - pos[0], 2) + Math.pow(points[1][i] - pos[1], 2));
       if(dist < ((spline.visual.pointSize + (spline.visual.pointStroke / 2)) * 1.3)) 
         return i;
+    }
+    return -1;
+  }
+
+  this.IsCollisionLines = function(lines, pos) {
+    for(let i = 0; i < lines.length; i++) {
+      for(let j = 0; j < lines[i].length; j++) {
+        for(let k = 0; k < lines[i][0].length; k++) {
+          for(let l = 0; l < lines[i][0][k].length; l++) {
+            const dist = Math.sqrt(Math.pow(lines[i][0][k][l] - pos[0], 2) + Math.pow(lines[i][1][k][l] - pos[1], 2));
+            if(dist < 5) {            
+              return k;
+            }
+          }
+        }
+      }
     }
     return -1;
   }

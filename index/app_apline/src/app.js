@@ -22,14 +22,14 @@ function App() {
       },
       state: {
         isDragging: false,
-        selectedPointIndex: 1,
-        selectedLineIndex: 1
+        selectedPointIndex: -1,
+        selectedLineIndex: -1
       },
       visual: {
         pointSize: 7,
         pointStroke: 2,
         show: [true, true],
-        color: ['#0000ff', '#ff0000']
+        color: [['#0000ff', '#0055ff', '#0099ff'], ['#ff0000', '#ff5500', '#ff9900']]
       }
     }
   }
@@ -56,8 +56,8 @@ function App() {
     splinePanel.setContinuity(app.spline.spec.continuity[app.spline.state.selectedPointIndex]);
     splinePanel.setResolution(app.spline.spec.resolution);
 
-    splinePanel.setNatural(app.spline.visual.color[0], app.spline.visual.show[0]);
-    splinePanel.setKochanek(app.spline.visual.color[1], app.spline.visual.show[1]);
+    splinePanel.setNatural(app.spline.visual.color[0][0], app.spline.visual.show[0]);
+    splinePanel.setKochanek(app.spline.visual.color[1][0], app.spline.visual.show[1]);
 
     splineController.setPanel(splinePanel);
 

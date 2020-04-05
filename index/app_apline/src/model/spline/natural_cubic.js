@@ -7,7 +7,6 @@ function NaturalCubicSpline2D() {
     output[1] = [];
     this.spline[0] = new NaturalCubicSpline1D(input.data[0], spec, output[0]);
     this.spline[1] = new NaturalCubicSpline1D(input.data[1], spec, output[1]);
-
   }
 
   this.build = function() {
@@ -30,9 +29,10 @@ function NaturalCubicSpline1D(input, spec, output) {
     this.coeffiC = [];
     this.coeffiD = [];
     
-    output.length = 0;
-
     const N = input.length;
+    for(let i = 0; i < input.length; i++) {
+      output[i] = [];
+    }
 
     // set coefficiant
     
@@ -82,9 +82,9 @@ function NaturalCubicSpline1D(input, spec, output) {
       this.coeffiC.push(unD[N - 1]);
       this.coeffiD.push(input[N - 1]);
     }
-
+    
     // create spline.
-    const size = spec.close === false ? N : N + 1;
+    const size = spec.close === false ? N - 1 : N;
     for(let i = 0; i < size; i++) {
       for(let j = 0; j < spec.resolution; j++) {
 
@@ -93,7 +93,7 @@ function NaturalCubicSpline1D(input, spec, output) {
         const t3 = t1 * t2;
 
         const value = this.coeffiA[i] * t3 + this.coeffiB[i] * t2 + this.coeffiC[i] * t1 + this.coeffiD[i];
-        output[(i * spec.resolution) + j] = value;
+        output[i][j] = value;
       }
     }
   } 

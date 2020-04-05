@@ -13,7 +13,8 @@ function Splines(spline) {
   }
 
   this.build = function() {
-    this.splines[0].build();
-    this.splines[1].build();
+    for(let i = 0; i < this.splines.length; i++) {
+      this.splines[i].build();
+    }
   }
 }

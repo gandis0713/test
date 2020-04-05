@@ -32,9 +32,11 @@ function KochanekSpline1D(input, spec, output) {
     this.coeffiA = [];
     this.coeffiB = [];
     this.coeffiC = [];
-    this.coeffiD = [];
-
-    output.length = 0;
+    this.coeffiD = [];   
+    
+    for(let i = 0; i < input.length; i++) {
+      output[i] = [];
+    }
     
     let pre;
     let cur;
@@ -124,7 +126,7 @@ function KochanekSpline1D(input, spec, output) {
         const t3 = t1 * t2;
 
         const value = this.coeffiA[i] * t3 + this.coeffiB[i] * t2 + this.coeffiC[i] * t1 + this.coeffiD[i];
-        output[(i * spec.resolution) + j] = value;
+        output[i][j] = value;
       }
     }
   }
