@@ -18,6 +18,16 @@ function SplineController(spline) {
 
   this.setPanel = function(panel) {
     this.splinePanel = panel;
+    
+    this.splinePanel.setClose(spline.spec.close);
+    this.splinePanel.setTension(spline.spec.tension[spline.state.selectedPointIndex]);
+    this.splinePanel.setBias(spline.spec.bias[spline.state.selectedPointIndex]);
+    this.splinePanel.setContinuity(spline.spec.continuity[spline.state.selectedPointIndex]);
+    this.splinePanel.setResolution(spline.spec.resolution);
+
+    this.splinePanel.setNatural(spline.visual.color[0][0], spline.visual.show[0]);
+    this.splinePanel.setKochanek(spline.visual.color[1][0], spline.visual.show[1]);
+
     this.splinePanel.setCloseCheckBoxEventListener(this.closeCheckBoxEventListener.bind(this));
     this.splinePanel.setTensionSliderEventListener(this.tensionSliderEventListener.bind(this));
     this.splinePanel.setBiasSliderEventListener(this.biasSliderEventListener.bind(this));
@@ -102,6 +112,10 @@ function SplineController(spline) {
       spline.state.selectedPointIndex = indexPoint;
       spline.state.selectedLineIndex = -1;
       spline.state.isDragging = true;
+      
+      this.splinePanel.setTension(spline.spec.tension[spline.state.selectedPointIndex]);
+      this.splinePanel.setBias(spline.spec.bias[spline.state.selectedPointIndex]);
+      this.splinePanel.setContinuity(spline.spec.continuity[spline.state.selectedPointIndex]);
       this.drawSpline();
       return;
     }
@@ -137,13 +151,11 @@ function SplineController(spline) {
 
   this.IsCollisionLines = function(lines, pos) {
     for(let i = 0; i < lines.length; i++) {
-      for(let j = 0; j < lines[i].length; j++) {
-        for(let k = 0; k < lines[i][0].length; k++) {
-          for(let l = 0; l < lines[i][0][k].length; l++) {
-            const dist = Math.sqrt(Math.pow(lines[i][0][k][l] - pos[0], 2) + Math.pow(lines[i][1][k][l] - pos[1], 2));
-            if(dist < 5) {            
-              return k;
-            }
+      for(let j = 0; j < lines[i][0].length; j++) {
+        for(let k = 0; k < lines[i][0][j].length; k++) {
+          const dist = Math.sqrt(Math.pow(lines[i][0][j][k] - pos[0], 2) + Math.pow(lines[i][1][j][k] - pos[1], 2));
+          if(dist < 5) {            
+            return j;
           }
         }
       }
