@@ -1,4 +1,6 @@
-const splineType = [[0, '#ff0000', 'kochanek'], [1, '#0000ff', 'natural']];
+const splineType = [[0, 'Natural'], [1, 'Kochanek']];
+
+
 
 function App() {
 
@@ -21,12 +23,13 @@ function App() {
       state: {
         isDragging: false,
         selectedPointIndex: 1,
-        selectedLineIndex: 1,
-        show: [true, true]
+        selectedLineIndex: 1
       },
       visual: {
         pointSize: 7,
-        pointStroke: 2
+        pointStroke: 2,
+        show: [true, true],
+        color: ['#0000ff', '#ff0000']
       }
     }
   }
@@ -53,8 +56,8 @@ function App() {
     splinePanel.setContinuity(app.spline.spec.continuity[app.spline.state.selectedPointIndex]);
     splinePanel.setResolution(app.spline.spec.resolution);
 
-    splinePanel.setNatural(app.spline.state.show[0]);
-    splinePanel.setKochanek(app.spline.state.show[1]);
+    splinePanel.setNatural(app.spline.visual.color[0], app.spline.visual.show[0]);
+    splinePanel.setKochanek(app.spline.visual.color[1], app.spline.visual.show[1]);
 
     splineController.setPanel(splinePanel);
 

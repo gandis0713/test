@@ -60,7 +60,7 @@ function SplineScreen() {
     
     for(let i = 0; i < spline.output.data[0].length; i++) {
       
-      if(spline.state.show[i] === false)
+      if(spline.visual.show[i] === false)
       {
         continue;
       }
@@ -74,7 +74,7 @@ function SplineScreen() {
 
         this.ctx.lineTo(x, y);
       }
-      this.ctx.strokeStyle = splineType[i][1];
+      this.ctx.strokeStyle = spline.visual.color[i];
       this.ctx.stroke();
     }
 

@@ -81,14 +81,14 @@ function SplineController(spline) {
 
     // Type
   this.naturalCheckBoxEventListener = function(checked) { 
-    spline.state.show[0] = checked;
+    spline.visual.show[0] = checked;
     
     this.splines.build();
     this.splineScreen.draw(spline);  
   }
 
   this.kochanekCheckBoxEventListener = function(checked) { 
-    spline.state.show[1] = checked;
+    spline.visual.show[1] = checked;
     
     this.splines.build();
     this.splineScreen.draw(spline);  

@@ -20,6 +20,9 @@ function SplinePanel() {
   this.lb_continuity_value = null;
   this.lb_resolution_value = null;
 
+  this.lb_natural_name = null;
+  this.lb_kochanek_name = null;
+
   this.tableSpec = null;
   this.tableType = null;
   
@@ -52,11 +55,13 @@ function SplinePanel() {
     this.sl_resolution.value = value;
   }
 
-  this.setNatural = function(checked) {
+  this.setNatural = function(color, checked) {
+    this.lb_natural_name.style.color = color;
     this.cb_type_natural.checked = checked;
   }
 
-  this.setKochanek = function(checked) {
+  this.setKochanek = function(color, checked) {
+    this.lb_kochanek_name.style.color = color;
     this.cb_type_kochanek.checked = checked;
   }
 
@@ -313,8 +318,8 @@ function SplinePanel() {
   
   this.createTypeNatural = function() {
 
-    const lb_natural_name = document.createElement('label');
-    lb_natural_name.innerText = 'Natural';
+    this.lb_natural_name = document.createElement('label');
+    this.lb_natural_name.innerText = 'Natural';
 
     this.cb_type_natural = document.createElement('input');
     this.cb_type_natural.type = 'checkbox';
@@ -325,7 +330,7 @@ function SplinePanel() {
 
     const cell1 = row.insertCell(0);
     const cell2 = row.insertCell(1); 
-    cell1.appendChild(lb_natural_name);
+    cell1.appendChild(this.lb_natural_name);
     cell1.style.border = "1px solid black";
     cell1.style.width = "40%";
     cell2.appendChild(this.cb_type_natural);
@@ -336,8 +341,8 @@ function SplinePanel() {
 
   this.createTypeKochanek = function() {
 
-    const lb_kochanek_name = document.createElement('label');
-    lb_kochanek_name.innerText = 'kochanek';
+    this.lb_kochanek_name = document.createElement('label');
+    this.lb_kochanek_name.innerText = 'kochanek';
 
     this.cb_type_kochanek = document.createElement('input');
     this.cb_type_kochanek.type = 'checkbox';
@@ -348,7 +353,7 @@ function SplinePanel() {
 
     const cell1 = row.insertCell(0);
     const cell2 = row.insertCell(1); 
-    cell1.appendChild(lb_kochanek_name);
+    cell1.appendChild(this.lb_kochanek_name);
     cell1.style.border = "1px solid black";
     cell1.style.width = "40%";
     cell2.appendChild(this.cb_type_kochanek);
