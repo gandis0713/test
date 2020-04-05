@@ -54,18 +54,23 @@ function SplineScreen() {
     this.mouseUpEventListener = eventListener;
   }
 
-  this.draw = function(points, splines, visual) {  
+  this.draw = function(spline) {  
     this.ctx.fillStyle = "#000000";
     this.ctx.fillRect(0, 0, 600, 600);
     
-    for(let i = 0; i < splines.data[0].length; i++) {
+    for(let i = 0; i < spline.output.data[0].length; i++) {
       
+      if(spline.state.show[i] === false)
+      {
+        continue;
+      }
+
       this.ctx.beginPath();
       this.ctx.lineWidth = 2;
-      for(let j = 0; j < splines.data[0][0].length; j++) {
+      for(let j = 0; j < spline.output.data[0][0].length; j++) {
         
-        const x = splines.data[i][0][j];
-        const y = splines.data[i][1][j];
+        const x = spline.output.data[i][0][j];
+        const y = spline.output.data[i][1][j];
 
         this.ctx.lineTo(x, y);
       }
@@ -73,13 +78,13 @@ function SplineScreen() {
       this.ctx.stroke();
     }
 
-    for(let i = 0; i < points[0].length; i++) {
+    for(let i = 0; i < spline.input.data[0].length; i++) {
       this.ctx.beginPath();
-      this.ctx.arc(points[0][i], points[1][i], visual.pointSize, 0, 2 * Math.PI);
+      this.ctx.arc(spline.input.data[0][i], spline.input.data[1][i], spline.visual.pointSize, 0, 2 * Math.PI);
       
       this.ctx.fillStyle = '#FF8888';
       this.ctx.fill();
-      this.ctx.lineWidth = visual.pointStroke;
+      this.ctx.lineWidth = spline.visual.pointStroke;
       this.ctx.strokeStyle = '#888888';
       this.ctx.stroke();
     }

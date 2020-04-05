@@ -21,7 +21,8 @@ function App() {
       state: {
         isDragging: false,
         selectedPointIndex: 1,
-        selectedLineIndex: 1
+        selectedLineIndex: 1,
+        show: [true, true]
       },
       visual: {
         pointSize: 7,
@@ -51,6 +52,9 @@ function App() {
     splinePanel.setBias(app.spline.spec.bias[app.spline.state.selectedPointIndex]);
     splinePanel.setContinuity(app.spline.spec.continuity[app.spline.state.selectedPointIndex]);
     splinePanel.setResolution(app.spline.spec.resolution);
+
+    splinePanel.setNatural(app.spline.state.show[0]);
+    splinePanel.setKochanek(app.spline.state.show[1]);
 
     splineController.setPanel(splinePanel);
 

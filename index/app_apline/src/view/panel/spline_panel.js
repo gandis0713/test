@@ -2,7 +2,6 @@ function SplinePanel() {
 
   this.parent = null;
   this.body = null;
-  this.tbody = null;
 
   this.closeCheckBoxEventListener = null;
   this.tensionSliderEventListener = null;
@@ -20,6 +19,12 @@ function SplinePanel() {
   this.lb_bias_value = null;
   this.lb_continuity_value = null;
   this.lb_resolution_value = null;
+
+  this.tableSpec = null;
+  this.tableType = null;
+  
+  this.tbSpecBody = null;  
+  this.tbTypeBody = null;
 
   // set function
   this.setClose = function(checked) {
@@ -47,6 +52,14 @@ function SplinePanel() {
     this.sl_resolution.value = value;
   }
 
+  this.setNatural = function(checked) {
+    this.cb_type_natural.checked = checked;
+  }
+
+  this.setKochanek = function(checked) {
+    this.cb_type_kochanek.checked = checked;
+  }
+
   // UI
   this.create = function() {
     this.parent = document.body;
@@ -60,29 +73,47 @@ function SplinePanel() {
     this.body.style.border = "1px solid black" 
     this.body.style.marginLeft = 20 + 'px';
     this.body.style.marginTop = 10 + 'px';
+
+
+    this.createSpecification();
+    this.body.appendChild(this.tableSpec);
+
+    this.createType();
+    this.body.appendChild(this.tableType);
     
-    const table = document.createElement('table');
-    table.style.width = "100%";
-    table.style.borderCollapse  = "collapse";
+    this.parent.appendChild(this.body);
+  }
+
+
+
+  // Spec
+  
+  this.createSpecification = function(){
+    
+    this.tableSpec = document.createElement('table');
+    this.tableSpec.style.width = "100%";
+    this.tableSpec.style.borderCollapse  = "collapse";
+
     const thead = document.createElement('thead');
     const th = document.createElement('th');
     th.innerText = "Specifications";
     
-    this.tbody = document.createElement('tbody');
+    this.tbSpecBody = document.createElement('tbody');
+    this.tbSpecBody.align = 'center';
 
     thead.appendChild(th);
-    table.appendChild(thead);
-    table.appendChild(this.tbody);
-
-    this.body.appendChild(table);
-    this.parent.appendChild(this.body);
-
+    this.tableSpec.appendChild(thead);
+    this.tableSpec.appendChild(this.tbSpecBody);
+    
     this.createSpecClose();
     this.createSpecTension();
     this.createSpecBias();
     this.createSpecContinuity();
     this.createSpecResolution();
+
   }
+
+  
 
   this.createSpecClose = function() {
 
@@ -97,7 +128,7 @@ function SplinePanel() {
     this.lb_close_value = document.createElement('label');
     this.lb_close_value.innerText = false;
 
-    const row = this.tbody.insertRow(this.tbody.rows.length);
+    const row = this.tbSpecBody.insertRow(this.tbSpecBody.rows.length);
 
     const cell1 = row.insertCell(0);
     const cell2 = row.insertCell(1); 
@@ -129,7 +160,7 @@ function SplinePanel() {
     this.lb_tension_value = document.createElement('label');
     this.lb_tension_value.innerText = 0;    
     
-    const row = this.tbody.insertRow(this.tbody.rows.length);
+    const row = this.tbSpecBody.insertRow(this.tbSpecBody.rows.length);
 
     const cell1 = row.insertCell(0);
     const cell2 = row.insertCell(1); 
@@ -161,7 +192,7 @@ function SplinePanel() {
     this.lb_bias_value = document.createElement('label');
     this.lb_bias_value.innerText = 0;    
     
-    const row = this.tbody.insertRow(this.tbody.rows.length);
+    const row = this.tbSpecBody.insertRow(this.tbSpecBody.rows.length);
 
     const cell1 = row.insertCell(0);
     const cell2 = row.insertCell(1); 
@@ -193,7 +224,7 @@ function SplinePanel() {
     this.lb_continuity_value = document.createElement('label');
     this.lb_continuity_value.innerText = 0;    
     
-    const row = this.tbody.insertRow(this.tbody.rows.length);
+    const row = this.tbSpecBody.insertRow(this.tbSpecBody.rows.length);
 
     const cell1 = row.insertCell(0);
     const cell2 = row.insertCell(1); 
@@ -225,7 +256,7 @@ function SplinePanel() {
     this.lb_resolution_value = document.createElement('label');
     this.lb_resolution_value.innerText = 32;    
     
-    const row = this.tbody.insertRow(this.tbody.rows.length);
+    const row = this.tbSpecBody.insertRow(this.tbSpecBody.rows.length);
 
     const cell1 = row.insertCell(0);
     const cell2 = row.insertCell(1); 
@@ -245,10 +276,92 @@ function SplinePanel() {
 
 
 
-  // event
+  // Type
 
+  this.createType = function() {
+    
+    this.tableType = document.createElement('table');
+    this.tableType.style.width = "100%";
+    this.tableType.style.borderCollapse  = "collapse";
+
+    const theadType = document.createElement('thead');
+    const thType = document.createElement('th');
+    thType.align = 'left'
+    thType.innerText = "Type";
+    theadType.appendChild(thType);
+    
+    const theadName = document.createElement('thead');
+    const thName = document.createElement('th');
+    thName.style.border = "1px solid black" 
+    thName.innerText = "Name";
+    const thShow = document.createElement('th');
+    thShow.style.border = "1px solid black" 
+    thShow.innerText = "Show";
+    theadName.appendChild(thName);
+    theadName.appendChild(thShow);
+    
+    this.tbTypeBody = document.createElement('tbody');
+    this.tbTypeBody.align = 'center';
+
+    this.tableType.appendChild(theadType);
+    this.tableType.appendChild(theadName);
+    this.tableType.appendChild(this.tbTypeBody);
+
+    this.createTypeNatural();
+    this.createTypeKochanek();
+  }
+  
+  this.createTypeNatural = function() {
+
+    const lb_natural_name = document.createElement('label');
+    lb_natural_name.innerText = 'Natural';
+
+    this.cb_type_natural = document.createElement('input');
+    this.cb_type_natural.type = 'checkbox';
+    this.cb_type_natural.checked = false;
+    this.cb_type_natural.addEventListener('change', this.naturalCheckBoxChangeEventListener.bind(this), false);
+
+    const row = this.tbTypeBody.insertRow(this.tbTypeBody.rows.length);
+
+    const cell1 = row.insertCell(0);
+    const cell2 = row.insertCell(1); 
+    cell1.appendChild(lb_natural_name);
+    cell1.style.border = "1px solid black";
+    cell1.style.width = "40%";
+    cell2.appendChild(this.cb_type_natural);
+    cell2.style.border = "1px solid black";
+    cell2.style.width = "60%";
+
+  }
+
+  this.createTypeKochanek = function() {
+
+    const lb_kochanek_name = document.createElement('label');
+    lb_kochanek_name.innerText = 'kochanek';
+
+    this.cb_type_kochanek = document.createElement('input');
+    this.cb_type_kochanek.type = 'checkbox';
+    this.cb_type_kochanek.checked = false;
+    this.cb_type_kochanek.addEventListener('change', this.kochanekCheckBoxChangeEventListener.bind(this), false);
+
+    const row = this.tbTypeBody.insertRow(this.tbTypeBody.rows.length);
+
+    const cell1 = row.insertCell(0);
+    const cell2 = row.insertCell(1); 
+    cell1.appendChild(lb_kochanek_name);
+    cell1.style.border = "1px solid black";
+    cell1.style.width = "40%";
+    cell2.appendChild(this.cb_type_kochanek);
+    cell2.style.border = "1px solid black";
+    cell2.style.width = "60%";
+
+  }
+
+
+
+  // event
+    // Spec
   this.closeCheckBoxChangeEventListener = function(event) {
-    console.log(event.target.checked);
     this.lb_close_value.innerText = event.target.checked;
     this.closeCheckBoxEventListener(event.target.checked);
   }
@@ -292,6 +405,26 @@ function SplinePanel() {
   this.setResolutionSliderEventListener = function(eventListener) {
     this.resolutionSliderEventListener = eventListener;
   }
+
+
+    // Type
+  this.naturalCheckBoxChangeEventListener = function(event) {
+    this.lb_close_value.innerText = event.target.checked;
+    this.naturalCheckBoxEventListener(event.target.checked);
+  }
+
+  this.setNaturalCheckBoxEventListener = function(eventListener) {
+    this.naturalCheckBoxEventListener = eventListener;
+  }
+
+  this.kochanekCheckBoxChangeEventListener = function(event) {
+    this.lb_close_value.innerText = event.target.checked;
+    this.kochanekCheckBoxEventListener(event.target.checked);
+  }
+
+  this.setKochanekCheckBoxEventListener = function(eventListener) {
+    this.kochanekCheckBoxEventListener = eventListener;
+  }  
 
   
 

@@ -23,6 +23,9 @@ function SplineController(spline) {
     this.splinePanel.setBiasSliderEventListener(this.biasSliderEventListener.bind(this));
     this.splinePanel.setContinuitySliderEventListener(this.continuitySliderEventListener.bind(this));
     this.splinePanel.setResolutionSliderEventListener(this.resolutionSliderEventListener.bind(this));
+    
+    this.splinePanel.setNaturalCheckBoxEventListener(this.naturalCheckBoxEventListener.bind(this));    
+    this.splinePanel.setKochanekCheckBoxEventListener(this.kochanekCheckBoxEventListener.bind(this));
   }
 
   this.setSplines = function(splines) {
@@ -36,43 +39,59 @@ function SplineController(spline) {
     }
     
     this.splines.build();
-    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
+    this.splineScreen.draw(spline);
   }
 
   // event
+    // Spec
   this.closeCheckBoxEventListener = function(checked) { 
     spline.spec.close = checked;
     
     this.splines.build();
-    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);  
+    this.splineScreen.draw(spline);  
   }
 
   this.tensionSliderEventListener = function(value) {
     spline.spec.tension[spline.state.selectedPointIndex] = value;
     
     this.splines.build();
-    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
+    this.splineScreen.draw(spline);
   }
 
   this.biasSliderEventListener = function(value) { 
     spline.spec.bias[spline.state.selectedPointIndex] = value;
     
     this.splines.build();
-    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
+    this.splineScreen.draw(spline);
   }
 
   this.continuitySliderEventListener = function(value) {
     spline.spec.continuity[spline.state.selectedPointIndex] = value;
     
     this.splines.build();
-    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
+    this.splineScreen.draw(spline);
   }
 
   this.resolutionSliderEventListener = function(value) {
     spline.spec.resolution = value;
     
     this.splines.build();
-    this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
+    this.splineScreen.draw(spline);
+  }
+
+    // Type
+  this.naturalCheckBoxEventListener = function(checked) { 
+    spline.state.show[0] = checked;
+    
+    this.splines.build();
+    this.splineScreen.draw(spline);  
+  }
+
+  this.kochanekCheckBoxEventListener = function(checked) { 
+    spline.state.show[1] = checked;
+    
+    this.splines.build();
+    this.splineScreen.draw(spline);  
   }
 
   this.mouseMoveEventListener = function(pos) {
@@ -82,7 +101,7 @@ function SplineController(spline) {
 
       this.splines.build();
       
-      this.splineScreen.draw(spline.input.data, spline.output, spline.visual);
+      this.splineScreen.draw(spline);
     }
   }
 
