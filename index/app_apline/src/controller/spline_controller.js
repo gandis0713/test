@@ -28,8 +28,9 @@ function SplineController(spline) {
     this.splinePanel.setContinuity(spline.spec.continuity[spline.state.selectedPointIndex]);
     this.splinePanel.setResolution(spline.spec.resolution);
 
-    this.splinePanel.setNatural(spline.visual.color[0][0], spline.visual.show[0]);
-    this.splinePanel.setKochanek(spline.visual.color[1][0], spline.visual.show[1]);
+    for(let type = 0; type < splineNumber; type++) {
+      this.splinePanel.setType(type, spline.type.name[type], spline.type.color[type][0], spline.type.show[type]);
+    }
 
     this.splinePanel.setCloseCheckBoxEventListener(this.closeCheckBoxEventListener.bind(this));
     this.splinePanel.setTensionSliderEventListener(this.tensionSliderEventListener.bind(this));
@@ -37,8 +38,7 @@ function SplineController(spline) {
     this.splinePanel.setContinuitySliderEventListener(this.continuitySliderEventListener.bind(this));
     this.splinePanel.setResolutionSliderEventListener(this.resolutionSliderEventListener.bind(this));
     
-    this.splinePanel.setNaturalCheckBoxEventListener(this.naturalCheckBoxEventListener.bind(this));    
-    this.splinePanel.setKochanekCheckBoxEventListener(this.kochanekCheckBoxEventListener.bind(this));
+    this.splinePanel.setTypeCheckBoxEventListener(this.typeCheckBoxEventListener.bind(this));    
   }
 
   this.setSplines = function(splines) {
@@ -88,14 +88,11 @@ function SplineController(spline) {
   }
 
     // Type
-  this.naturalCheckBoxEventListener = function(checked) { 
-    spline.visual.show[0] = checked;
-    
-    this.drawSpline();
-  }
-
-  this.kochanekCheckBoxEventListener = function(checked) { 
-    spline.visual.show[1] = checked;
+  this.typeCheckBoxEventListener = function(type, checked) {
+    console.log("show")
+    console.log(type)
+    console.log(checked)
+    spline.type.show[type] = checked;
     
     this.drawSpline();
   }

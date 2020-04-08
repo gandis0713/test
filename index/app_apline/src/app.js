@@ -1,5 +1,10 @@
-const splineType = [[0, 'Natural'], [1, 'Kochanek']];
 
+const splineType = {
+  natural: 0,
+  kochanek: 1
+}
+
+const splineNumber = 2;
 
 
 function App() {
@@ -26,9 +31,12 @@ function App() {
       },
       visual: {
         pointSize: 7,
-        pointStroke: 2,
+        pointStroke: 2
+      },
+      type: {
         show: [true, true],
-        color: [['#0000ff', '#0055ff', '#0099ff'], ['#ff0000', '#ff5500', '#ff9900']]
+        color: [['#0000ff', '#0055ff', '#0099ff'], ['#ff0000', '#ff5500', '#ff9900']],
+        name: ['Natural', 'Kochanek']
       }
     }
   }
