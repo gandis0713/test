@@ -6,21 +6,25 @@ from selenium.webdriver.common.by import By
 
 options = webdriver.ChromeOptions()
 options.add_argument("--start-maximized")
+options.add_argument("--incognito")
+# options.headless = True # Option that don't open chrome browser.
 driver = webdriver.Chrome("./chromedriver.exe", chrome_options=options)
-driver.get("http://dagympilates2.flexgym.pro/mobile")
+driver.get("http://dagympilates2.flexgym.pro/mobile") # open chrome browser.
 wait = WebDriverWait(driver, 10)
 
-idPath = '//input[@id="memberID"]'
-driver.find_element_by_xpath(idPath).send_keys("7082")
-pwPath = '//input[@id="memberPW"]'
-driver.find_element_by_xpath(pwPath).send_keys("7082")
-loginPath = '//button[@class="btnLogin"]'
-driver.find_element_by_xpath(loginPath).click()
-
+popCheckPath = '/html/body/span/form/div/div[3]/div[1]'
+driver.find_element_by_xpath(popCheckPath).click() # check close pop up
 closePath = '/html/body/span/form/div/div[3]/div[2]'
-driver.find_element_by_xpath(closePath).click()
+driver.find_element_by_xpath(closePath).click() # click close pop up
+
+idPath = '//input[@id="memberID"]'
+driver.find_element_by_xpath(idPath).send_keys("7082") # write ID
+pwPath = '//input[@id="memberPW"]'
+driver.find_element_by_xpath(pwPath).send_keys("7082") # write PW
+loginPath = '//button[@class="btnLogin"]'
+driver.find_element_by_xpath(loginPath).click() # Login
 
 bookPath = '//*[@id="paymentList"]/li'
-element = wait.until(EC.element_to_be_clickable((By.XPATH, bookPath)))
+element = wait.until(EC.element_to_be_clickable((By.XPATH, bookPath))) # Click books list
 element.click()
 
