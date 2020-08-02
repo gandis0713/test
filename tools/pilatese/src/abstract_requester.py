@@ -7,9 +7,11 @@ class AbstractRequester:
   headers = {}
   cookies = {}
 
-  _timeout = 3
-  _max_try_count = 5
+  _timeout = 5
+  _timeout_try_count = 0
+  _max_timeout_try_count = 5
   _try_count = 0
+  _max_try_count = 5
 
   def __init__(self, url = '', data = {}, headers = {}, cookies = {}):
       self.url = url
@@ -48,3 +50,14 @@ class AbstractRequester:
   @abstractmethod
   def request_post(self):
     pass
+
+  def PrintReservationStatus(self, name, count):
+    charactor = '...'
+    charCount = count % 3
+
+    if charCount == 0:
+      print(f'                 \r', end='')
+
+    for i in range(charCount):
+      charactor = charactor + '.'
+    print(f'{name}{charactor}\r', end='')
