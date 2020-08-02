@@ -1,6 +1,6 @@
 from abstract_requester import AbstractRequester
 import requests
-import time
+from time import sleep
 from bs4 import BeautifulSoup
 
 class ReservationRequester(AbstractRequester):
@@ -14,18 +14,21 @@ class ReservationRequester(AbstractRequester):
   def request_post(self):
     TIMEOUT = 5
     trainer = ''
-    tryCount = 0
+    try_count = 0
     with requests.Session() as session:
       while trainer == '':
         with session.get(self.url, data = self.data, headers = self.headers, cookies = self.cookies) as response:
-          html = BeautifulSoup(response.text, features='html.parser')
-          trainerItem = html.find('input', attrs={'name' : 'Trainer'})
+          html_elm = BeautifulSoup(response.text, features='html.parser')
+          # print(html_elm)
+          trainerItem = html_elm.find('input', attrs={'name' : 'Trainer'}) # TODO_
           if trainerItem == None:
             print("trainer none")
-          # trainer = html.findAll('input', attrs={'name' : 'Trainer'})[0]['value']
-          # print(html)
-          tryCount += 1
-          if tryCount >= TIMEOUT:
+            try_count += 1
+            if try_count >= TIMEOUT:
+              break
+            
+            sleep(1)
+          else:
             break
-          
-          time.sleep(1)
+            
+

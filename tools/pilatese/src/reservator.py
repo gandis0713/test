@@ -28,7 +28,7 @@ class Reservator():
     }
 
     login_req = LoginRequester(login_url, login_data)
-    is_logined = login_req.request_get()
+    is_logined = login_req.request_post()
 
     if is_logined == True:
       headers = login_req.get_headers()
@@ -37,9 +37,9 @@ class Reservator():
       # select reservation item
       pay_idx = self._pay.get_pay_idx()
       # date = datetime.date.today().isoformat()
-      # lc = 'C'
-      date = '2020-08-01'
-      lc = 'R'
+      lc = 'C' # TODO_
+      date = '2020-08-03'
+      # lc = 'R'
       page = 1
 
       rev_sel_url = self._site.get_rev_url()
@@ -61,5 +61,5 @@ class Reservator():
         reserve_data = {'params': no + '|' + date + '|' + idx + '|' + ssidx + '|24815|50274|2529299||||1|1'}
 
         rev_req = ReservationRequester(reserve_url, reserve_data, headers, cookies)
-        rev_req.request_get()
+        rev_req.request_post()
 

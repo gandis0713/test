@@ -34,10 +34,11 @@ class ReservationSelector(AbstractRequester):
   def request_get(self):
 
     is_success = False
-    TIME_OUT = 5
-    tryCount = 0
+    TIME_OUT = 5 # TODO_
+    try_count = 0
+    
     with requests.Session() as session:
-      while TIME_OUT > tryCount:
+      while TIME_OUT > try_count:
         with session.get(self.url, data = self.data, headers = self.headers, cookies = self.cookies) as response:
 
           ## if response is success
@@ -45,13 +46,14 @@ class ReservationSelector(AbstractRequester):
             # select time
             html_elm = BeautifulSoup(response.text, features='html.parser')
             rev_elm_lst = html_elm.find('ul', attrs={'id' : 'reserveList'})
-            time_elm_lst = rev_elm_lst.findAll('div', attrs={'class' : 'timelabel01 timeBG' + self._time})
+            time_elm_lst = rev_elm_lst.findAll('div', attrs={'class' : 'timelabel01 timeBG' + self._time}) # TODO_
             time_elm_lst_length = len(time_elm_lst)
+            print(time_elm_lst_length)
 
             if time_elm_lst_length == 0:
-              self._PrintReservationStatus(tryCount)
+              self._PrintReservationStatus(try_count)
               sleep(1)
-              tryCount += 1
+              try_count += 1
               continue
 
             elif time_elm_lst_length == 2: # TODO_
@@ -64,7 +66,7 @@ class ReservationSelector(AbstractRequester):
                 if len(btn_elm) == 1: 
                   regex = re.compile(r"\'(.*?)\'")
                   btn_elm_val = re.findall(regex, btn_elm[0]["onclick"])
-                  print(btn_elm_val)
+                  print(btn_elm_val) # TODO_
                   self._idx = btn_elm_val[0]
                   self._sSIdx = btn_elm_val[1]
                   self._no = btn_elm_val[2]
