@@ -7,7 +7,7 @@ IF "%1" == "" (
 SET time="%1"
 
 :RUN
-  CALL python3 ./src/main.py %time%
+  CALL python ./src/main.py %time%
   GOTO END
 
 :ABORT

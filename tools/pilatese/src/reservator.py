@@ -37,9 +37,9 @@ class Reservator():
       # select reservation item
       pay_idx = self._pay.get_pay_idx()
       # date = datetime.date.today().isoformat()
-      lc = 'C' # TODO_
-      date = '2020-08-03'
-      # lc = 'R'
+      # lc = 'C' # TODO_
+      date = '2020-07-01'
+      lc = 'R'
       page = 1
 
       rev_sel_url = self._site.get_rev_url()

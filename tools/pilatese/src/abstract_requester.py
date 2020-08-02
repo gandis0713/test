@@ -7,6 +7,10 @@ class AbstractRequester:
   headers = {}
   cookies = {}
 
+  _timeout = 3
+  _max_try_count = 5
+  _try_count = 0
+
   def __init__(self, url = '', data = {}, headers = {}, cookies = {}):
       self.url = url
       self.data = data

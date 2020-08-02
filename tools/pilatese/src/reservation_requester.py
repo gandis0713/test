@@ -12,23 +12,34 @@ class ReservationRequester(AbstractRequester):
     pass
 
   def request_post(self):
-    TIMEOUT = 5
-    trainer = ''
-    try_count = 0
+
     with requests.Session() as session:
-      while trainer == '':
-        with session.get(self.url, data = self.data, headers = self.headers, cookies = self.cookies) as response:
-          html_elm = BeautifulSoup(response.text, features='html.parser')
-          # print(html_elm)
-          trainerItem = html_elm.find('input', attrs={'name' : 'Trainer'}) # TODO_
-          if trainerItem == None:
-            print("trainer none")
-            try_count += 1
-            if try_count >= TIMEOUT:
+
+      while self._max_try_count > self._try_count:
+
+        try:
+
+          with session.get(self.url, data = self.data, headers = self.headers, cookies = self.cookies, timeout=self._timeout) as response:
+            
+            html_elm = BeautifulSoup(response.text, features='html.parser')
+            # print(html_elm)
+            trainer_item = html_elm.find('input', attrs={'name' : 'Trainer'}) # TODO_
+            
+            if trainer_item == None:
+              print("trainer none")
+              self._try_count += 1
+              if self._try_count >= self._max_try_count:
+                break
+              
+              sleep(1)
+              
+            else:
+              # TODO_
               break
             
-            sleep(1)
-          else:
-            break
+        except requests.exceptions.Timeout:
+          self._try_count += 1
+          print("예약도중 타임 아웃 에러 발생... 다시 시도합니다. 시도 횟수 : " + self._try_count)
+          sleep(1)
             
 
