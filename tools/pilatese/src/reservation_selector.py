@@ -11,11 +11,10 @@ class ReservationSelector(AbstractRequester):
   _sSIdx = ''
   _date = ''
   _no = ''
-
   _time = ''
 
-  def __init__(self, url = '', data = {}, headers = {}, cookies = {}):
-    super().__init__(url, data, headers, cookies)
+  def __init__(self, connection, url = '', data = {}, headers = {}, cookies = {}):
+    super().__init__(connection, url, data, headers, cookies)
     self._max_waiting_count = 7200
 
   def get_idx(self):
@@ -41,12 +40,12 @@ class ReservationSelector(AbstractRequester):
     is_duplicated = False
 
     with requests.Session() as session:
-      while self._max_try_count > self._try_count and \
-            self._max_waiting_count > self._waiting_count and \
-            self._max_timeout_try_count > self._timeout_try_count:
+      while self._connection.get_max_try_count() > self._try_count and \
+            self._connection.get_max_waiting_count() > self._waiting_count and \
+            self._connection.get_max_timeout_try_count() > self._timeout_try_count:
         try:
           with session.get(self.url, data = self.data, headers = self.headers, \
-                          cookies = self.cookies, timeout=self._timeout) as response:
+                            cookies = self.cookies, timeout=self._connection.get_timeout()) as response:
 
             # if response is success
             if response.status_code <= 200:
@@ -62,7 +61,7 @@ class ReservationSelector(AbstractRequester):
                 sleep(1)
                 continue
 
-              elif time_elm_lst_length == 1:
+              elif time_elm_lst_length == 1: # if there is one item that is for reservation.
                 time_elm = re.findall('\d+', time_elm_lst[0].text)
 
                 if time_elm[0] == self._time:
@@ -71,7 +70,7 @@ class ReservationSelector(AbstractRequester):
                     'button', attrs={'onclick' : lambda L: L and L.startswith('Reserve')} \
                   )
                   
-                  if len(btn_elm) == 1: 
+                  if len(btn_elm) == 1: # if there is one item that is for reservation.
                     regex = re.compile(r"\'(.*?)\'")
                     btn_elm_val = re.findall(regex, btn_elm[0]["onclick"])
                     self._idx = btn_elm_val[0]
@@ -80,6 +79,7 @@ class ReservationSelector(AbstractRequester):
                     self._date = btn_elm_val[3]
 
                     # print reserve info
+                    print("")
                     print("")
                     print("[예약 정보]")
                     regex = re.compile(r"div>(.*?)</div")    
@@ -92,6 +92,7 @@ class ReservationSelector(AbstractRequester):
                     rev_cls_time = html_elm.find('dd', attrs={'id' : 'rTime' + self._no})
                     cls_time = re.findall(regex, str(rev_cls_time))
                     print("시간 : " + cls_time[0])
+                    print("")
                     print("")
 
                     is_success = True

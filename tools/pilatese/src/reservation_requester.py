@@ -7,9 +7,8 @@ import re
 
 class ReservationRequester(AbstractRequester):
 
-  def __init__(self, url = '', data = {}, headers = {}, cookies = {}):
-    super().__init__(url, data, headers, cookies)
-    self._max_waiting_count = 7200
+  def __init__(self, connection, url = '', data = {}, headers = {}, cookies = {}):
+    super().__init__(connection, url, data, headers, cookies)
 
   def request_get(self):
     pass
@@ -19,12 +18,12 @@ class ReservationRequester(AbstractRequester):
     is_reserved = False
 
     with requests.Session() as session:
-      while self._max_try_count > self._try_count and \
-            self._max_waiting_count > self._waiting_count and \
-            self._max_timeout_try_count > self._timeout_try_count:
+      while self._connection.get_max_try_count() > self._try_count and \
+            self._connection.get_max_waiting_count() > self._waiting_count and \
+            self._connection.get_max_timeout_try_count() > self._timeout_try_count:
         try:
-          with session.post(self.url, data = self.data, headers = self.headers, \
-                            cookies = self.cookies, timeout=self._timeout) as response:
+          with session.get(self.url, data = self.data, headers = self.headers, \
+                            cookies = self.cookies, timeout=self._connection.get_timeout()) as response:
 
             # if response is success
             if response.status_code <= 200:

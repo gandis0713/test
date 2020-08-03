@@ -89,3 +89,35 @@ class Pay():
     
   def get_unknown2(self):
     return self._unknown2
+
+# connection
+class Connection():
+
+  _timeout = 5
+  _max_waiting_count = 43200
+  _max_try_count = 43200
+  _max_timeout_try_count = 43200
+
+  def __init__(self):
+    self.load_connection()
+
+  def load_connection(self):
+    cur_dir = os.path.dirname(os.path.abspath(__file__))
+    with open(cur_dir + '/../setting/connection.json') as connection_file:
+      connection_json = json.load(connection_file)
+      self._timeout = connection_json["timeout"]
+      self._max_waiting_count = connection_json["maxWaitingCount"]
+      self._max_try_count = connection_json["maxTryCount"]
+      self._max_timeout_try_count = connection_json["maxTimeoutTryCount"]
+
+  def get_timeout(self):
+    return self._timeout
+
+  def get_max_waiting_count(self):
+    return self._max_waiting_count
+
+  def get_max_try_count(self):
+    return self._max_try_count
+
+  def get_max_timeout_try_count(self):
+    return self._max_timeout_try_count

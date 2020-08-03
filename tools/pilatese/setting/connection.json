@@ -1,0 +1,6 @@
+{
+  "timeout": 5,
+  "maxWaitingCount": 43200,
+  "maxTryCount": 43200,
+  "maxTimeoutTryCount": 43200
+}

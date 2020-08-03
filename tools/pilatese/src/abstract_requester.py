@@ -7,20 +7,18 @@ class AbstractRequester:
   headers = {}
   cookies = {}
 
-  _timeout = 5
   _timeout_try_count = 0
-  _max_timeout_try_count = 5
   _try_count = 0
-  _max_try_count = 5
-
   _waiting_count = 0
-  _max_waiting_count = 5
 
-  def __init__(self, url = '', data = {}, headers = {}, cookies = {}):
-      self.url = url
-      self.data = data
-      self.headers = headers
-      self.cookies = cookies  
+  _connection = None
+
+  def __init__(self, connection, url = '', data = {}, headers = {}, cookies = {}):
+    self._connection = connection
+    self.url = url
+    self.data = data
+    self.headers = headers
+    self.cookies = cookies  
 
   def set_url(self, url):
     self.url = url
@@ -45,6 +43,9 @@ class AbstractRequester:
     
   def get_cookies(self):
     return self.cookies
+
+  def set_connection(self, connection):
+    self._connection = connection
 
   @abstractmethod
   def request_get(self):
