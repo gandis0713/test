@@ -33,7 +33,7 @@ class Reservator():
 
     login_req = LoginRequester(self._connection, login_url, login_data)
     is_logined = login_req.request_post()
-
+    
     if is_logined == True:
       headers = login_req.get_headers()
       cookies = login_req.get_cookies()
@@ -49,6 +49,7 @@ class Reservator():
       rev_sel.set_time(time)
 
       is_selected = rev_sel.request_get()
+
       if is_selected == True:
         # request reservation
         ssidx = rev_sel.get_ssidx()
