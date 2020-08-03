@@ -3,14 +3,13 @@ import requests
 from time import sleep
 from bs4 import BeautifulSoup
 from logger import *
+import re
 
 class ReservationRequester(AbstractRequester):
 
-  _waiting_count = 0
-  _max_waiting_count = 5 # TODO_
-
   def __init__(self, url = '', data = {}, headers = {}, cookies = {}):
     super().__init__(url, data, headers, cookies)
+    self._max_waiting_count = 7200
 
   def request_get(self):
     pass
@@ -30,17 +29,18 @@ class ReservationRequester(AbstractRequester):
             # if response is success
             if response.status_code <= 200:
               html_elm = BeautifulSoup(response.text, features='html.parser')
-              print(html_elm)
-              is_reserved = True
-              break
-              # trainer_item = html_elm.find('input', attrs={'name' : 'Trainer'}) # TODO_            
-              # if trainer_item != None:
-              #   print("예약완료!") # TODO_
-              #   break
-              # else:
-              #   PrintProgress('예약시도중', self._waiting_count)
-              #   self._waiting_count += 1              
-              #   sleep(1)
+              
+              regex = re.compile(r"\'(.*?)\'")
+              result_elm_lst = re.findall(regex, str(html_elm))
+              result_elm_len = len(result_elm_lst)
+              if len(result_elm_lst[result_elm_len - 1]) == 14:
+                print("예약 성공! 열심히 운동해요~ 으쌰으쌰!")
+                is_reserved = True
+                break
+              else:
+                PrintProgress('예약시도중', self._waiting_count)
+                self._waiting_count += 1
+                sleep(1)
             else:              
               PrintProgress('예약 전송 실패... 다시 시도중', self._try_count)
               self._try_count += 1

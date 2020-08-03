@@ -1,13 +1,12 @@
 from abstract_requester import AbstractRequester
 import requests
 from time import sleep
-from bs4 import BeautifulSoup
 from logger import *
 
 class ReservationContentRequester(AbstractRequester):
 
   _waiting_count = 0
-  _max_waiting_count = 5 # TODO_
+  _max_waiting_count = 5
 
   def __init__(self, url = '', data = {}, headers = {}, cookies = {}):
     super().__init__(url, data, headers, cookies)
@@ -26,18 +25,9 @@ class ReservationContentRequester(AbstractRequester):
 
             # if response is success
             if response.status_code <= 200:
-              html_elm = BeautifulSoup(response.text, features='html.parser')
-              # print(html_elm)
+              # if need, implement
               is_content = True
               break
-              # trainer_item = html_elm.find('input', attrs={'name' : 'Trainer'}) # TODO_            
-              # if trainer_item != None:
-              #   print("예약완료!") # TODO_
-              #   break
-              # else:
-              #   PrintProgress('예약내용 불러오는중', self._waiting_count)
-              #   self._waiting_count += 1              
-              #   sleep(1)
             else:              
               PrintProgress('예약내용 불러오기 실패... 다시 시도중', self._try_count)
               self._try_count += 1

@@ -13,6 +13,9 @@ class AbstractRequester:
   _try_count = 0
   _max_try_count = 5
 
+  _waiting_count = 0
+  _max_waiting_count = 5
+
   def __init__(self, url = '', data = {}, headers = {}, cookies = {}):
       self.url = url
       self.data = data

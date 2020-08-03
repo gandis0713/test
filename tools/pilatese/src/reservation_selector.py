@@ -14,11 +14,9 @@ class ReservationSelector(AbstractRequester):
 
   _time = ''
 
-  _waiting_count = 0
-  _max_waiting_count = 5 # TODO_
-
   def __init__(self, url = '', data = {}, headers = {}, cookies = {}):
     super().__init__(url, data, headers, cookies)
+    self._max_waiting_count = 7200
 
   def get_idx(self):
     return self._idx
@@ -55,7 +53,7 @@ class ReservationSelector(AbstractRequester):
               # select time
               html_elm = BeautifulSoup(response.text, features='html.parser')
               rev_elm_lst = html_elm.find('ul', attrs={'id' : 'reserveList'})
-              time_elm_lst = rev_elm_lst.findAll('div', attrs={'class' : 'timelabel01 timeBG' + self._time}) # TODO_
+              time_elm_lst = rev_elm_lst.findAll('div', attrs={'class' : 'timelabel01 timeBG' + self._time})
               time_elm_lst_length = len(time_elm_lst)
 
               if time_elm_lst_length == 0:
@@ -64,23 +62,38 @@ class ReservationSelector(AbstractRequester):
                 sleep(1)
                 continue
 
-              elif time_elm_lst_length == 1: # TODO_
+              elif time_elm_lst_length == 1:
                 time_elm = re.findall('\d+', time_elm_lst[0].text)
 
                 if time_elm[0] == self._time:
                   # get selected reservation info
                   btn_elm = time_elm_lst[0].parent.findAll( \
                     'button', attrs={'onclick' : lambda L: L and L.startswith('Reserve')} \
-                  ) # TODO_
+                  )
                   
                   if len(btn_elm) == 1: 
                     regex = re.compile(r"\'(.*?)\'")
                     btn_elm_val = re.findall(regex, btn_elm[0]["onclick"])
-                    print(btn_elm_val) # TODO_
                     self._idx = btn_elm_val[0]
                     self._sSIdx = btn_elm_val[1]
                     self._no = btn_elm_val[2]
                     self._date = btn_elm_val[3]
+
+                    # print reserve info
+                    print("")
+                    print("[예약 정보]")
+                    regex = re.compile(r"div>(.*?)</div")    
+                    rev_cls_name = html_elm.find('dd', attrs={'id' : 'cName' + self._no})
+                    cls_name = re.findall(regex, str(rev_cls_name))
+                    print("수업 : " + cls_name[0])        
+                    rev_mem_name = html_elm.find('dd', attrs={'id' : 'mName' + self._no})
+                    mem_name = re.findall(regex, str(rev_mem_name))
+                    print("강사 : " + mem_name[0])         
+                    rev_cls_time = html_elm.find('dd', attrs={'id' : 'rTime' + self._no})
+                    cls_time = re.findall(regex, str(rev_cls_time))
+                    print("시간 : " + cls_time[0])
+                    print("")
+
                     is_success = True
                     break
 
