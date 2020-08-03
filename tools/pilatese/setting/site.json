@@ -2,5 +2,6 @@
   "baseUrl" : "https://dagympilates2.flexgym.pro/mobile2/",
   "loginUrl" : "login.asp",
   "revUrl" : "reservation.asp",
-  "revReqUrl" : "reservation_appraise.asp"
+  "revConReqUrl" : "reservationChk.asp",
+  "revReqUrl" : "reservation_ok.asp"
 }

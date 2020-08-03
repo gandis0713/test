@@ -1,5 +1,6 @@
 from login_requester import LoginRequester
 from reservation_selector import ReservationSelector
+from reservation_content_requester import ReservationContentRequester
 from reservation_requester import ReservationRequester
 from setting import User
 from setting import Site
@@ -36,10 +37,10 @@ class Reservator():
 
       # select reservation item
       pay_idx = self._pay.get_pay_idx()
-      # date = datetime.date.today().isoformat()
-      # lc = 'C' # TODO_
-      date = '2020-07-01'
-      lc = 'R'
+      date = datetime.date.today().isoformat()
+      lc = 'C' # TODO_
+      # date = '2020-07-01'
+      # lc = 'R'
       page = 1
 
       rev_sel_url = self._site.get_rev_url()
@@ -56,10 +57,22 @@ class Reservator():
         ssidx = rev_sel.get_ssidx()
         no = rev_sel.get_no()
         date = rev_sel.get_date()
+        unknown1 = self._pay.get_unknown1()
+        unknown2 = self._pay.get_unknown2()
         
-        reserve_url = self._site.get_rev_req_url()
-        reserve_data = {'params': no + '|' + date + '|' + idx + '|' + ssidx + '|24815|50274|2529299||||1|1'}
+        rev_con_req_url = self._site.get_rev_con_req_url()
+        rev_con_req_data = {'params': no + '|' + date + '|' + idx + '|' + ssidx + \
+                        '|' + unknown1 + '|' + unknown2 + '|' + pay_idx + '||||1|1'}
 
-        rev_req = ReservationRequester(reserve_url, reserve_data, headers, cookies)
-        rev_req.request_post()
+        rev_con_req = ReservationContentRequester(rev_con_req_url, rev_con_req_data, headers, cookies)
+        is_content = rev_con_req.request_get()
+        if is_content == True:
+
+          rev_req_url = self._site.get_rev_req_url()
+          rev_req_data = {'flag': 'N', 'idx': '', 'payIdx': pay_idx, 'SSIdx': ssidx}
+
+          rev_req = ReservationRequester(rev_req_url, rev_req_data, headers, cookies)
+          is_reserved = rev_req.request_post()
+          if is_reserved == True:
+            print("완료..확인해주세요")
 

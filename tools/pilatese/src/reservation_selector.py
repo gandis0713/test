@@ -64,7 +64,7 @@ class ReservationSelector(AbstractRequester):
                 sleep(1)
                 continue
 
-              elif time_elm_lst_length == 2: # TODO_
+              elif time_elm_lst_length == 1: # TODO_
                 time_elm = re.findall('\d+', time_elm_lst[0].text)
 
                 if time_elm[0] == self._time:
