@@ -1,0 +1,16 @@
+{
+  "name": "react_self",
+  "version": "1.0.0",
+  "main": "./public/index.html",
+  "license": "MIT",
+  "scripts": {
+    "start": "webpack-dev-server --open --hot"
+  },
+  "devDependencies": {
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^3.2.0",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.3"
+  }
+}

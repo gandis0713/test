@@ -1,5 +1,11 @@
-const splineType = [[0, 'Natural'], [1, 'Kochanek']];
 
+const splineType = {
+  natural: 0,
+  kochanek: 1,
+  cardinal: 2
+}
+
+const splineNumber = 3;
 
 
 function App() {
@@ -26,9 +32,12 @@ function App() {
       },
       visual: {
         pointSize: 7,
-        pointStroke: 2,
-        show: [true, true],
-        color: [['#0000ff', '#0055ff', '#0099ff'], ['#ff0000', '#ff5500', '#ff9900']]
+        pointStroke: 2
+      },
+      type: {
+        show: [true, true, true],
+        color: [['#0000ff', '#0055ff', '#0099ff'], ['#ff0000', '#ff5500', '#ff9900'], ['#00ff00', '#ffff00', '#ffff55']],
+        name: ['Natural', 'Kochanek', 'Cardinal']
       }
     }
   }
@@ -39,8 +48,9 @@ function App() {
     
     // create model
     const splines = new Splines(app.spline);
-    splines.create(0, new NaturalCubicSpline2D());
-    splines.create(1, new KochanekSpline2D());
+    splines.create(splineType.natural, new NaturalCubicSpline2D());
+    splines.create(splineType.kochanek, new KochanekSpline2D());
+    splines.create(splineType.cardinal, new CardinalSpline2D());
     
     splineController.setSplines(splines);
 

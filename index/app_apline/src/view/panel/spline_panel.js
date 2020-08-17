@@ -20,8 +20,10 @@ function SplinePanel() {
   this.lb_continuity_value = null;
   this.lb_resolution_value = null;
 
-  this.lb_natural_name = null;
-  this.lb_kochanek_name = null;
+  this.lb_type_name = [];
+  this.cb_type_show = [];
+
+  this.typeCheckBoxEventListener = null;
 
   this.tableSpec = null;
   this.tableType = null;
@@ -55,14 +57,11 @@ function SplinePanel() {
     this.sl_resolution.value = value;
   }
 
-  this.setNatural = function(color, checked) {
-    this.lb_natural_name.style.color = color;
-    this.cb_type_natural.checked = checked;
-  }
-
-  this.setKochanek = function(color, checked) {
-    this.lb_kochanek_name.style.color = color;
-    this.cb_type_kochanek.checked = checked;
+  this.setType = function(type, name, color, checked) {
+    this.lb_type_name[type].style.color = color;
+    this.lb_type_name[type].innerText= name;
+    this.cb_type_show[type].checked = checked;
+    this.cb_type_show[type].value= type;
   }
 
   // UI
@@ -283,7 +282,7 @@ function SplinePanel() {
 
   // Type
 
-  this.createType = function() {
+  this.createType = function(type) {
     
     this.tableType = document.createElement('table');
     this.tableType.style.width = "100%";
@@ -312,56 +311,25 @@ function SplinePanel() {
     this.tableType.appendChild(theadName);
     this.tableType.appendChild(this.tbTypeBody);
 
-    this.createTypeNatural();
-    this.createTypeKochanek();
-  }
+    for(let i = 0; i < splineNumber; i++) {
+      this.lb_type_name[i] = document.createElement('label');
   
-  this.createTypeNatural = function() {
-
-    this.lb_natural_name = document.createElement('label');
-    this.lb_natural_name.innerText = 'Natural';
-
-    this.cb_type_natural = document.createElement('input');
-    this.cb_type_natural.type = 'checkbox';
-    this.cb_type_natural.checked = false;
-    this.cb_type_natural.addEventListener('change', this.naturalCheckBoxChangeEventListener.bind(this), false);
-
-    const row = this.tbTypeBody.insertRow(this.tbTypeBody.rows.length);
-
-    const cell1 = row.insertCell(0);
-    const cell2 = row.insertCell(1); 
-    cell1.appendChild(this.lb_natural_name);
-    cell1.style.border = "1px solid black";
-    cell1.style.width = "40%";
-    cell2.appendChild(this.cb_type_natural);
-    cell2.style.border = "1px solid black";
-    cell2.style.width = "60%";
-
+      this.cb_type_show[i] = document.createElement('input');
+      this.cb_type_show[i].type = 'checkbox';
+      this.cb_type_show[i].addEventListener('change', this.typeCheckBoxChangeEventListener.bind(this), false);
+  
+      const row = this.tbTypeBody.insertRow(this.tbTypeBody.rows.length);
+  
+      const cell1 = row.insertCell(0);
+      const cell2 = row.insertCell(1); 
+      cell1.appendChild(this.lb_type_name[i]);
+      cell1.style.border = "1px solid black";
+      cell1.style.width = "40%";
+      cell2.appendChild(this.cb_type_show[i]);
+      cell2.style.border = "1px solid black";
+      cell2.style.width = "60%";
+    }
   }
-
-  this.createTypeKochanek = function() {
-
-    this.lb_kochanek_name = document.createElement('label');
-    this.lb_kochanek_name.innerText = 'kochanek';
-
-    this.cb_type_kochanek = document.createElement('input');
-    this.cb_type_kochanek.type = 'checkbox';
-    this.cb_type_kochanek.checked = false;
-    this.cb_type_kochanek.addEventListener('change', this.kochanekCheckBoxChangeEventListener.bind(this), false);
-
-    const row = this.tbTypeBody.insertRow(this.tbTypeBody.rows.length);
-
-    const cell1 = row.insertCell(0);
-    const cell2 = row.insertCell(1); 
-    cell1.appendChild(this.lb_kochanek_name);
-    cell1.style.border = "1px solid black";
-    cell1.style.width = "40%";
-    cell2.appendChild(this.cb_type_kochanek);
-    cell2.style.border = "1px solid black";
-    cell2.style.width = "60%";
-
-  }
-
 
 
   // event
@@ -413,25 +381,13 @@ function SplinePanel() {
 
 
     // Type
-  this.naturalCheckBoxChangeEventListener = function(event) {
-    this.lb_close_value.innerText = event.target.checked;
-    this.naturalCheckBoxEventListener(event.target.checked);
-  }
 
-  this.setNaturalCheckBoxEventListener = function(eventListener) {
-    this.naturalCheckBoxEventListener = eventListener;
+  this.typeCheckBoxChangeEventListener = function(event) {
+    this.typeCheckBoxEventListener(event.target.value, event.target.checked);
   }
-
-  this.kochanekCheckBoxChangeEventListener = function(event) {
-    this.lb_close_value.innerText = event.target.checked;
-    this.kochanekCheckBoxEventListener(event.target.checked);
-  }
-
-  this.setKochanekCheckBoxEventListener = function(eventListener) {
-    this.kochanekCheckBoxEventListener = eventListener;
+  this.setTypeCheckBoxEventListener = function(eventListener) {
+    this.typeCheckBoxEventListener = eventListener;
   }  
-
-  
 
   this.create();
 }

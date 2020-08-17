@@ -58,9 +58,9 @@ function SplineScreen() {
     this.ctx.fillStyle = "#000000";
     this.ctx.fillRect(0, 0, 600, 600);
     
-    for(let i = 0; i < spline.output.data[0].length; i++) {
-      
-      if(spline.visual.show[i] === false)
+    for(let i = 0; i < splineNumber; i++) {
+      console.log(" spline.type.show[i] : ", spline.type.show[i]);
+      if(spline.type.show[i] === false)
       {
         continue;
       }
@@ -76,17 +76,14 @@ function SplineScreen() {
         }        
 
         if(spline.state.selectedLineIndex === j) {
-          this.ctx.strokeStyle = spline.visual.color[i][2];
+          this.ctx.strokeStyle = spline.type.color[i][2];
         }
         else {
-          this.ctx.strokeStyle = spline.visual.color[i][0];
+          this.ctx.strokeStyle = spline.type.color[i][0];
         }
 
         this.ctx.stroke();
       }
-
-
-
     }
 
     for(let i = 0; i < spline.input.data[0].length; i++) {
