@@ -17,13 +17,15 @@
       "schemes": [
         "electron_charles_protocol_schemes"
       ]
+    },
+    "win": {
+      "requestedExecutionLevel": "requireAdministrator"
     }
   },
   "devDependencies": {
     "@babel/cli": "^7.11.6",
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
-    "arptable-js": "^0.0.2",
     "babel-loader": "^8.1.0",
     "dgram": "^1.0.1",
     "electron": "^10.1.1",
@@ -33,6 +35,8 @@
     "webpack": "^4.44.1"
   },
   "dependencies": {
-    "@ewoosoft/ezwebserver-client": "^1.2.2164"
+    "@ewoosoft/ezwebserver-client": "^1.2.2164",
+    "node-windows": "^1.0.0-beta.5",
+    "arptable-js": "^0.0.2"
   }
 }

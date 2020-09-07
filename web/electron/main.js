@@ -3,12 +3,14 @@ const path = require('path')
 const url = require('url')
 const EventEmitter = require('events');
 const {ipcMain} = require('electron');
+var winSecond = undefined;
 
 //윈도우 객체의 전역으로 선언합니다. 그렇지 않으면 윈도우가 자동으로 닫는다.
 //자바 스크립트 객체가 가비지 수집 될 때 자동으로 닫는다.
 
 function createWindow () {
   // 브라우저 창을 만듭니다.
+  console.log("create11111111 window");
   const win = new BrowserWindow({
     width: 800,
     height: 600,
@@ -18,7 +20,11 @@ function createWindow () {
     },
   })
 
+  console.log("create window");
+
   //index.html를 로드합니다.
+  // win.loadURL('https://prod.dentasssssslclever.com/signIn');
+  // win.loadURL('https://prod.dentalclever.com/signIn');
   win.loadURL(url.format({
     pathname: path.join(__dirname, 'index.html'),
     protocol: 'file:',
@@ -34,8 +40,60 @@ function createWindow () {
   // 윈도우가 닫힐 때 발생되는 이벤트다.
   win.on('closed', () => {
     // win = null
+  console.log("close window");
   })
   win.removeMenu();
+  win.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
+    event.preventDefault();
+    console.log("url : ", url);
+    if(winSecond === undefined) {
+      console.log("create new window))aaaa")
+      winSecond = new BrowserWindow({
+        webContents: options.webContents, // use existing webContents if provided
+        show: false
+      })
+      winSecond.once('ready-to-show', () => winSecond.show());
+      winSecond.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
+        event.preventDefault();
+        console.log("winSecond evert : ", event);
+        console.log("winSecond errorCode : ", errorCode);
+        console.log("winSecond errorDescription : ", errorDescription);
+        console.log("winSecond validatedURL : ", validatedURL);
+        console.log("winSecond isMainFrame : ", isMainFrame);
+        console.log("winSecond frameProcessId : ", frameProcessId);
+        console.log("winSecond frameRoutingId : ", frameRoutingId);
+      })
+      if (!options.webContents) {
+        const loadOptions = {
+          httpReferrer: referrer
+        }
+        if (postBody != null) {
+          const { data, contentType, boundary } = postBody
+          loadOptions.postData = postBody.data
+          loadOptions.extraHeaders = `content-type: ${contentType}; boundary=${boundary}`
+        }
+    
+        winSecond.loadURL(url, loadOptions) // existing webContents will be navigated automatically
+        
+      }
+      winSecond.webContents.openDevTools();
+      winSecond.removeMenu();
+      event.newGuest = winSecond;
+
+    }
+  })
+
+  win.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
+    event.preventDefault();
+    console.log("win evert : ", event);
+    console.log("win errorCode : ", errorCode);
+    console.log("win errorDescription : ", errorDescription);
+    console.log("win validatedURL : ", validatedURL);
+    console.log("win isMainFrame : ", isMainFrame);
+    console.log("win frameProcessId : ", frameProcessId);
+    console.log("win frameRoutingId : ", frameRoutingId);
+  })
+  
 }
 
 //사용 준비가 완료되면 윈도우를 연다.
@@ -52,15 +110,13 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // macOS에서 독 아이콘이 클릭되고 다른 창은 열리지 않는다.
   console.log("app.on activate");
-  if (win === null) {
-    createWindow()
-  }
 })
 
 const myEmitter = new EventEmitter();
 //message가 event인 이벤트를 등록한다.
 myEmitter.on('event', () => {
   console.log('A');
+  
 });
 
 //message가 event인 이벤트를 발생한다.

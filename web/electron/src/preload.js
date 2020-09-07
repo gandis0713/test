@@ -1,9 +1,22 @@
 
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, BrowserWindow } = require('electron');
 var os = require('os');
 var dgram = require('dgram');
 var arptable = require('arptable-js');
+var child = require('child_process').execFile;
+var executablePath = "C:\\Program Files (x86)\\VATECH\\EzDent-i\\Bin\\VTE2Loader_ReqAdmin32.exe";
+// var executablePath = "C:\\Program Files (x86)\\VATECH\\EzDent-i\\Bin\\VTE2Loader32.exe";
+// var executablePath = "C:\\Program Files (x86)\\VATECH\\EzDent-i\\Bin\\VTE232..exe";
 
+
+child(executablePath, function(err, data, se) {
+    if(err){
+       console.error(err);
+       return;
+    }
+ 
+    console.log(data.toString());
+});
 const EzWebServerClient = require('@ewoosoft/ezwebserver-client').default;
 
 
@@ -17,10 +30,6 @@ const getExpire = () => {
   expires.setDate(expires.getDate() + 1);
   return Math.round(expires.valueOf() / 1000);
 };
-
-const checkDuplicate = (data)=>{
-  return new Set(data).size !== w.length 
-}
 
 const lstIP = [];
 const findDuplicate = (address)=>{
@@ -37,6 +46,10 @@ window.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.send('asynchronous-message', 'ping');
 
   ipcRenderer.on('asynchronous-reply', (arg) => {
+    
+  let count = require('electron').BrowserWindow.getFocusedWindow();
+  console.log("count", count) // "pong" 출력
+
       console.log("arg", arg) // "pong" 출력
   });
 
