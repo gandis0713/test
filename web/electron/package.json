@@ -4,6 +4,7 @@
   "main": "dist/main.js",
   "private": true,
   "scripts": {
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
     "build": "tsc",
     "pack": "electron-builder build -w --x64=true",
     "start": "electron ."
@@ -28,10 +29,18 @@
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-typescript": "^7.10.4",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
     "babel-loader": "^8.1.0",
     "dgram": "^1.0.1",
     "electron": "^10.1.1",
     "electron-builder": "^22.8.0",
+    "eslint": "^7.8.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-import-resolver-typescript": "^2.3.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.1.1",
     "webpack": "^4.44.1"
   },
   "dependencies": {
