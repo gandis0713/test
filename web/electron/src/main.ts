@@ -1,8 +1,7 @@
-const { app, BrowserWindow } = require('electron');
-const path = require('path')
-const url = require('url')
-const EventEmitter = require('events');
-const {ipcMain} = require('electron');
+import { app, BrowserWindow, ipcMain } from 'electron';
+import * as path from 'path'
+import * as url from 'url';
+import { EventEmitter } from 'events';
 var winSecond = undefined;
 
 //윈도우 객체의 전역으로 선언합니다. 그렇지 않으면 윈도우가 자동으로 닫는다.
@@ -15,7 +14,7 @@ function createWindow () {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, "./src/preload.js"),
+      preload: path.join(__dirname, "./preload.js"),
       webSecurity: false,
     },
   })
@@ -43,14 +42,16 @@ function createWindow () {
   console.log("close window");
   })
   win.removeMenu();
-  win.webContents.on('new-window', (event, url, frameName, disposition, options, additionalFeatures, referrer, postBody) => {
+  win.webContents.on('new-window', (event: Electron.NewWindowWebContentsEvent, url, frameName, disposition, options : Electron.BrowserWindowConstructorOptions , additionalFeatures, referrer, postBody) => {
     event.preventDefault();
     console.log("url : ", url);
     if(winSecond === undefined) {
-      console.log("create new window))aaaa")
       winSecond = new BrowserWindow({
-        webContents: options.webContents, // use existing webContents if provided
-        show: false
+        width: 800,
+        height: 600,
+        webPreferences: {
+          webSecurity: false,
+        },
       })
       winSecond.once('ready-to-show', () => winSecond.show());
       winSecond.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame, frameProcessId, frameRoutingId) => {
@@ -63,19 +64,20 @@ function createWindow () {
         console.log("winSecond frameProcessId : ", frameProcessId);
         console.log("winSecond frameRoutingId : ", frameRoutingId);
       })
-      if (!options.webContents) {
+
+      if (postBody != null) {
         const loadOptions = {
-          httpReferrer: referrer
+          httpReferrer: referrer,
+          postData: undefined,
+          extraHeaders: undefined
         }
-        if (postBody != null) {
-          const { data, contentType, boundary } = postBody
-          loadOptions.postData = postBody.data
-          loadOptions.extraHeaders = `content-type: ${contentType}; boundary=${boundary}`
-        }
-    
-        winSecond.loadURL(url, loadOptions) // existing webContents will be navigated automatically
+        const { data, contentType, boundary } = postBody
+        loadOptions.postData = postBody.data
+        loadOptions.extraHeaders = `content-type: ${contentType}; boundary=${boundary}`
         
+        winSecond.loadURL(url, loadOptions) // existing webContents will be navigated automatically
       }
+
       winSecond.webContents.openDevTools();
       winSecond.removeMenu();
       event.newGuest = winSecond;

@@ -47,10 +47,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
   ipcRenderer.on('asynchronous-reply', (arg) => {
     
-  let count = require('electron').BrowserWindow.getFocusedWindow();
-  console.log("count", count) // "pong" 출력
-
-      console.log("arg", arg) // "pong" 출력
+    // let count = BrowserWindow.getFocusedWindow();
+    // console.log("count", count) // "pong" 출력
+    console.log("arg", arg) // "pong" 출력
   });
 
 
