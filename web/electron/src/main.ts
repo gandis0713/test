@@ -23,10 +23,9 @@ function createWindow() {
 
   //index.html를 로드합니다.
   // win.loadURL('https://prod.dentasssssslclever.com/signIn');
-  // win.loadURL('https://prod.dentalclever.com/signIn');
   win.loadURL(
     url.format({
-      pathname: path.join(__dirname, 'index.html'),
+      pathname: path.join(__dirname, '../public/index.html'),
       protocol: 'file:',
       slashes: true,
     })

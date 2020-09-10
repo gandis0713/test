@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
-    "build": "tsc",
+    "build-react": "webpack --config .webpack.conf/webpack.js",
+    "build-electron": "tsc",
     "pack": "electron-builder build -w --x64=true",
-    "start": "electron ."
+    "start-electron": "electron ."
   },
   "build": {
     "productName": "electron_charles",
@@ -28,8 +29,11 @@
     "@babel/cli": "^7.11.6",
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
     "@types/electron": "^1.6.10",
+    "@types/react": "^16.9.49",
+    "@types/react-dom": "^16.9.8",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
     "@typescript-eslint/parser": "^4.1.0",
     "babel-loader": "^8.1.0",
@@ -42,7 +46,11 @@
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-prettier": "^3.1.4",
     "prettier": "^2.1.1",
-    "webpack": "^4.44.1"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "ts-loader": "^8.0.3",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "@ewoosoft/ezwebserver-client": "^1.2.2164",
