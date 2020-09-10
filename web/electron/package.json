@@ -8,7 +8,8 @@
     "build-react": "webpack --config .webpack.conf/webpack.js",
     "build-electron": "tsc",
     "pack": "electron-builder build -w --x64=true",
-    "start-electron": "electron ."
+    "start-electron": "electron .",
+    "start-all": "yarn build-react && yarn build-electron && yarn start-electron"
   },
   "build": {
     "productName": "electron_charles",
