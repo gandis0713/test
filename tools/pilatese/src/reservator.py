@@ -40,7 +40,11 @@ class Reservator():
 
       # select reservation item
       pay_idx = self._pay.get_pay_idx()
-      date = datetime.date.today().isoformat()
+      date = None
+      if int(time) <= 12:
+        date = datetime.date.today() + datetime.timedelta(days=1)
+      else:
+        date = datetime.date.today().isoformat()
 
       rev_sel_url = self._site.get_rev_url()
       rev_sel_data = {'codeSS033': pay_idx, 'page': 1, 'Date': date, 'LC': 'C'}
