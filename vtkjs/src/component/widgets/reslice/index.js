@@ -3,10 +3,12 @@ import vtkOpenGLRenderWindow from 'vtk.js/Sources/Rendering/OpenGL/RenderWindow'
 import vtkRenderer from 'vtk.js/Sources/Rendering/Core/Renderer';
 import vtkRenderWindow from 'vtk.js/Sources/Rendering/Core/RenderWindow';
 import vtkRenderWindowInteractor from 'vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
-import vtkResliceCursorWidget from 'vtk.js/Sources/Widgets/Widgets3D/ResliceCursorWidget';
+import vtkResliceCursorWidget from '../../../../vtk.jsc/Sources/Widgets/Widgets3D/MPRCursorWidget';
+// import vtkResliceCursorWidget from '../../../../vtk.js/Sources/Widgets/Widgets3D/ResliceCursorWidget';
 import vtkWidgetManager from 'vtk.js/Sources/Widgets/Core/WidgetManager';
 import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
-import vtkImageReslice from 'vtk.js/Sources/Imaging/Core/ImageReslice';
+// import vtkImageReslice from '../../../../vtk.jsc/Sources/Imaging/Core/ImageReslice';
+import vtkImageReslice from '../../../../vtk.js/Sources/Imaging/Core/ImageReslice';
 import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
 import vtkInteractorStyleImage from 'vtk.js/Sources/Interaction/Style/InteractorStyleImage';
 
@@ -15,7 +17,7 @@ import openXmlVtiFile from '../../../common/DicomReader';
 
 const viewAttributes = [];
 const widget = vtkResliceCursorWidget.newInstance();
-widget.getWidgetState().setOpacity(0.6);
+// widget.getWidgetState().setOpacity(0.6);
 const sliceTypes = [ViewTypes.CORONAL, ViewTypes.SAGITTAL, ViewTypes.AXIAL];
 // ----------------------------------------------------------------------------
 // Define html structure
@@ -31,7 +33,6 @@ function updateReslice(viewtype, reslice, actor, renderer) {
 }
 function Reslice() {
   useEffect(() => {
-    console.log('etesss');
     const container = document.getElementById('reslice');
     const table = document.createElement('table');
     table.setAttribute('id', 'table');

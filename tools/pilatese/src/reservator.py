@@ -41,7 +41,9 @@ class Reservator():
       # select reservation item
       pay_idx = self._pay.get_pay_idx()
       date = None
-      if int(time) <= 12:
+      today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+      print("todya : ", today)
+      if int(time) <= 12 and datetime.date.today():
         date = datetime.date.today() + datetime.timedelta(days=1)
       else:
         date = datetime.date.today().isoformat()
