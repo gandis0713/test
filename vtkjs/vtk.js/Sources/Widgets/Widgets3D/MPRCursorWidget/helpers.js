@@ -150,21 +150,9 @@ function updateLine(lineState, center, axis, lineLength, rotationLength) {
     center[1] + lineLength * axis[1],
     center[2] + lineLength * axis[2]
   ];
-  const rotationP1 = [
-    center[0] - rotationLength * axis[0],
-    center[1] - rotationLength * axis[1],
-    center[2] - rotationLength * axis[2]
-  ];
-  const rotationP2 = [
-    center[0] + rotationLength * axis[0],
-    center[1] + rotationLength * axis[1],
-    center[2] + rotationLength * axis[2]
-  ];
 
   lineState.setPoint1(p1);
   lineState.setPoint2(p2);
-  // lineState.setRotationPoint1(rotationP1);
-  // lineState.setRotationPoint2(rotationP2);
 }
 
 // Update the reslice cursor state according to the three planes normals and the origin

@@ -1,5 +1,4 @@
 import vtkStateBuilder from 'vtk.js/Sources/Widgets/Core/StateBuilder';
-import { ScrollingMethods } from 'vtk.js/Sources/Widgets/Widgets3D/ResliceCursorWidget/Constants';
 
 const factor = 1;
 const axisXColor = [1, 0, 0];
@@ -95,9 +94,10 @@ export default function generateState() {
     .addField({ name: 'activeLineState', initialValue: null })
     .addField({ name: 'image', initialValue: null })
     .addField({ name: 'activeViewName', initialValue: '' })
-    .addField({ name: 'lineThickness', initialValue: 5 })
-    .addField({ name: 'showCenter', initialValue: true })
-    .addField({ name: 'worldCoords', initialValue: [0, 0, 0] })
+    .addField({ name: 'lineThickness', initialValue: 2 })
+    .addField({ name: 'lineAxisRotateLength', initialValue: 5 })
+    .addField({ name: 'lineAxisPosFromCenter', initialValue: 30 })
+    .addField({ name: 'lineRotatePosFromCenter', initialValue: 60 })
     .addField({
       name: 'updateMethodName'
     })
@@ -107,5 +107,6 @@ export default function generateState() {
     .addField({ name: 'enableRotation', initialValue: true })
     .addField({ name: 'enableTranslation', initialValue: true })
     .addField({ name: 'keepOrthogonality', initialValue: true })
+    .addField({ name: 'keepInVolume', initialValue: false })
     .build();
 }

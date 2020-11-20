@@ -1,4 +1,4 @@
-import { vec3 } from 'gl-matrix';
+import { vec3, mat4 } from 'gl-matrix';
 
 import macro from 'vtk.js/Sources/macro';
 import vtkBoundingBox from 'vtk.js/Sources/Common/DataModel/BoundingBox';
@@ -15,6 +15,8 @@ import {
 
 export default function widgetBehavior(publicAPI, model) {
   let isDragging = null;
+  let preWorldCoords = [0, 0, 0];
+  let curWorldCoords = [0, 0, 0];
 
   function getWorldCoords(callData) {
     const viewType = callData.pokedRenderer.getViewType();
@@ -28,12 +30,13 @@ export default function widgetBehavior(publicAPI, model) {
 
   publicAPI.updateCursor = () => {
     const center = model.widgetState.getCenter();
-    const position = model.widgetState.getWorldCoords();
-    const length = vec3.distance(center, position);
-    if (length < 30) {
+    const length = vec3.distance(center, curWorldCoords);
+    const lineAxisPosFromCenter = model.widgetState.getLineAxisPosFromCenter();
+    const lineRotatePosFromCenter = model.widgetState.getLineRotatePosFromCenter();
+    if (length < lineAxisPosFromCenter) {
       model.widgetState.setUpdateMethodName('translateCenter');
       model.openGLRenderWindow.setCursor('move');
-    } else if (length >= 30 && length < 60) {
+    } else if (length >= lineAxisPosFromCenter && length < lineRotatePosFromCenter) {
       model.widgetState.setUpdateMethodName('translateAxis');
       model.openGLRenderWindow.setCursor('pointer');
     } else {
@@ -42,13 +45,14 @@ export default function widgetBehavior(publicAPI, model) {
     }
   };
 
-  publicAPI.handleLeftButtonPress = () => {
+  publicAPI.handleLeftButtonPress = callData => {
     if (model.activeState && model.activeState.getActive()) {
       isDragging = true;
       const viewName = model.widgetState.getActiveViewName();
       const currentPlaneNormal = model.widgetState[`get${viewName}PlaneNormal`]();
       model.planeManipulator.setOrigin(model.widgetState.getCenter());
       model.planeManipulator.setNormal(currentPlaneNormal);
+      preWorldCoords = model.planeManipulator.handleEvent(callData, model.openGLRenderWindow);
 
       publicAPI.startInteraction();
     } else {
@@ -59,8 +63,7 @@ export default function widgetBehavior(publicAPI, model) {
   };
 
   publicAPI.handleMouseMove = callData => {
-    const worldCoords = getWorldCoords(callData);
-    model.widgetState.setWorldCoords(worldCoords);
+    curWorldCoords = getWorldCoords(callData);
     if (isDragging && model.pickable) {
       return publicAPI.handleEvent(callData);
     }
@@ -104,6 +107,8 @@ export default function widgetBehavior(publicAPI, model) {
     if (model.activeState.getActive()) {
       publicAPI[model.activeState.getUpdateMethodName()](callData);
       publicAPI.invokeInteractionEvent();
+
+      preWorldCoords = getWorldCoords(callData);
       return macro.EVENT_ABORT;
     }
     return macro.VOID;
@@ -153,7 +158,6 @@ export default function widgetBehavior(publicAPI, model) {
   publicAPI.translateAxis = calldata => {
     const stateLine = model.widgetState.getActiveLineState();
     const worldCoords = model.planeManipulator.handleEvent(calldata, model.openGLRenderWindow);
-    // console.log('calldata : ', calldata);
 
     const point1 = stateLine.getPoint1();
     const point2 = stateLine.getPoint2();
@@ -204,9 +208,20 @@ export default function widgetBehavior(publicAPI, model) {
   };
 
   publicAPI.translateCenter = calldata => {
-    let worldCoords = model.planeManipulator.handleEvent(calldata, model.openGLRenderWindow);
-    worldCoords = publicAPI.getBoundedCenter(worldCoords);
-    model.activeState.setCenter(worldCoords);
+    const curWorldCoords = model.planeManipulator.handleEvent(calldata, model.openGLRenderWindow);
+    const center = model.widgetState.getCenter();
+    const preWCToCurWC = [0, 0, 0];
+    vec3.subtract(preWCToCurWC, curWorldCoords, preWorldCoords);
+    let newCenter = [
+      center[0] + preWCToCurWC[0],
+      center[1] + preWCToCurWC[1],
+      center[2] + preWCToCurWC[2]
+    ];
+
+    if (model.widgetState.getKeepInVolume()) {
+      newCenter = publicAPI.getBoundedCenter(newCenter);
+    }
+    model.activeState.setCenter(newCenter);
     updateState(model.widgetState);
   };
 
@@ -215,9 +230,7 @@ export default function widgetBehavior(publicAPI, model) {
     const planeNormal = model.planeManipulator.getNormal();
     const worldCoords = model.planeManipulator.handleEvent(calldata, model.openGLRenderWindow);
     const center = model.widgetState.getCenter();
-    const previousWorldPosition = activeLine[
-      `get${model.widgetState.getActiveRotationPointName()}`
-    ]();
+    const previousWorldPosition = preWorldCoords;
     const previousVectorToOrigin = [0, 0, 0];
     vtkMath.subtract(previousWorldPosition, center, previousVectorToOrigin);
     vtkMath.normalize(previousVectorToOrigin);

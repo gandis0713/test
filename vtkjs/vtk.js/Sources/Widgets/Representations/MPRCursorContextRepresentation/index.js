@@ -32,75 +32,41 @@ function vtkMPRCursorContextRepresentation(publicAPI, model) {
 
   model.pipelines = {};
   model.pipelines.axes = [];
-  const axis1 = {};
-  axis1.line = {
-    source: vtkCylinderSource.newInstance(),
-    mapper: vtkMapper.newInstance(),
-    actor: vtkActor.newInstance({ pickable: true })
-  };
-  axis1.lineAxis1 = {
-    source: vtkCylinderSource.newInstance(),
-    mapper: vtkMapper.newInstance(),
-    actor: vtkActor.newInstance({ pickable: false })
-  };
-  axis1.lineAxis2 = {
-    source: vtkCylinderSource.newInstance(),
-    mapper: vtkMapper.newInstance(),
-    actor: vtkActor.newInstance({ pickable: false })
-  };
-  axis1.lineRotate1 = {
-    source: vtkCylinderSource.newInstance(),
-    mapper: vtkMapper.newInstance(),
-    actor: vtkActor.newInstance({ pickable: false })
-  };
-  axis1.lineRotate2 = {
-    source: vtkCylinderSource.newInstance(),
-    mapper: vtkMapper.newInstance(),
-    actor: vtkActor.newInstance({ pickable: false })
-  };
+  const axis1 = [];
 
-  const axis2 = {};
-  axis2.line = {
-    source: vtkCylinderSource.newInstance(),
-    mapper: vtkMapper.newInstance(),
-    actor: vtkActor.newInstance({ pickable: true })
-  };
-  axis2.lineAxis1 = {
-    source: vtkCylinderSource.newInstance(),
-    mapper: vtkMapper.newInstance(),
-    actor: vtkActor.newInstance({ pickable: false })
-  };
-  axis2.lineAxis2 = {
-    source: vtkCylinderSource.newInstance(),
-    mapper: vtkMapper.newInstance(),
-    actor: vtkActor.newInstance({ pickable: false })
-  };
-  axis2.lineRotate1 = {
-    source: vtkCylinderSource.newInstance(),
-    mapper: vtkMapper.newInstance(),
-    actor: vtkActor.newInstance({ pickable: false })
-  };
-  axis2.lineRotate2 = {
-    source: vtkCylinderSource.newInstance(),
-    mapper: vtkMapper.newInstance(),
-    actor: vtkActor.newInstance({ pickable: false })
-  };
+  for (let i = 0; i < Object.keys(LineType).length; i++) {
+    axis1.push({
+      source: vtkCylinderSource.newInstance(),
+      mapper: vtkMapper.newInstance(),
+      actor: vtkActor.newInstance({ pickable: true })
+    });
+  }
+  axis1[LineType.lineHandle].actor.setPickable(true);
+
+  const axis2 = [];
+
+  for (let i = 0; i < Object.keys(LineType).length; i++) {
+    axis2.push({
+      source: vtkCylinderSource.newInstance(),
+      mapper: vtkMapper.newInstance(),
+      actor: vtkActor.newInstance({ pickable: true })
+    });
+  }
+  axis2[LineType.lineHandle].actor.setPickable(true);
 
   model.pipelines.axes.push(axis1);
   model.pipelines.axes.push(axis2);
   publicAPI.setResolution = resolution => {
     model.pipelines.axes.forEach(axis => {
-      axis.line.source.setResolution(resolution);
-      axis.lineAxis1.source.setResolution(resolution);
-      axis.lineAxis2.source.setResolution(resolution);
-      axis.lineRotate1.source.setResolution(resolution);
-      axis.lineRotate2.source.setResolution(resolution);
+      axis.forEach(line => {
+        line.source.setResolution(resolution);
+      });
     });
   };
   publicAPI.setResolution(4);
 
   model.pipelines.axes.forEach(axis => {
-    Object.values(axis).forEach(line => {
+    axis.forEach(line => {
       vtkWidgetRepresentation.connectPipeline(line);
       const actor = line.actor;
       actor.getProperty().setAmbient(1, 1, 1);
@@ -116,74 +82,84 @@ function vtkMPRCursorContextRepresentation(publicAPI, model) {
       scaledLineThickness *= publicAPI.getPixelWorldHeightAtCoord(center);
     }
     model.pipelines.axes.forEach(axis => {
-      axis.line.source.setRadius(scaledLineThickness);
-      axis.lineAxis1.source.setRadius(scaledLineThickness);
-      axis.lineAxis2.source.setRadius(scaledLineThickness);
-      axis.lineRotate1.source.setRadius(scaledLineThickness);
-      axis.lineRotate2.source.setRadius(scaledLineThickness);
+      axis.forEach(line => {
+        line.source.setRadius(scaledLineThickness);
+      });
+    });
+  };
+
+  publicAPI.setLineAxisRotateLength = length => {
+    model.pipelines.axes.forEach(axis => {
+      axis[LineType.lineAxis1].source.setHeight(length);
+      axis[LineType.lineAxis2].source.setHeight(length);
+      axis[LineType.lineRotate1].source.setHeight(length);
+      axis[LineType.lineRotate2].source.setHeight(length);
     });
   };
 
   function updateRender(state, axis) {
+    const widgetState = model.inputData[0];
     const color = state.getColor();
-    axis.line.actor.getProperty().setColor(color);
-    axis.lineAxis1.actor.getProperty().setColor(color);
-    axis.lineRotate1.actor.getProperty().setColor(color);
-    axis.lineAxis2.actor.getProperty().setColor(color);
-    axis.lineRotate2.actor.getProperty().setColor(color);
+    axis.forEach(line => {
+      line.actor.getProperty().setColor(color);
+    });
 
     const vector = [0, 0, 0];
     vtkMath.subtract(state.getPoint2(), state.getPoint1(), vector);
     const center = [0, 0, 0];
     vtkMath.multiplyAccumulate(state.getPoint1(), vector, 0.5, center);
-    axis.line.source.setCenter(center);
+    axis[LineType.lineHandle].source.setCenter(center);
     const length = vtkMath.normalize(vector);
-    axis.line.source.setDirection(vector);
-    axis.line.source.setHeight(length);
-    const lineVector = [0, 0, 0];
-    vec3.cross(lineVector, vector, model.inputData[0][`get${model.viewName}PlaneNormal`]());
-    const scaleAxisCenter = 30;
-    const lineAxisCenter1 = [
-      center[0] + vector[0] * scaleAxisCenter,
-      center[1] + vector[1] * scaleAxisCenter,
-      center[2] + vector[2] * scaleAxisCenter
-    ];
-    axis.lineAxis1.source.setCenter(lineAxisCenter1);
-    axis.lineAxis1.source.setDirection(lineVector);
-    axis.lineAxis1.source.setHeight(10);
-    const lineAxisCenter2 = [
-      center[0] - vector[0] * scaleAxisCenter,
-      center[1] - vector[1] * scaleAxisCenter,
-      center[2] - vector[2] * scaleAxisCenter
-    ];
-    axis.lineAxis2.source.setCenter(lineAxisCenter2);
-    axis.lineAxis2.source.setDirection(lineVector);
-    axis.lineAxis2.source.setHeight(10);
+    axis[LineType.lineHandle].source.setDirection(vector);
+    axis[LineType.lineHandle].source.setHeight(length);
+    const lineAxisRotateVector = [0, 0, 0];
+    const planeNormal = widgetState[`get${model.viewName}PlaneNormal`]();
+    vec3.cross(lineAxisRotateVector, vector, planeNormal);
 
-    const scaleRotateCenter = 60;
+    const lineAxisPosFromCenter = widgetState.getLineAxisPosFromCenter();
+    const lineAxisCenter1 = [
+      center[0] + vector[0] * lineAxisPosFromCenter,
+      center[1] + vector[1] * lineAxisPosFromCenter,
+      center[2] + vector[2] * lineAxisPosFromCenter
+    ];
+    axis[LineType.lineAxis1].source.setCenter(lineAxisCenter1);
+    axis[LineType.lineAxis1].source.setDirection(lineAxisRotateVector);
+    const lineAxisCenter2 = [
+      center[0] - vector[0] * lineAxisPosFromCenter,
+      center[1] - vector[1] * lineAxisPosFromCenter,
+      center[2] - vector[2] * lineAxisPosFromCenter
+    ];
+    axis[LineType.lineAxis2].source.setCenter(lineAxisCenter2);
+    axis[LineType.lineAxis2].source.setDirection(lineAxisRotateVector);
+
+    const lineRotatePosFromCenter = widgetState.getLineRotatePosFromCenter();
     const lineRotateCenter1 = [
-      center[0] + vector[0] * scaleRotateCenter,
-      center[1] + vector[1] * scaleRotateCenter,
-      center[2] + vector[2] * scaleRotateCenter
+      center[0] + vector[0] * lineRotatePosFromCenter,
+      center[1] + vector[1] * lineRotatePosFromCenter,
+      center[2] + vector[2] * lineRotatePosFromCenter
     ];
-    axis.lineRotate1.source.setCenter(lineRotateCenter1);
-    axis.lineRotate1.source.setDirection(lineVector);
-    axis.lineRotate1.source.setHeight(10);
+    axis[LineType.lineRotate1].source.setCenter(lineRotateCenter1);
+    axis[LineType.lineRotate1].source.setDirection(lineAxisRotateVector);
     const lineRotateCenter2 = [
-      center[0] - vector[0] * scaleRotateCenter,
-      center[1] - vector[1] * scaleRotateCenter,
-      center[2] - vector[2] * scaleRotateCenter
+      center[0] - vector[0] * lineRotatePosFromCenter,
+      center[1] - vector[1] * lineRotatePosFromCenter,
+      center[2] - vector[2] * lineRotatePosFromCenter
     ];
-    axis.lineRotate2.source.setCenter(lineRotateCenter2);
-    axis.lineRotate2.source.setDirection(lineVector);
-    axis.lineRotate2.source.setHeight(10);
+    axis[LineType.lineRotate2].source.setCenter(lineRotateCenter2);
+    axis[LineType.lineRotate2].source.setDirection(lineAxisRotateVector);
+
+    const lineAxisRotateLength = widgetState.getLineAxisRotateLength();
+    publicAPI.setLineAxisRotateLength(lineAxisRotateLength);
   }
 
   /**
    * Returns the line actors in charge of translating the views.
    */
   publicAPI.getTranslationActors = () => {
-    return [model.pipelines.axes[0].line.actor, model.pipelines.axes[1].line.actor];
+    return [
+      model.pipelines.axes[0][LineType.lineHandle].actor,
+      model.pipelines.axes[1][LineType.lineHandle].actor
+    ];
   };
 
   publicAPI.requestData = (inData, outData) => {
@@ -212,11 +188,6 @@ function vtkMPRCursorContextRepresentation(publicAPI, model) {
       actor.getProperty().setOpacity(state.getOpacity());
       let actorVisibility = visibility;
 
-      // Conditionally display center handle but always show it for picking
-      if (!state.getShowCenter() && actor === model.pipelines.center.actor) {
-        actorVisibility = actorVisibility && renderingType === RenderingTypes.PICKING_BUFFER;
-      }
-
       actor.setVisibility(actorVisibility);
 
       // Conditionally pick lines
@@ -243,10 +214,10 @@ function vtkMPRCursorContextRepresentation(publicAPI, model) {
     let activeLineState = null;
 
     switch (prop) {
-      case model.pipelines.axes[0].line.actor:
+      case model.pipelines.axes[0][LineType.lineHandle].actor:
         activeLineState = axis1State;
         break;
-      case model.pipelines.axes[1].line.actor:
+      case model.pipelines.axes[1][LineType.lineHandle].actor:
         activeLineState = axis2State;
         break;
       default:
