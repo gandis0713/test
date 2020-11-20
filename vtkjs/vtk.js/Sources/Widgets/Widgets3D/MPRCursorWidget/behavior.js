@@ -1,4 +1,4 @@
-import { mat4 } from 'gl-matrix';
+import { vec3 } from 'gl-matrix';
 
 import macro from 'vtk.js/Sources/macro';
 import vtkBoundingBox from 'vtk.js/Sources/Common/DataModel/BoundingBox';
@@ -6,26 +6,43 @@ import vtkLine from 'vtk.js/Sources/Common/DataModel/Line';
 import vtkPlaneManipulator from 'vtk.js/Sources/Widgets/Manipulators/PlaneManipulator';
 import * as vtkMath from 'vtk.js/Sources/Common/Core/Math';
 
-import { boundPointOnPlane, getAssociatedLinesName, updateState } from './helpers';
+import {
+  boundPointOnPlane,
+  getAssociatedLinesName,
+  updateState,
+  getViewPlaneNameFromViewType
+} from './helpers';
 
 export default function widgetBehavior(publicAPI, model) {
   let isDragging = null;
 
+  function getWorldCoords(callData) {
+    const viewType = callData.pokedRenderer.getViewType();
+    const viewName = getViewPlaneNameFromViewType(viewType);
+    const currentPlaneNormal = model.widgetState[`get${viewName}PlaneNormal`]();
+    model.planeManipulator.setOrigin(model.widgetState.getCenter());
+    model.planeManipulator.setNormal(currentPlaneNormal);
+    const worldCoords = model.planeManipulator.handleEvent(callData, model.openGLRenderWindow);
+    return worldCoords;
+  }
+
   publicAPI.updateCursor = () => {
-    switch (model.activeState.getUpdateMethodName()) {
-      case 'translateCenter':
-        model.openGLRenderWindow.setCursor('move');
-        break;
-      case 'translateAxis':
-        model.openGLRenderWindow.setCursor('pointer');
-        break;
-      default:
-        model.openGLRenderWindow.setCursor('default');
-        break;
+    const center = model.widgetState.getCenter();
+    const position = model.widgetState.getWorldCoords();
+    const length = vec3.distance(center, position);
+    if (length < 30) {
+      model.widgetState.setUpdateMethodName('translateCenter');
+      model.openGLRenderWindow.setCursor('move');
+    } else if (length >= 30 && length < 60) {
+      model.widgetState.setUpdateMethodName('translateAxis');
+      model.openGLRenderWindow.setCursor('pointer');
+    } else {
+      model.widgetState.setUpdateMethodName('rotateLine');
+      model.openGLRenderWindow.setCursor('alias');
     }
   };
 
-  publicAPI.handleLeftButtonPress = callData => {
+  publicAPI.handleLeftButtonPress = () => {
     if (model.activeState && model.activeState.getActive()) {
       isDragging = true;
       const viewName = model.widgetState.getActiveViewName();
@@ -42,6 +59,8 @@ export default function widgetBehavior(publicAPI, model) {
   };
 
   publicAPI.handleMouseMove = callData => {
+    const worldCoords = getWorldCoords(callData);
+    model.widgetState.setWorldCoords(worldCoords);
     if (isDragging && model.pickable) {
       return publicAPI.handleEvent(callData);
     }
@@ -134,6 +153,7 @@ export default function widgetBehavior(publicAPI, model) {
   publicAPI.translateAxis = calldata => {
     const stateLine = model.widgetState.getActiveLineState();
     const worldCoords = model.planeManipulator.handleEvent(calldata, model.openGLRenderWindow);
+    // console.log('calldata : ', calldata);
 
     const point1 = stateLine.getPoint1();
     const point2 = stateLine.getPoint2();
@@ -191,46 +211,46 @@ export default function widgetBehavior(publicAPI, model) {
   };
 
   publicAPI.rotateLine = calldata => {
-    // const activeLine = model.widgetState.getActiveLineState();
-    // const planeNormal = model.planeManipulator.getNormal();
-    // const worldCoords = model.planeManipulator.handleEvent(calldata, model.openGLRenderWindow);
-    // const center = model.widgetState.getCenter();
-    // const previousWorldPosition = activeLine[
-    //   `get${model.widgetState.getActiveRotationPointName()}`
-    // ]();
-    // const previousVectorToOrigin = [0, 0, 0];
-    // vtkMath.subtract(previousWorldPosition, center, previousVectorToOrigin);
-    // vtkMath.normalize(previousVectorToOrigin);
-    // const currentVectorToOrigin = [0, 0, 0];
-    // vtkMath.subtract(worldCoords, center, currentVectorToOrigin);
-    // vtkMath.normalize(currentVectorToOrigin);
-    // const rotationAngle = vtkMath.angleBetweenVectors(
-    //   previousVectorToOrigin,
-    //   currentVectorToOrigin
-    // );
-    // // Define the direction of the rotation
-    // const cross = [0, 0, 0];
-    // vtkMath.cross(currentVectorToOrigin, previousVectorToOrigin, cross);
-    // vtkMath.normalize(cross);
-    // const sign = vtkMath.dot(cross, planeNormal) > 0 ? -1 : 1;
-    // const matrix = mat4.create();
-    // mat4.translate(matrix, matrix, center);
-    // mat4.rotate(matrix, matrix, rotationAngle * sign, planeNormal);
-    // mat4.translate(matrix, matrix, [-center[0], -center[1], -center[2]]);
-    // // Rotate associated line's plane normal
-    // const planeName = activeLine.getPlaneName();
-    // const normal = model.widgetState[`get${planeName}PlaneNormal`]();
-    // const newNormal = vtkMath.rotateVector(normal, planeNormal, rotationAngle * sign);
-    // model.widgetState[`set${planeName}PlaneNormal`](newNormal);
-    // if (model.widgetState.getKeepOrthogonality()) {
-    //   const associatedLineName = getAssociatedLinesName(activeLine.getName());
-    //   const associatedLine = model.widgetState[`get${associatedLineName}`]();
-    //   const planeName2 = associatedLine.getPlaneName();
-    //   const normal2 = model.widgetState[`get${planeName2}PlaneNormal`]();
-    //   const newNormal2 = vtkMath.rotateVector(normal2, planeNormal, rotationAngle * sign);
-    //   model.widgetState[`set${planeName2}PlaneNormal`](newNormal2);
-    // }
-    // updateState(model.widgetState);
+    const activeLine = model.widgetState.getActiveLineState();
+    const planeNormal = model.planeManipulator.getNormal();
+    const worldCoords = model.planeManipulator.handleEvent(calldata, model.openGLRenderWindow);
+    const center = model.widgetState.getCenter();
+    const previousWorldPosition = activeLine[
+      `get${model.widgetState.getActiveRotationPointName()}`
+    ]();
+    const previousVectorToOrigin = [0, 0, 0];
+    vtkMath.subtract(previousWorldPosition, center, previousVectorToOrigin);
+    vtkMath.normalize(previousVectorToOrigin);
+    const currentVectorToOrigin = [0, 0, 0];
+    vtkMath.subtract(worldCoords, center, currentVectorToOrigin);
+    vtkMath.normalize(currentVectorToOrigin);
+    const rotationAngle = vtkMath.angleBetweenVectors(
+      previousVectorToOrigin,
+      currentVectorToOrigin
+    );
+    // Define the direction of the rotation
+    const cross = [0, 0, 0];
+    vtkMath.cross(currentVectorToOrigin, previousVectorToOrigin, cross);
+    vtkMath.normalize(cross);
+    const sign = vtkMath.dot(cross, planeNormal) > 0 ? -1 : 1;
+    const matrix = mat4.create();
+    mat4.translate(matrix, matrix, center);
+    mat4.rotate(matrix, matrix, rotationAngle * sign, planeNormal);
+    mat4.translate(matrix, matrix, [-center[0], -center[1], -center[2]]);
+    // Rotate associated line's plane normal
+    const planeName = activeLine.getPlaneName();
+    const normal = model.widgetState[`get${planeName}PlaneNormal`]();
+    const newNormal = vtkMath.rotateVector(normal, planeNormal, rotationAngle * sign);
+    model.widgetState[`set${planeName}PlaneNormal`](newNormal);
+    if (model.widgetState.getKeepOrthogonality()) {
+      const associatedLineName = getAssociatedLinesName(activeLine.getName());
+      const associatedLine = model.widgetState[`get${associatedLineName}`]();
+      const planeName2 = associatedLine.getPlaneName();
+      const normal2 = model.widgetState[`get${planeName2}PlaneNormal`]();
+      const newNormal2 = vtkMath.rotateVector(normal2, planeNormal, rotationAngle * sign);
+      model.widgetState[`set${planeName2}PlaneNormal`](newNormal2);
+    }
+    updateState(model.widgetState);
   };
 
   // --------------------------------------------------------------------------

@@ -242,6 +242,8 @@ export default function widgetBehavior(publicAPI, model) {
       `get${model.widgetState.getActiveRotationPointName()}`
     ]();
 
+    console.log('previousWorldPosition : ', previousWorldPosition);
+
     const previousVectorToOrigin = [0, 0, 0];
     vtkMath.subtract(previousWorldPosition, center, previousVectorToOrigin);
     vtkMath.normalize(previousVectorToOrigin);

@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import vtkOpenGLRenderWindow from 'vtk.js/Sources/Rendering/OpenGL/RenderWindow';
-import vtkRenderer from 'vtk.js/Sources/Rendering/Core/Renderer';
+import vtkESRenderer from '../../../../vtk.js/Sources/Rendering/Core/ESRenderer';
 import vtkRenderWindow from 'vtk.js/Sources/Rendering/Core/RenderWindow';
 import vtkRenderWindowInteractor from 'vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
-import vtkResliceCursorWidget from '../../../../vtk.jsc/Sources/Widgets/Widgets3D/MPRCursorWidget';
+import vtkResliceCursorWidget from '../../../../vtk.js/Sources/Widgets/Widgets3D/MPRCursorWidget';
 // import vtkResliceCursorWidget from '../../../../vtk.js/Sources/Widgets/Widgets3D/ResliceCursorWidget';
 import vtkWidgetManager from 'vtk.js/Sources/Widgets/Core/WidgetManager';
 import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
-// import vtkImageReslice from '../../../../vtk.jsc/Sources/Imaging/Core/ImageReslice';
 import vtkImageReslice from '../../../../vtk.js/Sources/Imaging/Core/ImageReslice';
 import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
 import vtkInteractorStyleImage from 'vtk.js/Sources/Interaction/Style/InteractorStyleImage';
@@ -61,7 +60,7 @@ function Reslice() {
 
       const obj = {
         renderWindow: vtkRenderWindow.newInstance(),
-        renderer: vtkRenderer.newInstance(),
+        renderer: vtkESRenderer.newInstance(),
         GLWindow: vtkOpenGLRenderWindow.newInstance(),
         interactor: vtkRenderWindowInteractor.newInstance(),
         widgetManager: vtkWidgetManager.newInstance()
@@ -80,7 +79,7 @@ function Reslice() {
       obj.widgetInstance = obj.widgetManager.addWidget(widget, sliceTypes[i]);
       obj.widgetManager.enablePicking();
       // Use to update all renderers buffer when actors are moved
-      obj.widgetManager.setCaptureOn(CaptureOn.MOUSE_MOVE);
+      // obj.widgetManager.setCaptureOn(CaptureOn.MOUSE_MOVE);
 
       obj.reslice = vtkImageReslice.newInstance();
       obj.reslice.setTransformInputSampling(false);
@@ -116,6 +115,7 @@ function Reslice() {
         } else if (i === 1) {
           viewType = ViewTypes.SAGITTAL;
         }
+        obj.renderer.setViewType(viewType);
 
         viewAttributes
           // No need to update plane nor refresh when interaction

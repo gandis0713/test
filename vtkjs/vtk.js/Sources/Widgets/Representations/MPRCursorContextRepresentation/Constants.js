@@ -9,3 +9,11 @@ export const PlaneOrientation = {
   Y: 1,
   Z: 2
 };
+
+export const LineType = {
+  lineHandle: 0,
+  lineAxis1: 1,
+  lineAxis2: 2,
+  lineRotate1: 3,
+  lineRotate2: 4
+};
