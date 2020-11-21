@@ -136,7 +136,11 @@ function Reslice() {
       }
     });
   }, []);
-  return <div id="reslice"></div>;
+  return (
+    <div>
+      <div id="reslice" />
+    </div>
+  );
 }
 
 export default Reslice;
