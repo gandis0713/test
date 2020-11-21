@@ -46,6 +46,11 @@ export default function widgetBehavior(publicAPI, model) {
   };
 
   publicAPI.handleLeftButtonPress = callData => {
+    const { pokedRenderer } = callData;
+    if (pokedRenderer !== model.widgetManager.getRenderer()) {
+      return macro.VOID;
+    }
+
     let returnValue = macro.VOID;
     if (model.activeState && model.activeState.getActive()) {
       isDragging = true;
@@ -65,6 +70,11 @@ export default function widgetBehavior(publicAPI, model) {
   };
 
   publicAPI.handleMouseMove = callData => {
+    const { pokedRenderer } = callData;
+    if (pokedRenderer !== model.widgetManager.getRenderer()) {
+      return macro.VOID;
+    }
+
     let returnValue = macro.VOID;
     curWorldCoords = getWorldCoords(callData);
 
@@ -216,6 +226,7 @@ export default function widgetBehavior(publicAPI, model) {
   };
 
   publicAPI.translateCenter = calldata => {
+    const { pokedRenderer } = calldata;
     const curWorldCoords = model.planeManipulator.handleEvent(calldata, model.openGLRenderWindow);
     const center = model.widgetState.getCenter();
     const preWCToCurWC = [0, 0, 0];

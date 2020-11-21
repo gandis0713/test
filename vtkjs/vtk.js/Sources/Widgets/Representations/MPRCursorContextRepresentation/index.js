@@ -253,6 +253,7 @@ const DEFAULT_VALUES = {
 export function extend(publicAPI, model, initialValues = {}) {
   vtkWidgetRepresentation.extend(publicAPI, model, initialValues);
   Object.assign(model, DEFAULT_VALUES, initialValues);
+  macro.setGet(publicAPI, model, ['viewName']);
 
   // Object specific methods
   vtkMPRCursorContextRepresentation(publicAPI, model);

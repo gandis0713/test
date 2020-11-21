@@ -94,7 +94,7 @@ export default function generateState() {
     .addField({ name: 'activeLineState', initialValue: null })
     .addField({ name: 'image', initialValue: null })
     .addField({ name: 'activeViewName', initialValue: '' })
-    .addField({ name: 'lineThickness', initialValue: 2 })
+    .addField({ name: 'lineThickness', initialValue: 4 })
     .addField({ name: 'lineAxisRotateLength', initialValue: 5 })
     .addField({ name: 'axisGuidePosFromCenter', initialValue: 30 })
     .addField({ name: 'rotateGuidePosFromCenter', initialValue: 60 })

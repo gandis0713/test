@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import vtkOpenGLRenderWindow from 'vtk.js/Sources/Rendering/OpenGL/RenderWindow';
 import vtkESRenderer from '../../../../vtk.js/Sources/Rendering/Core/ESRenderer';
-import vtkRenderWindow from 'vtk.js/Sources/Rendering/Core/RenderWindow';
-import vtkRenderWindowInteractor from 'vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
+import vtkRenderWindow from '../../../../vtk.js/Sources/Rendering/Core/RenderWindow';
+import vtkRenderWindowInteractor from '../../../../vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
 import vtkResliceCursorWidget from '../../../../vtk.js/Sources/Widgets/Widgets3D/MPRCursorWidget';
-// import vtkResliceCursorWidget from '../../../../vtk.js/Sources/Widgets/Widgets3D/ResliceCursorWidget';
-import vtkWidgetManager from 'vtk.js/Sources/Widgets/Core/WidgetManager';
+import vtkWidgetManager from '../../../../vtk.js/Sources/Widgets/Core/WidgetManager';
 import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
-import vtkImageReslice from '../../../../vtk.js/Sources/Imaging/Core/ImageReslice';
+import vtkImageReslice from 'vtk.js/Sources/Imaging/Core/ImageReslice';
 import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
 import vtkInteractorStyleImage from 'vtk.js/Sources/Interaction/Style/InteractorStyleImage';
 
@@ -17,7 +16,7 @@ import openXmlVtiFile from '../../../common/DicomReader';
 const viewAttributes = [];
 const widget = vtkResliceCursorWidget.newInstance();
 // widget.getWidgetState().setOpacity(0.6);
-const sliceTypes = [ViewTypes.CORONAL, ViewTypes.SAGITTAL, ViewTypes.AXIAL];
+const sliceTypes = [ViewTypes.CORONAL, ViewTypes.AXIAL, ViewTypes.SAGITTAL];
 // ----------------------------------------------------------------------------
 // Define html structure
 // ----------------------------------------------------------------------------
@@ -32,54 +31,51 @@ function updateReslice(viewtype, reslice, actor, renderer) {
 }
 function Reslice() {
   useEffect(() => {
+    const renderWindow = vtkRenderWindow.newInstance();
+    const GLWindow = vtkOpenGLRenderWindow.newInstance();
+    GLWindow.setSize(600, 600);
+    renderWindow.addView(GLWindow);
+    const interactor = vtkRenderWindowInteractor.newInstance();
+    renderWindow.setInteractor(interactor);
     const container = document.getElementById('reslice');
-    const table = document.createElement('table');
-    table.setAttribute('id', 'table');
-    container.appendChild(table);
-
-    const trLine1 = document.createElement('tr');
-    trLine1.setAttribute('id', 'line1');
-    table.appendChild(trLine1);
-
-    const trLine2 = document.createElement('tr');
-    trLine2.setAttribute('id', 'line2');
-    table.appendChild(trLine2);
+    GLWindow.setContainer(container);
+    interactor.setView(GLWindow);
+    interactor.initialize();
+    interactor.bindEvents(container);
+    // interactor.setInteractorStyle(vtkInteractorStyleImage.newInstance());
 
     // ----------------------------------------------------------------------------
     // Setup rendering code
     // ----------------------------------------------------------------------------
 
     for (let i = 0; i < sliceTypes.length; i++) {
-      const element = document.createElement('td');
-
-      if (i === 2) {
-        trLine2.appendChild(element);
-      } else {
-        trLine1.appendChild(element);
-      }
+      // if (i === 2) {
+      //   trLine2.appendChild(element);
+      // } else {
+      //   trLine1.appendChild(element);
+      // }
 
       const obj = {
-        renderWindow: vtkRenderWindow.newInstance(),
         renderer: vtkESRenderer.newInstance(),
-        GLWindow: vtkOpenGLRenderWindow.newInstance(),
-        interactor: vtkRenderWindowInteractor.newInstance(),
         widgetManager: vtkWidgetManager.newInstance()
       };
 
+      if (sliceTypes[i] === ViewTypes.AXIAL) {
+        obj.renderer.setViewport(0, 0.5, 0.5, 1.0);
+      } else if (sliceTypes[i] === ViewTypes.SAGITTAL) {
+        obj.renderer.setViewport(0.5, 0.5, 1.0, 1.0);
+      } else if (sliceTypes[i] === ViewTypes.CORONAL) {
+        obj.renderer.setViewport(0, 0, 0.5, 0.5);
+      }
+
       obj.renderer.getActiveCamera().setParallelProjection(true);
-      obj.renderWindow.addRenderer(obj.renderer);
-      obj.renderWindow.addView(obj.GLWindow);
-      obj.renderWindow.setInteractor(obj.interactor);
-      obj.GLWindow.setContainer(element);
-      obj.interactor.setView(obj.GLWindow);
-      obj.interactor.initialize();
-      obj.interactor.bindEvents(element);
-      obj.interactor.setInteractorStyle(vtkInteractorStyleImage.newInstance());
+      renderWindow.addRenderer(obj.renderer);
       obj.widgetManager.setRenderer(obj.renderer);
       obj.widgetInstance = obj.widgetManager.addWidget(widget, sliceTypes[i]);
       obj.widgetManager.enablePicking();
+      obj.widgetManager.setViewType(sliceTypes[i]);
       // Use to update all renderers buffer when actors are moved
-      // obj.widgetManager.setCaptureOn(CaptureOn.MOUSE_MOVE);
+      obj.widgetManager.setCaptureOn(CaptureOn.MOUSE_MOVE);
 
       obj.reslice = vtkImageReslice.newInstance();
       obj.reslice.setTransformInputSampling(false);
@@ -109,11 +105,11 @@ function Reslice() {
         actorProp.setColorLevel(1500);
 
         const reslice = obj.reslice;
-        let viewType = ViewTypes.AXIAL;
+        let viewType = ViewTypes.SAGITTAL;
         if (i === 0) {
           viewType = ViewTypes.CORONAL;
         } else if (i === 1) {
-          viewType = ViewTypes.SAGITTAL;
+          viewType = ViewTypes.AXIAL;
         }
         obj.renderer.setViewType(viewType);
 
@@ -132,13 +128,13 @@ function Reslice() {
           });
 
         updateReslice(viewType, reslice, obj.resliceActor, obj.renderer);
-        obj.renderWindow.render();
       }
+      renderWindow.render();
     });
   }, []);
   return (
     <div>
-      <div id="reslice" />
+      <div id="reslice" style={{ width: 600, height: 600 }} />
     </div>
   );
 }
