@@ -1,0 +1,24 @@
+services:
+  - docker:dind
+
+# We tell GitLab to install all the packages
+# before running anything.
+# Docker images come with yarn preinstalled
+before_script:
+  - date +"%H"
+  - echo ${HOUR}
+  - echo "started by ${GITLAB_USER_NAME}"
+
+# You specify the stages. Those are the steps that GitLab will go through
+# Order matters.
+stages:
+  - build
+
+Build:
+  stage: build
+  image: node:latest
+  before_script:
+    - yarn install --network-concurrency 1
+  script:
+    - yarn lint
+    - yarn build
