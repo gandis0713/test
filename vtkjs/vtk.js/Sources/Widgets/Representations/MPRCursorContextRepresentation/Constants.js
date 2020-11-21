@@ -11,9 +11,9 @@ export const PlaneOrientation = {
 };
 
 export const LineType = {
-  lineHandle: 0,
-  lineAxis1: 1,
-  lineAxis2: 2,
-  lineRotate1: 3,
-  lineRotate2: 4
+  Handler: 0,
+  AxisGuide1: 1,
+  AxisGuide2: 2,
+  RotateGuide1: 3,
+  RotateGuide2: 4
 };

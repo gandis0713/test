@@ -32,30 +32,22 @@ function vtkMPRCursorContextRepresentation(publicAPI, model) {
 
   model.pipelines = {};
   model.pipelines.axes = [];
-  const axis1 = [];
 
-  for (let i = 0; i < Object.keys(LineType).length; i++) {
-    axis1.push({
-      source: vtkCylinderSource.newInstance(),
-      mapper: vtkMapper.newInstance(),
-      actor: vtkActor.newInstance({ pickable: true })
-    });
+  // create two axis
+  for (let axesCount = 0; axesCount < 2; axesCount++) {
+    const axis = [];
+    // create one axis line handle and 4 axis guide line
+    for (let lineCount = 0; lineCount < Object.keys(LineType).length; lineCount++) {
+      axis.push({
+        source: vtkCylinderSource.newInstance(),
+        mapper: vtkMapper.newInstance(),
+        actor: vtkActor.newInstance({ pickable: false })
+      });
+    }
+    axis[LineType.Handler].actor.setPickable(true);
+    model.pipelines.axes.push(axis);
   }
-  axis1[LineType.lineHandle].actor.setPickable(true);
 
-  const axis2 = [];
-
-  for (let i = 0; i < Object.keys(LineType).length; i++) {
-    axis2.push({
-      source: vtkCylinderSource.newInstance(),
-      mapper: vtkMapper.newInstance(),
-      actor: vtkActor.newInstance({ pickable: true })
-    });
-  }
-  axis2[LineType.lineHandle].actor.setPickable(true);
-
-  model.pipelines.axes.push(axis1);
-  model.pipelines.axes.push(axis2);
   publicAPI.setResolution = resolution => {
     model.pipelines.axes.forEach(axis => {
       axis.forEach(line => {
@@ -90,10 +82,10 @@ function vtkMPRCursorContextRepresentation(publicAPI, model) {
 
   publicAPI.setLineAxisRotateLength = length => {
     model.pipelines.axes.forEach(axis => {
-      axis[LineType.lineAxis1].source.setHeight(length);
-      axis[LineType.lineAxis2].source.setHeight(length);
-      axis[LineType.lineRotate1].source.setHeight(length);
-      axis[LineType.lineRotate2].source.setHeight(length);
+      axis[LineType.AxisGuide1].source.setHeight(length);
+      axis[LineType.AxisGuide2].source.setHeight(length);
+      axis[LineType.RotateGuide1].source.setHeight(length);
+      axis[LineType.RotateGuide2].source.setHeight(length);
     });
   };
 
@@ -108,45 +100,45 @@ function vtkMPRCursorContextRepresentation(publicAPI, model) {
     vtkMath.subtract(state.getPoint2(), state.getPoint1(), vector);
     const center = [0, 0, 0];
     vtkMath.multiplyAccumulate(state.getPoint1(), vector, 0.5, center);
-    axis[LineType.lineHandle].source.setCenter(center);
+    axis[LineType.Handler].source.setCenter(center);
     const length = vtkMath.normalize(vector);
-    axis[LineType.lineHandle].source.setDirection(vector);
-    axis[LineType.lineHandle].source.setHeight(length);
+    axis[LineType.Handler].source.setDirection(vector);
+    axis[LineType.Handler].source.setHeight(length);
     const lineAxisRotateVector = [0, 0, 0];
     const planeNormal = widgetState[`get${model.viewName}PlaneNormal`]();
     vec3.cross(lineAxisRotateVector, vector, planeNormal);
 
-    const lineAxisPosFromCenter = widgetState.getLineAxisPosFromCenter();
-    const lineAxisCenter1 = [
-      center[0] + vector[0] * lineAxisPosFromCenter,
-      center[1] + vector[1] * lineAxisPosFromCenter,
-      center[2] + vector[2] * lineAxisPosFromCenter
+    const AxisGuidePosFromCenter = widgetState.getAxisGuidePosFromCenter();
+    const AxisGuideCenter1 = [
+      center[0] + vector[0] * AxisGuidePosFromCenter,
+      center[1] + vector[1] * AxisGuidePosFromCenter,
+      center[2] + vector[2] * AxisGuidePosFromCenter
     ];
-    axis[LineType.lineAxis1].source.setCenter(lineAxisCenter1);
-    axis[LineType.lineAxis1].source.setDirection(lineAxisRotateVector);
-    const lineAxisCenter2 = [
-      center[0] - vector[0] * lineAxisPosFromCenter,
-      center[1] - vector[1] * lineAxisPosFromCenter,
-      center[2] - vector[2] * lineAxisPosFromCenter
+    axis[LineType.AxisGuide1].source.setCenter(AxisGuideCenter1);
+    axis[LineType.AxisGuide1].source.setDirection(lineAxisRotateVector);
+    const AxisGuideCenter2 = [
+      center[0] - vector[0] * AxisGuidePosFromCenter,
+      center[1] - vector[1] * AxisGuidePosFromCenter,
+      center[2] - vector[2] * AxisGuidePosFromCenter
     ];
-    axis[LineType.lineAxis2].source.setCenter(lineAxisCenter2);
-    axis[LineType.lineAxis2].source.setDirection(lineAxisRotateVector);
+    axis[LineType.AxisGuide2].source.setCenter(AxisGuideCenter2);
+    axis[LineType.AxisGuide2].source.setDirection(lineAxisRotateVector);
 
-    const lineRotatePosFromCenter = widgetState.getLineRotatePosFromCenter();
+    const rotateGuidePosFromCenter = widgetState.getRotateGuidePosFromCenter();
     const lineRotateCenter1 = [
-      center[0] + vector[0] * lineRotatePosFromCenter,
-      center[1] + vector[1] * lineRotatePosFromCenter,
-      center[2] + vector[2] * lineRotatePosFromCenter
+      center[0] + vector[0] * rotateGuidePosFromCenter,
+      center[1] + vector[1] * rotateGuidePosFromCenter,
+      center[2] + vector[2] * rotateGuidePosFromCenter
     ];
-    axis[LineType.lineRotate1].source.setCenter(lineRotateCenter1);
-    axis[LineType.lineRotate1].source.setDirection(lineAxisRotateVector);
+    axis[LineType.RotateGuide1].source.setCenter(lineRotateCenter1);
+    axis[LineType.RotateGuide1].source.setDirection(lineAxisRotateVector);
     const lineRotateCenter2 = [
-      center[0] - vector[0] * lineRotatePosFromCenter,
-      center[1] - vector[1] * lineRotatePosFromCenter,
-      center[2] - vector[2] * lineRotatePosFromCenter
+      center[0] - vector[0] * rotateGuidePosFromCenter,
+      center[1] - vector[1] * rotateGuidePosFromCenter,
+      center[2] - vector[2] * rotateGuidePosFromCenter
     ];
-    axis[LineType.lineRotate2].source.setCenter(lineRotateCenter2);
-    axis[LineType.lineRotate2].source.setDirection(lineAxisRotateVector);
+    axis[LineType.RotateGuide2].source.setCenter(lineRotateCenter2);
+    axis[LineType.RotateGuide2].source.setDirection(lineAxisRotateVector);
 
     const lineAxisRotateLength = widgetState.getLineAxisRotateLength();
     publicAPI.setLineAxisRotateLength(lineAxisRotateLength);
@@ -157,8 +149,8 @@ function vtkMPRCursorContextRepresentation(publicAPI, model) {
    */
   publicAPI.getTranslationActors = () => {
     return [
-      model.pipelines.axes[0][LineType.lineHandle].actor,
-      model.pipelines.axes[1][LineType.lineHandle].actor
+      model.pipelines.axes[0][LineType.Handler].actor,
+      model.pipelines.axes[1][LineType.Handler].actor
     ];
   };
 
@@ -214,10 +206,10 @@ function vtkMPRCursorContextRepresentation(publicAPI, model) {
     let activeLineState = null;
 
     switch (prop) {
-      case model.pipelines.axes[0][LineType.lineHandle].actor:
+      case model.pipelines.axes[0][LineType.Handler].actor:
         activeLineState = axis1State;
         break;
-      case model.pipelines.axes[1][LineType.lineHandle].actor:
+      case model.pipelines.axes[1][LineType.Handler].actor:
         activeLineState = axis2State;
         break;
       default:

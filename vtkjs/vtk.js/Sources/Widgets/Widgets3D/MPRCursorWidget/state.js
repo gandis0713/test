@@ -96,8 +96,8 @@ export default function generateState() {
     .addField({ name: 'activeViewName', initialValue: '' })
     .addField({ name: 'lineThickness', initialValue: 2 })
     .addField({ name: 'lineAxisRotateLength', initialValue: 5 })
-    .addField({ name: 'lineAxisPosFromCenter', initialValue: 30 })
-    .addField({ name: 'lineRotatePosFromCenter', initialValue: 60 })
+    .addField({ name: 'axisGuidePosFromCenter', initialValue: 30 })
+    .addField({ name: 'rotateGuidePosFromCenter', initialValue: 60 })
     .addField({
       name: 'updateMethodName'
     })

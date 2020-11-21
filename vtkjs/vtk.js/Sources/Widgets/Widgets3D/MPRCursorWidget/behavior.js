@@ -31,12 +31,12 @@ export default function widgetBehavior(publicAPI, model) {
   publicAPI.updateCursor = () => {
     const center = model.widgetState.getCenter();
     const length = vec3.distance(center, curWorldCoords);
-    const lineAxisPosFromCenter = model.widgetState.getLineAxisPosFromCenter();
-    const lineRotatePosFromCenter = model.widgetState.getLineRotatePosFromCenter();
-    if (length < lineAxisPosFromCenter) {
+    const axisGuidePosFromCenter = model.widgetState.getAxisGuidePosFromCenter();
+    const rotateGuidePosFromCenter = model.widgetState.getRotateGuidePosFromCenter();
+    if (length < axisGuidePosFromCenter) {
       model.widgetState.setUpdateMethodName('translateCenter');
       model.openGLRenderWindow.setCursor('move');
-    } else if (length >= lineAxisPosFromCenter && length < lineRotatePosFromCenter) {
+    } else if (length >= axisGuidePosFromCenter && length < rotateGuidePosFromCenter) {
       model.widgetState.setUpdateMethodName('translateAxis');
       model.openGLRenderWindow.setCursor('pointer');
     } else {
@@ -46,28 +46,34 @@ export default function widgetBehavior(publicAPI, model) {
   };
 
   publicAPI.handleLeftButtonPress = callData => {
+    let returnValue = macro.VOID;
     if (model.activeState && model.activeState.getActive()) {
       isDragging = true;
       const viewName = model.widgetState.getActiveViewName();
       const currentPlaneNormal = model.widgetState[`get${viewName}PlaneNormal`]();
       model.planeManipulator.setOrigin(model.widgetState.getCenter());
       model.planeManipulator.setNormal(currentPlaneNormal);
-      preWorldCoords = model.planeManipulator.handleEvent(callData, model.openGLRenderWindow);
 
       publicAPI.startInteraction();
+      returnValue = macro.EVENT_ABORT;
     } else {
-      return macro.VOID;
+      returnValue = macro.VOID;
     }
 
-    return macro.EVENT_ABORT;
+    preWorldCoords = model.planeManipulator.handleEvent(callData, model.openGLRenderWindow);
+    return returnValue;
   };
 
   publicAPI.handleMouseMove = callData => {
+    let returnValue = macro.VOID;
     curWorldCoords = getWorldCoords(callData);
+
     if (isDragging && model.pickable) {
-      return publicAPI.handleEvent(callData);
+      returnValue = publicAPI.handleEvent(callData);
     }
-    return macro.VOID;
+
+    preWorldCoords = curWorldCoords;
+    return returnValue;
   };
 
   publicAPI.handleLeftButtonRelease = () => {
@@ -104,14 +110,16 @@ export default function widgetBehavior(publicAPI, model) {
   publicAPI.handleMiddleButtonRelease = () => {};
 
   publicAPI.handleEvent = callData => {
+    let returnValue = macro.VOID;
+
     if (model.activeState.getActive()) {
       publicAPI[model.activeState.getUpdateMethodName()](callData);
       publicAPI.invokeInteractionEvent();
 
-      preWorldCoords = getWorldCoords(callData);
-      return macro.EVENT_ABORT;
+      returnValue = macro.EVENT_ABORT;
     }
-    return macro.VOID;
+
+    return returnValue;
   };
 
   publicAPI.startInteraction = () => {
