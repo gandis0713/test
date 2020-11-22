@@ -14,7 +14,6 @@ function vtkInteractorStyleImage(publicAPI, model) {
   // Public API methods
   publicAPI.superHandleMouseMove = publicAPI.handleMouseMove;
   publicAPI.handleMouseMove = callData => {
-    console.log('vtkInteractorStyleImage handleMouseMove');
     const pos = callData.position;
     const renderer = callData.pokedRenderer;
 

@@ -2,7 +2,7 @@ import macro from 'vtk.js/Sources/macro';
 import vtkAbstractWidgetFactory from '../../Core/AbstractWidgetFactory';
 import vtkPlane from 'vtk.js/Sources/Common/DataModel/Plane';
 import vtkPlaneSource from 'vtk.js/Sources/Filters/Sources/PlaneSource';
-import vtkMPRCursorContextRepresentation from '../../Representations/MPRCursorContextRepresentation';
+import vtkMPRAxisContextRepresentation from '../../Representations/MPRAxisContextRepresentation';
 
 import * as vtkMath from 'vtk.js/Sources/Common/Core/Math';
 
@@ -22,8 +22,8 @@ const viewUpFromViewType = {};
 // Factory
 // ----------------------------------------------------------------------------
 
-function vtkMPRCursorWidget(publicAPI, model) {
-  model.classHierarchy.push('vtkMPRCursorWidget');
+function vtkMPRAxisWidget(publicAPI, model) {
+  model.classHierarchy.push('vtkMPRAxisWidget');
 
   // --------------------------------------------------------------------------
   // Private methods
@@ -124,7 +124,7 @@ function vtkMPRCursorWidget(publicAPI, model) {
       case ViewTypes.AXIAL:
         return [
           {
-            builder: vtkMPRCursorContextRepresentation,
+            builder: vtkMPRAxisContextRepresentation,
             labels: ['AxisXinZ', 'AxisYinZ'],
             initialValues: {
               axis1Name: 'AxisXinZ',
@@ -137,7 +137,7 @@ function vtkMPRCursorWidget(publicAPI, model) {
       case ViewTypes.CORONAL:
         return [
           {
-            builder: vtkMPRCursorContextRepresentation,
+            builder: vtkMPRAxisContextRepresentation,
             labels: ['AxisXinY', 'AxisZinY'],
             initialValues: {
               axis1Name: 'AxisXinY',
@@ -150,7 +150,7 @@ function vtkMPRCursorWidget(publicAPI, model) {
       case ViewTypes.SAGITTAL:
         return [
           {
-            builder: vtkMPRCursorContextRepresentation,
+            builder: vtkMPRAxisContextRepresentation,
             labels: ['AxisYinX', 'AxisZinX'],
             initialValues: {
               axis1Name: 'AxisYinX',
@@ -389,12 +389,12 @@ export function extend(publicAPI, model, initialValues = {}) {
 
   vtkAbstractWidgetFactory.extend(publicAPI, model, initialValues);
 
-  vtkMPRCursorWidget(publicAPI, model);
+  vtkMPRAxisWidget(publicAPI, model);
 }
 
 // ----------------------------------------------------------------------------
 
-export const newInstance = macro.newInstance(extend, 'vtkMPRCursorWidget');
+export const newInstance = macro.newInstance(extend, 'vtkMPRAxisWidget');
 
 // ----------------------------------------------------------------------------
 

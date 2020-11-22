@@ -13,12 +13,12 @@ import { LineType } from './Constants';
 import { vec3 } from 'gl-matrix';
 
 // ----------------------------------------------------------------------------
-// vtkMPRCursorContextRepresentation methods
+// vtkMPRAxisContextRepresentation methods
 // ----------------------------------------------------------------------------
 
-function vtkMPRCursorContextRepresentation(publicAPI, model) {
+function vtkMPRAxisContextRepresentation(publicAPI, model) {
   // Set our className
-  model.classHierarchy.push('vtkMPRCursorContextRepresentation');
+  model.classHierarchy.push('vtkMPRAxisContextRepresentation');
 
   // --------------------------------------------------------------------------
   // Generic rendering pipeline
@@ -256,12 +256,12 @@ export function extend(publicAPI, model, initialValues = {}) {
   macro.setGet(publicAPI, model, ['viewName']);
 
   // Object specific methods
-  vtkMPRCursorContextRepresentation(publicAPI, model);
+  vtkMPRAxisContextRepresentation(publicAPI, model);
 }
 
 // ----------------------------------------------------------------------------
 
-export const newInstance = macro.newInstance(extend, 'vtkMPRCursorContextRepresentation');
+export const newInstance = macro.newInstance(extend, 'vtkMPRAxisContextRepresentation');
 
 // ----------------------------------------------------------------------------
 
