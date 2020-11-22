@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
 import vtkOpenGLRenderWindow from 'vtk.js/Sources/Rendering/OpenGL/RenderWindow';
-import vtkESRenderer from '../../../../vtk.js/Sources/Rendering/Core/ESRenderer';
-import vtkRenderWindow from '../../../../vtk.js/Sources/Rendering/Core/RenderWindow';
-import vtkRenderWindowInteractor from '../../../../vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
-import vtkResliceCursorWidget from '../../../../vtk.js/Sources/Widgets/Widgets3D/MPRCursorWidget';
-import vtkWidgetManager from '../../../../vtk.js/Sources/Widgets/Core/WidgetManager';
+import vtkESRenderer from '../../../../../vtk.js/Sources/Rendering/Core/ESRenderer';
+import vtkRenderWindow from '../../../../../vtk.js/Sources/Rendering/Core/RenderWindow';
+import vtkRenderWindowInteractor from '../../../../../vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
+import vtkResliceCursorWidget from '../../../../../vtk.js/Sources/Widgets/Widgets3D/MPRCursorWidget';
+import vtkWidgetManager from '../../../../../vtk.js/Sources/Widgets/Core/WidgetManager';
 import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
 import vtkImageReslice from 'vtk.js/Sources/Imaging/Core/ImageReslice';
 import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
-import vtkInteractorStyleImage from 'vtk.js/Sources/Interaction/Style/InteractorStyleImage';
 
 import { ViewTypes, CaptureOn } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
-import openXmlVtiFile from '../../../common/DicomReader';
+import openXmlVtiFile from '../../../../common/DicomReader';
 
 const viewAttributes = [];
 const widget = vtkResliceCursorWidget.newInstance();
@@ -29,7 +28,7 @@ function updateReslice(viewtype, reslice, actor, renderer) {
   }
   return modified;
 }
-function Reslice() {
+function ResliceSingleContext() {
   useEffect(() => {
     const renderWindow = vtkRenderWindow.newInstance();
     const GLWindow = vtkOpenGLRenderWindow.newInstance();
@@ -42,7 +41,6 @@ function Reslice() {
     interactor.setView(GLWindow);
     interactor.initialize();
     interactor.bindEvents(container);
-    // interactor.setInteractorStyle(vtkInteractorStyleImage.newInstance());
 
     // ----------------------------------------------------------------------------
     // Setup rendering code
@@ -139,4 +137,4 @@ function Reslice() {
   );
 }
 
-export default Reslice;
+export default ResliceSingleContext;

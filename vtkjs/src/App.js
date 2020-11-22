@@ -15,7 +15,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import { Switch, Redirect, Route, Link as RouterLink } from 'react-router-dom';
 
-import Reslice from './component/widgets/reslice';
+import ResliceSingleContext from './component/widgets/reslice/singleContext';
+import ResliceMultipleContext from './component/widgets/reslice/multipleContext';
 
 const drawerWidth = 240;
 
@@ -78,8 +79,11 @@ function App() {
             }
           >
             <Collapse in={widgetExpand} timeout="auto" unmountOnExit={false}>
-              <ListItem button key={0} component={RouterLink} to="/Bacis_Reslice">
-                Reslice
+              <ListItem button key={0} component={RouterLink} to="/Bacis_ResliceSingleContext">
+                Reslice Single Context
+              </ListItem>
+              <ListItem button key={1} component={RouterLink} to="/Bacis_ResliceMultipleContext">
+                Reslice Multiple Context
               </ListItem>
             </Collapse>
           </List>
@@ -88,7 +92,8 @@ function App() {
         <div className={classes.content}>
           <div className={classes.toolbar} />
           <Switch>
-            <Route exact path="/Bacis_Reslice" component={Reslice} />
+            <Route exact path="/Bacis_ResliceSingleContext" component={ResliceSingleContext} />
+            <Route exact path="/Bacis_ResliceMultipleContext" component={ResliceMultipleContext} />
           </Switch>
         </div>
       </div>

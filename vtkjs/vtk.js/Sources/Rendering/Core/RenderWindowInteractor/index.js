@@ -1,4 +1,4 @@
-import macro from '../../../macro';
+import macro from 'vtk.js/Sources/macro';
 import * as vtkMath from 'vtk.js/Sources/Common/Core/Math';
 
 import Constants from 'vtk.js/Sources/Rendering/Core/RenderWindowInteractor/Constants';
@@ -323,6 +323,13 @@ function vtkRenderWindowInteractor(publicAPI, model) {
     // the render to the appropriate class
     publicAPI.invokeRenderEvent();
   }
+
+  publicAPI.isRequestedAnimation = requestor => {
+    if (requestor === undefined) {
+      return false;
+    }
+    return animationRequesters.has(requestor);
+  };
 
   publicAPI.requestAnimation = requestor => {
     if (requestor === undefined) {

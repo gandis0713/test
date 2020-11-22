@@ -51,7 +51,7 @@ export default function widgetBehavior(publicAPI, model) {
       return macro.VOID;
     }
 
-    let returnValue = macro.VOID;
+    let returnValue = macro.EVENT_ABORT;
     if (model.activeState && model.activeState.getActive()) {
       isDragging = true;
       const viewName = model.widgetState.getActiveViewName();
@@ -136,14 +136,20 @@ export default function widgetBehavior(publicAPI, model) {
     publicAPI.invokeStartInteractionEvent();
     // When interacting, plane actor and lines must be re-rendered on other views
     publicAPI.getViewWidgets().forEach(viewWidget => {
-      viewWidget.getInteractor().requestAnimation(publicAPI);
+      const interactor = viewWidget.getInteractor();
+      if (!interactor.isRequestedAnimation(publicAPI)) {
+        viewWidget.getInteractor().requestAnimation(publicAPI);
+      }
     });
   };
 
   publicAPI.endInteraction = () => {
     publicAPI.invokeEndInteractionEvent();
     publicAPI.getViewWidgets().forEach(viewWidget => {
-      viewWidget.getInteractor().cancelAnimation(publicAPI);
+      const interactor = viewWidget.getInteractor();
+      if (interactor.isRequestedAnimation(publicAPI)) {
+        viewWidget.getInteractor().cancelAnimation(publicAPI);
+      }
     });
   };
 
