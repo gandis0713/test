@@ -313,7 +313,9 @@ function vtkWidgetManager(publicAPI, model) {
         if (model.renderer !== pokedRenderer) {
           return;
         }
-
+        if (model.isAnimating || !model.pickingAvailable) {
+          return;
+        }
         publicAPI.updateSelectionFromXY(position.x, position.y);
         const { requestCount, selectedState, representation, widget } = publicAPI.getSelectedData();
 
@@ -322,9 +324,6 @@ function vtkWidgetManager(publicAPI, model) {
           return;
         }
 
-        if (model.isAnimating || !model.pickingAvailable) {
-          return;
-        }
         // Default cursor behavior
         model.openGLRenderWindow.setCursor(widget ? 'pointer' : 'default');
 
@@ -519,7 +518,7 @@ function vtkWidgetManager(publicAPI, model) {
 const DEFAULT_VALUES = {
   viewId: null,
   widgets: [],
-  renderer: [],
+  renderer: null,
   viewType: ViewTypes.DEFAULT,
   pickingAvailable: false,
   isAnimating: false,

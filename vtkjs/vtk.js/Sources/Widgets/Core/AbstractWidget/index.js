@@ -1,5 +1,5 @@
 import macro from 'vtk.js/Sources/macro';
-import vtkInteractorObserver from 'vtk.js/Sources/Rendering/Core/InteractorObserver';
+import vtkInteractorObserver from '../../../Rendering/Core/InteractorObserver';
 import vtkProp from 'vtk.js/Sources/Rendering/Core/Prop';
 
 import { RenderingTypes } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
