@@ -47,12 +47,6 @@ function ResliceSingleContext() {
     // ----------------------------------------------------------------------------
 
     for (let i = 0; i < sliceTypes.length; i++) {
-      // if (i === 2) {
-      //   trLine2.appendChild(element);
-      // } else {
-      //   trLine1.appendChild(element);
-      // }
-
       const obj = {
         renderer: vtkESRenderer.newInstance(),
         widgetManager: vtkWidgetManager.newInstance()

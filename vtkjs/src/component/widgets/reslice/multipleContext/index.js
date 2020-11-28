@@ -8,27 +8,30 @@ import vtkWidgetManager from '../../../../../vtk.js/Sources/Widgets/Core/WidgetM
 import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
 import vtkImageReslice from 'vtk.js/Sources/Imaging/Core/ImageReslice';
 import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
+import vtkInteractorStyleImage from '../../../../../vtk.js/Sources/Interaction/Style/InteractorStyleImage';
 
 import { ViewTypes, CaptureOn } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 import openXmlVtiFile from '../../../../common/DicomReader';
 
 const viewAttributes = [];
-const widget = vtkMPRAxisWidget.newInstance();
-// widget.getWidgetState().setOpacity(0.6);
+const mprAxisWidget = vtkMPRAxisWidget.newInstance();
 const sliceTypes = [ViewTypes.CORONAL, ViewTypes.SAGITTAL, ViewTypes.AXIAL];
+
 // ----------------------------------------------------------------------------
 // Define html structure
 // ----------------------------------------------------------------------------
-function updateReslice(viewtype, reslice, actor, renderer) {
-  const modified = widget.updateReslicePlane(reslice, viewtype);
-  if (modified) {
-    // Get returned modified from setter to know if we have to render
-    actor.setUserMatrix(reslice.getResliceAxes());
-    widget.resetCamera(renderer, viewtype);
-  }
-  return modified;
-}
+
 function Reslice() {
+  function updateReslice(viewtype, reslice, actor, renderer) {
+    const modified = mprAxisWidget.updateReslicePlane(reslice, viewtype);
+    if (modified) {
+      // Get returned modified from setter to know if we have to render
+      actor.setUserMatrix(reslice.getResliceAxes());
+      mprAxisWidget.resetCamera(renderer, viewtype);
+    }
+    return modified;
+  }
+
   useEffect(() => {
     const container = document.getElementById('reslice');
     const table = document.createElement('table');
@@ -72,8 +75,9 @@ function Reslice() {
       obj.interactor.setView(obj.GLWindow);
       obj.interactor.initialize();
       obj.interactor.bindEvents(element);
+      obj.interactor.setInteractorStyle(vtkInteractorStyleImage.newInstance());
       obj.widgetManager.setRenderer(obj.renderer);
-      obj.widgetInstance = obj.widgetManager.addWidget(widget, sliceTypes[i]);
+      obj.mprAxisWidgetInstance = obj.widgetManager.addWidget(mprAxisWidget, sliceTypes[i]);
       obj.widgetManager.enablePicking();
       // Use to update all renderers buffer when actors are moved
       obj.widgetManager.setCaptureOn(CaptureOn.MOUSE_MOVE);
@@ -95,7 +99,7 @@ function Reslice() {
     // ----------------------------------------------------------------------------
 
     openXmlVtiFile('/assets/volumes/dicom.vti').then(imageData => {
-      widget.setImage(imageData);
+      mprAxisWidget.setImage(imageData);
 
       for (let i = 0; i < viewAttributes.length; i++) {
         const obj = viewAttributes[i];
@@ -123,7 +127,7 @@ function Reslice() {
           // .filter((_, index) => index !== i)
           .forEach(v => {
             // Interactions in other views may change current plane
-            v.widgetInstance.onInteractionEvent(() => {
+            v.mprAxisWidgetInstance.onInteractionEvent(() => {
               updateReslice(viewType, reslice, obj.resliceActor, obj.renderer);
             });
           });

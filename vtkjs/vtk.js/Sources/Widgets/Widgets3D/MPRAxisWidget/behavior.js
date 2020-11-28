@@ -47,7 +47,7 @@ export default function widgetBehavior(publicAPI, model) {
 
   publicAPI.handleLeftButtonPress = callData => {
     const { pokedRenderer } = callData;
-    if (pokedRenderer !== model.widgetManager.getRenderer()) {
+    if (pokedRenderer !== model.renderer) {
       return macro.VOID;
     }
 
@@ -71,7 +71,7 @@ export default function widgetBehavior(publicAPI, model) {
 
   publicAPI.handleMouseMove = callData => {
     const { pokedRenderer } = callData;
-    if (pokedRenderer !== model.widgetManager.getRenderer()) {
+    if (pokedRenderer !== model.renderer) {
       return macro.VOID;
     }
 
