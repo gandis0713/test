@@ -6,11 +6,11 @@ const glm = require('glm-js');
 const vtkRules = require('vtk.js/Utilities/config/dependency.js').webpack.core.rules;
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './example/index.js',
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname + '/build'),
-    publicPath: '/',
+    publicPath: '/'
   },
   devServer: {
     contentBase: path.resolve('./public'),
@@ -18,7 +18,7 @@ module.exports = {
     port: 3000,
     historyApiFallback: true,
     publicPath: 'http://localhost:3000/',
-    writeToDisk: true,
+    writeToDisk: true
   },
   mode: 'development',
   module: {
@@ -26,49 +26,49 @@ module.exports = {
       {
         test: /\.glsl$/,
         exclude: /node_modules/,
-        use: ['shader-loader'],
+        use: ['shader-loader']
       },
       {
         test: /\.(js|jsx)$/,
         exclude: '/node_modules',
-        use: ['babel-loader'],
+        use: ['babel-loader']
       },
       {
         test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
       },
       {
         test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
       },
       {
         test: /\.html$/,
         use: [
           {
             loader: 'html-loader',
-            options: { minimize: false },
-          },
-        ],
-      },
-    ].concat(vtkRules),
+            options: { minimize: false }
+          }
+        ]
+      }
+    ].concat(vtkRules)
   },
   plugins: [
     new HtmlWebPackPlugin({
       template: './public/index.html',
-      filename: 'index.html',
+      filename: 'index.html'
     }),
     new MiniCssExtractPlugin({
-      filename: 'style.css',
+      filename: 'style.css'
     }),
     new CopyWebPackPlugin([
       {
         from: path.join(__dirname, 'node_modules', 'itk', 'WebWorkers'),
-        to: path.join(__dirname, 'build', 'itk', 'WebWorkers'),
+        to: path.join(__dirname, 'build', 'itk', 'WebWorkers')
       },
       {
         from: path.join(__dirname, 'node_modules', 'itk', 'ImageIOs'),
-        to: path.join(__dirname, 'build', 'itk', 'ImageIOs'),
-      },
-    ]),
-  ],
+        to: path.join(__dirname, 'build', 'itk', 'ImageIOs')
+      }
+    ])
+  ]
 };
