@@ -6,6 +6,7 @@ import vtkRenderer from '../Renderer';
 // ----------------------------------------------------------------------------
 
 function vtkESRenderer(publicAPI, model) {
+  model.classHierarchy.push('vtkESRenderer');
   // Set our className
 }
 
