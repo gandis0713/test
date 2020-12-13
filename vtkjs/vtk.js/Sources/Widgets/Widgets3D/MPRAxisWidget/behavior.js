@@ -46,8 +46,7 @@ export default function widgetBehavior(publicAPI, model) {
   };
 
   publicAPI.handleLeftButtonPress = callData => {
-    const { pokedRenderer } = callData;
-    if (pokedRenderer !== model.widgetManager.getRenderer()) {
+    if (callData.pokedRenderer !== model.renderer) {
       return macro.VOID;
     }
 
@@ -70,8 +69,7 @@ export default function widgetBehavior(publicAPI, model) {
   };
 
   publicAPI.handleMouseMove = callData => {
-    const { pokedRenderer } = callData;
-    if (pokedRenderer !== model.widgetManager.getRenderer()) {
+    if (callData.pokedRenderer !== model.renderer) {
       return macro.VOID;
     }
 
@@ -86,7 +84,10 @@ export default function widgetBehavior(publicAPI, model) {
     return returnValue;
   };
 
-  publicAPI.handleLeftButtonRelease = () => {
+  publicAPI.handleLeftButtonRelease = callData => {
+    if (callData.pokedRenderer !== model.renderer) {
+      return macro.VOID;
+    }
     if (isDragging) {
       publicAPI.endInteraction();
     }
@@ -94,25 +95,36 @@ export default function widgetBehavior(publicAPI, model) {
     model.widgetState.deactivate();
   };
 
-  publicAPI.handleRightButtonPress = calldata => {};
+  publicAPI.handleRightButtonPress = callData => {};
 
-  publicAPI.handleRightButtonRelease = calldata => {};
+  publicAPI.handleRightButtonRelease = callData => {};
 
   publicAPI.handleStartMouseWheel = callData => {
+    if (callData.pokedRenderer !== model.renderer) {
+      return macro.VOID;
+    }
     publicAPI.startInteraction();
+    return macro.EVENT_ABORT;
   };
 
-  publicAPI.handleMouseWheel = calldata => {
-    const step = calldata.spinY;
-    publicAPI.translateCenterOnCurrentDirection(step, calldata.pokedRenderer);
+  publicAPI.handleMouseWheel = callData => {
+    if (callData.pokedRenderer !== model.renderer) {
+      return macro.VOID;
+    }
+    const step = callData.spinY;
+    publicAPI.translateCenterOnCurrentDirection(step, callData.pokedRenderer);
 
     publicAPI.invokeInteractionEvent();
 
     return macro.EVENT_ABORT;
   };
 
-  publicAPI.handleEndMouseWheel = () => {
+  publicAPI.handleEndMouseWheel = callData => {
+    if (callData.pokedRenderer !== model.renderer) {
+      return macro.VOID;
+    }
     publicAPI.endInteraction();
+    return macro.EVENT_ABORT;
   };
 
   publicAPI.handleMiddleButtonPress = () => {};
@@ -179,9 +191,9 @@ export default function widgetBehavior(publicAPI, model) {
     updateState(model.widgetState);
   };
 
-  publicAPI.translateAxis = calldata => {
+  publicAPI.translateAxis = callData => {
     const stateLine = model.widgetState.getActiveLineState();
-    const worldCoords = model.planeManipulator.handleEvent(calldata, model.openGLRenderWindow);
+    const worldCoords = model.planeManipulator.handleEvent(callData, model.openGLRenderWindow);
 
     const point1 = stateLine.getPoint1();
     const point2 = stateLine.getPoint2();
@@ -231,9 +243,9 @@ export default function widgetBehavior(publicAPI, model) {
     return boundPointOnPlane(newCenter, oldCenter, imageBounds);
   };
 
-  publicAPI.translateCenter = calldata => {
-    const { pokedRenderer } = calldata;
-    const curWorldCoords = model.planeManipulator.handleEvent(calldata, model.openGLRenderWindow);
+  publicAPI.translateCenter = callData => {
+    const { pokedRenderer } = callData;
+    const curWorldCoords = model.planeManipulator.handleEvent(callData, model.openGLRenderWindow);
     const center = model.widgetState.getCenter();
     const preWCToCurWC = [0, 0, 0];
     vec3.subtract(preWCToCurWC, curWorldCoords, preWorldCoords);
@@ -250,10 +262,10 @@ export default function widgetBehavior(publicAPI, model) {
     updateState(model.widgetState);
   };
 
-  publicAPI.rotateLine = calldata => {
+  publicAPI.rotateLine = callData => {
     const activeLine = model.widgetState.getActiveLineState();
     const planeNormal = model.planeManipulator.getNormal();
-    const worldCoords = model.planeManipulator.handleEvent(calldata, model.openGLRenderWindow);
+    const worldCoords = model.planeManipulator.handleEvent(callData, model.openGLRenderWindow);
     const center = model.widgetState.getCenter();
     const previousWorldPosition = preWorldCoords;
     const previousVectorToOrigin = [0, 0, 0];

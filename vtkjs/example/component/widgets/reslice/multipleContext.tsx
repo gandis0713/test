@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import vtkOpenGLRenderWindow from 'vtk.js/Sources/Rendering/OpenGL/RenderWindow';
-import vtkESRenderer from '../../../../../vtk.js/Sources/Rendering/Core/ESRenderer';
+import vtkESRenderer from '../../../../vtk.js/Sources/Rendering/Core/ESRenderer';
 import vtkRenderWindow from 'vtk.js/Sources/Rendering/Core/RenderWindow';
-import vtkRenderWindowInteractor from '../../../../../vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
-import vtkMPRAxisWidget from '../../../../../vtk.js/Sources/Widgets/Widgets3D/MPRAxisWidget';
-import vtkWidgetManager from '../../../../../vtk.js/Sources/Widgets/Core/WidgetManager';
+import vtkRenderWindowInteractor from '../../../../vtk.js/Sources/Rendering/Core/RenderWindowInteractor';
+import vtkMPRAxisWidget from '../../../../vtk.js/Sources/Widgets/Widgets3D/MPRAxisWidget';
+import vtkWidgetManager from '../../../../vtk.js/Sources/Widgets/Core/WidgetManager';
 import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
 import vtkImageReslice from 'vtk.js/Sources/Imaging/Core/ImageReslice';
 import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
 
 import { ViewTypes, CaptureOn } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
-import openXmlVtiFile from '../../../../../src/common/DicomReader';
+import openXmlVtiFile from '../../../../src/common/DicomReader';
 
 const viewAttributes = [];
 const widget = vtkMPRAxisWidget.newInstance();
@@ -68,6 +68,7 @@ function Reslice() {
       obj.renderWindow.addRenderer(obj.renderer);
       obj.renderWindow.addView(obj.GLWindow);
       obj.renderWindow.setInteractor(obj.interactor);
+      console.log('obj.renderWindow : ', obj.renderWindow.getRenderersByReference);
       obj.GLWindow.setContainer(element);
       obj.interactor.setView(obj.GLWindow);
       obj.interactor.initialize();

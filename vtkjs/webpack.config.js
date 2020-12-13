@@ -24,12 +24,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.glsl$/,
-        exclude: /node_modules/,
-        use: ['shader-loader']
-      },
-      {
-        test: /\.(js|jsx)$/,
+        test: /\.(js|jsx|ts|tsx)$/,
         exclude: '/node_modules',
         use: ['babel-loader']
       },
@@ -70,5 +65,8 @@ module.exports = {
         to: path.join(__dirname, 'build', 'itk', 'ImageIOs')
       }
     ])
-  ]
+  ],
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
+  }
 };

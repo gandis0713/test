@@ -17,6 +17,7 @@ import { Switch, Redirect, Route, Link as RouterLink } from 'react-router-dom';
 
 import ResliceSingleContext from './component/widgets/reslice/singleContext';
 import ResliceMultipleContext from './component/widgets/reslice/multipleContext';
+import Viewer from './component/viewer';
 
 const drawerWidth = 240;
 
@@ -79,11 +80,14 @@ function App() {
             }
           >
             <Collapse in={widgetExpand} timeout="auto" unmountOnExit={false}>
-              <ListItem button key={0} component={RouterLink} to="/Bacis_ResliceSingleContext">
+              <ListItem button key={0} component={RouterLink} to="/Widgets_ResliceSingleContext">
                 Reslice Single Context
               </ListItem>
-              <ListItem button key={1} component={RouterLink} to="/Bacis_ResliceMultipleContext">
+              <ListItem button key={1} component={RouterLink} to="/Widgets_ResliceMultipleContext">
                 Reslice Multiple Context
+              </ListItem>
+              <ListItem button key={2} component={RouterLink} to="/Viewer">
+                Viewer
               </ListItem>
             </Collapse>
           </List>
@@ -92,8 +96,13 @@ function App() {
         <div className={classes.content}>
           <div className={classes.toolbar} />
           <Switch>
-            <Route exact path="/Bacis_ResliceSingleContext" component={ResliceSingleContext} />
-            <Route exact path="/Bacis_ResliceMultipleContext" component={ResliceMultipleContext} />
+            <Route exact path="/Widgets_ResliceSingleContext" component={ResliceSingleContext} />
+            <Route
+              exact
+              path="/Widgets_ResliceMultipleContext"
+              component={ResliceMultipleContext}
+            />
+            <Route exact path="/Viewer" component={Viewer} />
           </Switch>
         </div>
       </div>
