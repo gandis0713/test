@@ -318,7 +318,6 @@ function vtkInteractorStyleMPR(publicAPI, model) {
     }
 
     if (model.autoAdjustCameraClippingRange) {
-      console.log('sssssssssssss');
       renderer.resetCameraClippingRange();
     }
 
