@@ -1090,16 +1090,14 @@ void main()
   // do not go PAST far clipping plane
   float farDist = -camThick/rayDirVC.z;
 
-    if(0.0 > rayStartEndDistancesVC.y) {
-    
-  gl_FragData[0] = vec4(1,0,0,1);
-  return;
-  }
-  else {
-    
-  gl_FragData[0] = vec4(0,0,1,1);
-  return;
-  }
+  // if(0.0 > rayStartEndDistancesVC.y) {    
+  //   gl_FragData[0] = vec4(1,0,0,1);
+  //   return;
+  // }
+  // else {    
+  //   gl_FragData[0] = vec4(0,0,1,1);
+  //   return;
+  // }
   rayStartEndDistancesVC.y = min(farDist,rayStartEndDistancesVC.y);
   // charles end
 
@@ -1110,6 +1108,9 @@ void main()
   {
     discard;
   }
+
+  // gl_FragData[0] = vec4(1,0,0,1);
+  // return;
 
   // IS = Index Space
   vec3 posIS;
