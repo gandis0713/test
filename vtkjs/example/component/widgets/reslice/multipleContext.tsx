@@ -8,7 +8,7 @@ import vtkWidgetManager from '../../../../vtk.js/Sources/Widgets/Core/WidgetMana
 import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
 import vtkImageReslice from 'vtk.js/Sources/Imaging/Core/ImageReslice';
 import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
-import vtkInteractorStyleImage from '../../../../../vtk.js/Sources/Interaction/Style/InteractorStyleImage';
+import vtkInteractorStyleImage from '../../../../vtk.js/Sources/Interaction/Style/InteractorStyleImage';
 
 import { ViewTypes, CaptureOn } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 import openXmlVtiFile from '../../../../src/common/DicomReader';
