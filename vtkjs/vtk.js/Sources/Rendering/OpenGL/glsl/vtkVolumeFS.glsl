@@ -19,6 +19,7 @@
 // the output of this shader
 //VTK::Output::Dec
 
+varying vec4 vertexDCOutput;
 varying vec3 vertexVCVSOutput;
 
 // first declare the settings from the mapper
@@ -99,10 +100,8 @@ uniform int cameraParallel;
 
 // values describing the volume geometry
 uniform vec3 vOriginVC;
-uniform vec3 vPlaneOriginVC;
 uniform vec3 vSpacing;
 uniform ivec3 volumeDimensions; // 3d texture dimensions
-uniform ivec3 planeDimensions; // 3d texture dimensions
 uniform vec3 vPlaneNormal0;
 uniform float vPlaneDistance0;
 uniform vec3 vPlaneNormal1;
@@ -115,6 +114,21 @@ uniform vec3 vPlaneNormal4;
 uniform float vPlaneDistance4;
 uniform vec3 vPlaneNormal5;
 uniform float vPlaneDistance5;
+
+uniform vec3 vClipPlaneOriginVC;
+uniform ivec3 clipPlaneDimensions; // 3d texture dimensions
+uniform vec3 vClipPlaneNormal0;
+uniform float vClipPlaneDistance0;
+uniform vec3 vClipPlaneNormal1;
+uniform float vClipPlaneDistance1;
+uniform vec3 vClipPlaneNormal2;
+uniform float vClipPlaneDistance2;
+uniform vec3 vClipPlaneNormal3;
+uniform float vClipPlaneDistance3;
+uniform vec3 vClipPlaneNormal4;
+uniform float vClipPlaneDistance4;
+uniform vec3 vClipPlaneNormal5;
+uniform float vClipPlaneDistance5;
 
 // opacity and color textures
 uniform sampler2D otexture;
@@ -911,7 +925,7 @@ void getRayPointIntersectionBoundsOnPlane(
   }
   result = -1.0 * (dot(rayPos, planeDir) + planeDist) / result;
   vec3 xposVC = rayPos + rayDir*result;
-  vec3 vxpos = xposVC - vPlaneOriginVC;
+  vec3 vxpos = xposVC - vClipPlaneOriginVC;
   vec2 vpos = vec2(
     dot(vxpos, vPlaneX),
     dot(vxpos, vPlaneY));
@@ -981,6 +995,43 @@ vec2 computeRayDistances(vec3 rayDir, vec3 tdims)
   return dists;
 }
 
+vec2 computeRayDistancesOnPlane(vec3 rayDir, vec3 tdims)
+{  
+  vec2 dists = vec2(100.0*camFar, -1.0);
+  vec3 vSize = vSpacing*(tdims - 1.0);
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+    vClipPlaneNormal0, vClipPlaneDistance0, dists, vClipPlaneNormal2, vClipPlaneNormal4,
+    vSize.y, vSize.z);
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+    vClipPlaneNormal1, vClipPlaneDistance1, dists, vClipPlaneNormal2, vClipPlaneNormal4,
+    vSize.y, vSize.z);
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+    vClipPlaneNormal2, vClipPlaneDistance2, dists, vClipPlaneNormal0, vClipPlaneNormal4,
+    vSize.x, vSize.z);
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+    vClipPlaneNormal3, vClipPlaneDistance3, dists, vClipPlaneNormal0, vClipPlaneNormal4,
+    vSize.x, vSize.z);
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+    vClipPlaneNormal4, vClipPlaneDistance4, dists, vClipPlaneNormal0, vClipPlaneNormal2,
+    vSize.x, vSize.y);
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+    vClipPlaneNormal5, vClipPlaneDistance5, dists, vClipPlaneNormal0, vClipPlaneNormal2,
+    vSize.x, vSize.y);
+
+  // do not go behind front clipping plane
+  dists.x = max(0.0,dists.x);
+
+  // do not go PAST far clipping plane
+  float farDist = -camThick/rayDir.z;
+  dists.y = min(farDist,dists.y);
+
+  // Do not go past the zbuffer value if set
+  // This is used for intermixing opaque geometry
+  //VTK::ZBuffer::Impl
+
+  return dists;
+}
+
 //=======================================================================
 // Compute the index space starting position (pos) and end
 // position
@@ -1012,33 +1063,6 @@ void computeIndexSpaceValues(out vec3 pos, out vec3 endPos, out float sampleDist
   sampleDistanceIS = sampleDistance*delta2/delta;
 }
 
-void computeIndexSpaceValuesOnPlane(out vec3 pos, out vec3 endPos, out float sampleDistanceIS, vec3 rayDir, vec2 dists)
-{
-  // compute starting and ending values in volume space
-  pos = vertexVCVSOutput + dists.x*rayDir;
-  pos = pos - vPlaneOriginVC;
-  // convert to volume basis and origin
-  pos = vec3(
-    dot(pos, vPlaneNormal0),
-    dot(pos, vPlaneNormal2),
-    dot(pos, vPlaneNormal4));
-
-  endPos = vertexVCVSOutput + dists.y*rayDir;
-  endPos = endPos - vPlaneOriginVC;
-  endPos = vec3(
-    dot(endPos, vPlaneNormal0),
-    dot(endPos, vPlaneNormal2),
-    dot(endPos, vPlaneNormal4));
-
-  float delta = length(endPos - pos);
-
-  pos *= vVCToIJK;
-  endPos *= vVCToIJK;
-
-  float delta2 = length(endPos - pos);
-  sampleDistanceIS = sampleDistance*delta2/delta;
-}
-
 void main()
 {
 
@@ -1053,42 +1077,20 @@ void main()
     rayDirVC = normalize(vertexVCVSOutput);
   }
 
-  // vec3 tdims = vec3(volumeDimensions);
-  vec3 tdims = vec3(planeDimensions);
-
+  vec3 tdims = vec3(volumeDimensions);
 
   // compute the start and end points for the ray
-  // vec2 rayStartEndDistancesVC = computeRayDistances(rayDirVC, tdims);
-    // charles start
-  vec2 rayStartEndDistancesVC = vec2(100.0*camFar, -1.0);
+  vec2 rayStartEndVolumeDistancesVC = computeRayDistances(rayDirVC, tdims);
+  
+  vec3 clipDims = vec3(clipPlaneDimensions);
+  
+  vec2 rayStartEndClipDistancesVC = computeRayDistancesOnPlane(rayDirVC, clipDims);
 
-  vec3 vSize = vSpacing*(tdims - 1.0);
-
-  // all this is in View Coordinates
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDirVC,
-    vPlaneNormal0, vPlaneDistance0, rayStartEndDistancesVC, vPlaneNormal2, vPlaneNormal4,
-    vSize.y, vSize.z);
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDirVC,
-    vPlaneNormal1, vPlaneDistance1, rayStartEndDistancesVC, vPlaneNormal2, vPlaneNormal4,
-    vSize.y, vSize.z);
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDirVC,
-    vPlaneNormal2, vPlaneDistance2, rayStartEndDistancesVC, vPlaneNormal0, vPlaneNormal4,
-    vSize.x, vSize.z);
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDirVC,
-    vPlaneNormal3, vPlaneDistance3, rayStartEndDistancesVC, vPlaneNormal0, vPlaneNormal4,
-    vSize.x, vSize.z);
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDirVC,
-    vPlaneNormal4, vPlaneDistance4, rayStartEndDistancesVC, vPlaneNormal0, vPlaneNormal2,
-    vSize.x, vSize.y);
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDirVC,
-    vPlaneNormal5, vPlaneDistance5, rayStartEndDistancesVC, vPlaneNormal0, vPlaneNormal2,
-    vSize.x, vSize.y);
-
-  // do not go behind front clipping plane
-  rayStartEndDistancesVC.x = max(0.0,rayStartEndDistancesVC.x);
-
-  // do not go PAST far clipping plane
-  float farDist = -camThick/rayDirVC.z;
+  vec2 rayStartEndDistancesVC;
+  rayStartEndDistancesVC.x = max(rayStartEndClipDistancesVC.x, rayStartEndVolumeDistancesVC.x);
+  rayStartEndDistancesVC.y = min(rayStartEndClipDistancesVC.y, rayStartEndVolumeDistancesVC.y);
+  rayStartEndDistancesVC = rayStartEndClipDistancesVC;
+  // rayStartEndDistancesVC = rayStartEndVolumeDistancesVC;
 
   // if(0.0 > rayStartEndDistancesVC.y) {    
   //   gl_FragData[0] = vec4(1,0,0,1);
@@ -1098,27 +1100,26 @@ void main()
   //   gl_FragData[0] = vec4(0,0,1,1);
   //   return;
   // }
-  rayStartEndDistancesVC.y = min(farDist,rayStartEndDistancesVC.y);
-  // charles end
-
 
   // do we need to composite? aka does the ray have any length
   // If not, bail out early
   if (rayStartEndDistancesVC.y <= rayStartEndDistancesVC.x)
   {
-    discard;
+    // discard;
+      gl_FragData[0] = vec4(1,0,0,1);
+  return;
+
   }
 
-  // gl_FragData[0] = vec4(1,0,0,1);
-  // return;
+  gl_FragData[0] = vec4(0,0,1,1);
+  return;
 
   // IS = Index Space
   vec3 posIS;
   vec3 endIS;
   float sampleDistanceIS;
-  // computeIndexSpaceValues(posIS, endIS, sampleDistanceIS, rayDirVC, rayStartEndDistancesVC);
-  computeIndexSpaceValuesOnPlane(posIS, endIS, sampleDistanceIS, rayDirVC, rayStartEndDistancesVC);
+  computeIndexSpaceValues(posIS, endIS, sampleDistanceIS, rayDirVC, rayStartEndDistancesVC);
 
   // Perform the blending operation along the ray
-  applyBlend(posIS, endIS, sampleDistanceIS, tdims);
+  applyBlend(posIS, endIS, sampleDistanceIS, tdims);  
 }

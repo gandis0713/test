@@ -426,7 +426,6 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
 
     const cam = model.openGLCamera.getRenderable();
     const crange = cam.getClippingRange();
-    console.log('crange : ', crange);
     program.setUniformf('camThick', crange[1] - crange[0]);
     program.setUniformf('camNear', crange[0]);
     program.setUniformf('camFar', crange[1]);
@@ -471,6 +470,10 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
       dcymax = Math.max(pos[1], dcymax);
     }
 
+    // console.log('dcxmin : ', dcxmin);
+    // console.log('dcxmax : ', dcxmax);
+    // console.log('dcymin : ', dcymin);
+    // console.log('dcymax : ', dcymax);
     program.setUniformf('dcxmin', dcxmin);
     program.setUniformf('dcxmax', dcxmax);
     program.setUniformf('dcymin', dcymin);
@@ -481,7 +484,6 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
     }
 
     const ext = model.currentInput.getExtent();
-    console.log('ext : ', ext);
     const spc = model.currentInput.getSpacing();
     const vsize = vec3.create();
     vec3.set(
@@ -496,7 +498,6 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
     model.currentInput.indexToWorldVec3(pos, pos);
 
     vec3.transformMat4(pos, pos, model.modelToView);
-    console.log('pos : ', pos);
     program.setUniform3f('vOriginVC', pos[0], pos[1], pos[2]);
 
     // apply the image directions
@@ -537,7 +538,6 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
     let pnormal = [];
     let ppos = [];
 
-    console.log('model.renderable : ', model.renderable.getClippingPlanes());
     for (let i = 0; i < 6; ++i) {
       switch (i) {
         default:
@@ -578,36 +578,54 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
           ppos = model.renderable.getClippingPlanes()[5].getOrigin();
           break;
       }
-      // vec3.transformMat3(normal, normal, model.idxNormalMatrix);
-      // vec3.transformMat4(pos2, pos2, model.idxToView);
-      // const dist = -1.0 * vec3.dot(pos2, normal);
+      vec3.transformMat3(normal, normal, model.idxNormalMatrix);
+      vec3.transformMat4(pos2, pos2, model.idxToView);
+      const dist = -1.0 * vec3.dot(pos2, normal);
 
       // we have the plane in view coordinates
       // specify the planes in view coordinates
-      // program.setUniform3f(`vPlaneNormal${i}`, normal[0], normal[1], normal[2]);
-      // program.setUniformf(`vPlaneDistance${i}`, dist);
+      program.setUniform3f(`vPlaneNormal${i}`, normal[0], normal[1], normal[2]);
+      program.setUniformf(`vPlaneDistance${i}`, dist);
 
       // charles start
       vec3.transformMat3(pnormal, pnormal, model.idxNormalMatrix);
       vec3.transformMat4(ppos, ppos, model.idxToView);
+
       const pdist = -1.0 * vec3.dot(ppos, pnormal);
-      program.setUniform3i('planeDimensions', 51, 51, 51);
-      const origin = [30, 0, 0];
+      program.setUniform3f(`vClipPlaneNormal${i}`, pnormal[0], pnormal[1], pnormal[2]);
+      program.setUniformf(`vClipPlaneDistance${i}`, pdist);
+      const clipPlaneDimension = [
+        model.renderable.getClippingPlanes()[0].getOrigin()[0] -
+          model.renderable.getClippingPlanes()[1].getOrigin()[0] +
+          1,
+        model.renderable.getClippingPlanes()[2].getOrigin()[1] -
+          model.renderable.getClippingPlanes()[3].getOrigin()[1] +
+          1,
+        model.renderable.getClippingPlanes()[4].getOrigin()[2] -
+          model.renderable.getClippingPlanes()[5].getOrigin()[2] +
+          1
+      ];
+      program.setUniform3i(
+        'clipPlaneDimensions',
+        clipPlaneDimension[0],
+        clipPlaneDimension[1],
+        clipPlaneDimension[2]
+      );
+      const origin = model.renderable.getClippingPlanes()[5].getOrigin();
       model.currentInput.indexToWorldVec3(origin, origin);
 
       vec3.transformMat4(origin, origin, model.modelToView);
-      program.setUniform3f('vPlaneOriginVC', origin[0], origin[1], origin[2]);
+      program.setUniform3f('vClipPlaneOriginVC', origin[0], origin[1], origin[2]);
 
-      console.log('ext : ', ext);
+      // console.log('ext : ', ext);
+      // console.log('pos2 : ', pos2);
+      // console.log('ppos : ', ppos);
       // console.log('normal : ', normal);
-      console.log('pnormal : ', pnormal);
-      // console.log('dist : ', dist);
-      console.log('pdist : ', pdist);
-      const cam = model.openGLCamera.getRenderable();
-      console.log('cam : ', cam.getState());
+      // console.log('pnormal : ', pnormal);
+      // console.log('pdist : ', pdist);
+      // const cam = model.openGLCamera.getRenderable();
+      // console.log('cam : ', cam.getState());
 
-      program.setUniform3f(`vPlaneNormal${i}`, pnormal[0], pnormal[1], pnormal[2]);
-      program.setUniformf(`vPlaneDistance${i}`, pdist);
       // charles end
 
       if (actor.getProperty().getUseLabelOutline()) {
@@ -1228,6 +1246,7 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
         numberOfComponents: 3,
         values: ptsArray
       });
+
       points.setName('points');
       const cells = vtkDataArray.newInstance({
         numberOfComponents: 1,

@@ -6,6 +6,8 @@ import vtkRenderWindowInteractor from '../../../../vtk.js/Sources/Rendering/Core
 import vtkInteractorStyleMPR from '../../../../vtk.js/Sources/Interaction/Style/InteractorStyleMPR';
 import vtkPlane from 'vtk.js/Sources/Common/DataModel/Plane';
 
+import vtkMatrixBuilder from 'vtk.js/Sources/Common/Core/MatrixBuilder';
+
 import vtkMPRAxisWidget from '../../../../vtk.js/Sources/Widgets/Widgets3D/MPRAxisWidget';
 import vtkWidgetManager from '../../../../vtk.js/Sources/Widgets/Core/WidgetManager';
 import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
@@ -14,9 +16,11 @@ import vtkCustomPass from '../../../../vtk.js/Sources/Rendering/Core/SceneGraph/
 import vtkVolume from 'vtk.js/Sources/Rendering/Core/Volume';
 import vtkImageReslice from 'vtk.js/Sources/Imaging/Core/ImageReslice';
 import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
+import * as vtkMath from 'vtk.js/Sources/Common/Core/Math';
 
 import { ViewTypes, CaptureOn } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
 import openXmlVtiFile from '../../../../src/common/DicomReader';
+import { vec3 } from 'gl-matrix';
 
 const viewAttributes = [];
 const widget = vtkMPRAxisWidget.newInstance();
@@ -82,37 +86,76 @@ function ResliceSingleContext() {
           viewType: sliceTypes[i]
         };
 
-        const xMaxDim = 80;
-        const xMinDim = 30;
-        const yMaxDim = 50;
-        const yMinDim = 0;
-        const zMaxDim = 50;
-        const zMinDim = 0;
-        const topPlane = vtkPlane.newInstance();
-        topPlane.setNormal([0, 1, 0]);
-        topPlane.setOrigin([xMaxDim, yMaxDim, zMaxDim]);
-        const bottomPlane = vtkPlane.newInstance();
-        bottomPlane.setNormal([0, -1, 0]);
-        bottomPlane.setOrigin([xMinDim, yMinDim, zMinDim]);
-        const nearPlane = vtkPlane.newInstance();
-        nearPlane.setNormal([0, 0, 1]);
-        nearPlane.setOrigin([xMaxDim, yMaxDim, zMaxDim]);
-        const farPlane = vtkPlane.newInstance();
-        farPlane.setNormal([0, 0, -1]);
-        farPlane.setOrigin([xMinDim, yMinDim, zMinDim]);
+        // const xMaxDim = 50;
+        // const xMinDim = 0;
+        // const yMaxDim = 50;
+        // const yMinDim = 0;
+        // const zMaxDim = 50;
+        // const zMinDim = 0;
+
+        const xMaxDim = 90;
+        const xMinDim = 40;
+        const yMaxDim = 90;
+        const yMinDim = 40;
+        const zMaxDim = 80;
+        const zMinDim = 40;
+
+        let rightNormal = [1, 0, 0];
+        let leftNormal = [-1, 0, 0];
+        let topNormal = [0, 1, 0];
+        let bottomNormal = [0, -1, 0];
+        let nearNormal = [0, 0, 1];
+        let farNormal = [0, 0, -1];
+
+        let maxOrigin = [xMaxDim, yMaxDim, zMaxDim];
+        let minOrigin = [xMinDim, yMinDim, zMinDim];
+
+        const rotationNormal = [0, 0, 1];
+        const degree = 45;
+        const radian = (degree * Math.PI) / 180;
+
+        // rightNormal = vtkMath.rotateVector(rightNormal, rotationNormal, radian);
+        // leftNormal = vtkMath.rotateVector(leftNormal, rotationNormal, radian);
+        // topNormal = vtkMath.rotateVector(topNormal, rotationNormal, radian);
+        // bottomNormal = vtkMath.rotateVector(bottomNormal, rotationNormal, radian);
+        // nearNormal = vtkMath.rotateVector(nearNormal, rotationNormal, radian);
+        // farNormal = vtkMath.rotateVector(farNormal, rotationNormal, radian);
+
+        // vtkMatrixBuilder
+        //   .buildFromRadian()
+        //   .rotate(radian, rotationNormal)
+        //   .apply(maxOrigin);
+
+        // vtkMatrixBuilder
+        //   .buildFromRadian()
+        //   .rotate(degree, rotationNormal)
+        //   .apply(minOrigin);
+
         const rightPlane = vtkPlane.newInstance();
-        rightPlane.setNormal([1, 0, 0]);
-        rightPlane.setOrigin([xMaxDim, yMaxDim, zMaxDim]);
+        rightPlane.setNormal(rightNormal);
+        rightPlane.setOrigin(maxOrigin);
         const leftPlane = vtkPlane.newInstance();
-        leftPlane.setNormal([-1, 0, 0]);
-        leftPlane.setOrigin([xMinDim, yMinDim, zMinDim]);
+        leftPlane.setNormal(leftNormal);
+        leftPlane.setOrigin(minOrigin);
+        const topPlane = vtkPlane.newInstance();
+        topPlane.setNormal(topNormal);
+        topPlane.setOrigin(maxOrigin);
+        const bottomPlane = vtkPlane.newInstance();
+        bottomPlane.setNormal(bottomNormal);
+        bottomPlane.setOrigin(minOrigin);
+        const nearPlane = vtkPlane.newInstance();
+        nearPlane.setNormal(nearNormal);
+        nearPlane.setOrigin(maxOrigin);
+        const farPlane = vtkPlane.newInstance();
+        farPlane.setNormal(farNormal);
+        farPlane.setOrigin(minOrigin);
         obj.volumeMapper.addClippingPlane(rightPlane);
         obj.volumeMapper.addClippingPlane(leftPlane);
         obj.volumeMapper.addClippingPlane(topPlane);
         obj.volumeMapper.addClippingPlane(bottomPlane);
         obj.volumeMapper.addClippingPlane(nearPlane);
         obj.volumeMapper.addClippingPlane(farPlane);
-        console.log('obj.volumeMapper : ', obj.volumeMapper.getClippingPlanes());
+
         obj.volume.setMapper(obj.volumeMapper);
         obj.renderer.addVolume(obj.volume);
         obj.renderer.setViewType(sliceTypes[i]);
