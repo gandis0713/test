@@ -120,7 +120,6 @@ function ResliceSingleContext() {
         // bottomNormal = vtkMath.rotateVector(bottomNormal, rotationNormal, radian);
         // nearNormal = vtkMath.rotateVector(nearNormal, rotationNormal, radian);
         // farNormal = vtkMath.rotateVector(farNormal, rotationNormal, radian);
-        console.log('radian : ', radian);
 
         // vtkMatrixBuilder
         //   .buildFromRadian()
