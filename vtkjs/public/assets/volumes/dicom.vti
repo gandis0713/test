@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <VTKFile type="ImageData" version="0.1" byte_order="LittleEndian" header_type="UInt32" compressor="vtkZLibDataCompressor">
-  <ImageData WholeExtent="0 123 0 123 0 99" Origin="0 0 0" Spacing="0.80000001192 0.80000001192 0.80000305176">
+  <ImageData WholeExtent="0 123 0 123 0 99" Origin="0 0 0" Spacing="0.8 0.8 0.8">
     <Piece Extent="0 123 0 123 0 99"                                                  >
       <PointData Scalars="DICOMImage">
         <DataArray type="Int16" Name="DICOMImage" format="appended" RangeMin="-1140"                RangeMax="7000"                 offset="0"                   />

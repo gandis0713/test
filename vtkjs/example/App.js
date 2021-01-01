@@ -17,7 +17,7 @@ import { Switch, Redirect, Route, Link as RouterLink } from 'react-router-dom';
 
 import ResliceSingleContext from './component/widgets/reslice/singleContext';
 import ResliceMultipleContext from './component/widgets/reslice/multipleContext';
-import Viewer from './component/viewer';
+import ClipVolume from './component/clipVolume';
 
 const drawerWidth = 240;
 
@@ -86,8 +86,8 @@ function App() {
               <ListItem button key={1} component={RouterLink} to="/Widgets_ResliceMultipleContext">
                 Reslice Multiple Context
               </ListItem>
-              <ListItem button key={2} component={RouterLink} to="/Viewer">
-                Viewer
+              <ListItem button key={2} component={RouterLink} to="/ClipVolume">
+                ClipVolume
               </ListItem>
             </Collapse>
           </List>
@@ -102,7 +102,7 @@ function App() {
               path="/Widgets_ResliceMultipleContext"
               component={ResliceMultipleContext}
             />
-            <Route exact path="/Viewer" component={Viewer} />
+            <Route exact path="/clipVolume" component={ClipVolume} />
           </Switch>
         </div>
       </div>

@@ -12,6 +12,8 @@ import vtkVertexArrayObject from 'vtk.js/Sources/Rendering/OpenGL/VertexArrayObj
 import vtkViewNode from 'vtk.js/Sources/Rendering/SceneGraph/ViewNode';
 import { Representation } from 'vtk.js/Sources/Rendering/Core/Property/Constants';
 import { Wrap, Filter } from 'vtk.js/Sources/Rendering/OpenGL/Texture/Constants';
+
+import vtkMatrixBuilder from 'vtk.js/Sources/Common/Core/MatrixBuilder';
 import {
   InterpolationType,
   OpacityMode
@@ -495,14 +497,28 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
     program.setUniform3f('vSpacing', spc[0], spc[1], spc[2]);
 
     vec3.set(pos, ext[0], ext[2], ext[4]);
+    console.log('vOriginVC 1 : ', pos);
     model.currentInput.indexToWorldVec3(pos, pos);
+    console.log('vOriginVC 2 : ', pos);
 
     vec3.transformMat4(pos, pos, model.modelToView);
+    console.log('vOriginVC 3 : ', pos);
     program.setUniform3f('vOriginVC', pos[0], pos[1], pos[2]);
+    const origin = model.renderable.getClippingPlanes()[5].getOrigin();
+    console.log('vClipPlaneOriginVC 1 : ', origin);
+    // model.currentInput.indexToWorldVec3(origin, origin);
+    console.log('vClipPlaneOriginVC 2 : ', origin);
+
+    vec3.transformMat4(origin, origin, model.modelToView);
+    console.log('vClipPlaneOriginVC 3 : ', origin);
+    program.setUniform3f('vClipPlaneOriginVC', origin[0], origin[1], origin[2]);
 
     // apply the image directions
     const i2wmat4 = model.currentInput.getIndexToWorld();
     mat4.multiply(model.idxToView, model.modelToView, i2wmat4);
+    console.log('i2wmat4 : ', i2wmat4);
+    console.log('model.idxToView : ', model.idxToView);
+    console.log('model.modelToView : ', model.modelToView);
 
     mat3.multiply(model.idxNormalMatrix, keyMats.normalMatrix, actMats.normalMatrix);
     mat3.multiply(model.idxNormalMatrix, model.idxNormalMatrix, model.currentInput.getDirection());
@@ -535,52 +551,59 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
     // then use a point on the plane to compute the distance
     const normal = vec3.create();
     const pos2 = vec3.create();
-    let pnormal = [];
-    let ppos = [];
+    let clipPlaneNormal = [];
+    let clipPlanePos = [];
 
     for (let i = 0; i < 6; ++i) {
+      clipPlaneNormal = model.renderable.getClippingPlanes()[i].getNormal();
+      clipPlanePos = model.renderable.getClippingPlanes()[i].getOrigin();
       switch (i) {
         default:
         case 0:
           vec3.set(normal, 1.0, 0.0, 0.0);
           vec3.set(pos2, ext[1], ext[3], ext[5]);
-          pnormal = model.renderable.getClippingPlanes()[0].getNormal();
-          ppos = model.renderable.getClippingPlanes()[0].getOrigin();
           break;
         case 1:
           vec3.set(normal, -1.0, 0.0, 0.0);
           vec3.set(pos2, ext[0], ext[2], ext[4]);
-          pnormal = model.renderable.getClippingPlanes()[1].getNormal();
-          ppos = model.renderable.getClippingPlanes()[1].getOrigin();
           break;
         case 2:
           vec3.set(normal, 0.0, 1.0, 0.0);
           vec3.set(pos2, ext[1], ext[3], ext[5]);
-          pnormal = model.renderable.getClippingPlanes()[2].getNormal();
-          ppos = model.renderable.getClippingPlanes()[2].getOrigin();
           break;
         case 3:
           vec3.set(normal, 0.0, -1.0, 0.0);
           vec3.set(pos2, ext[0], ext[2], ext[4]);
-          pnormal = model.renderable.getClippingPlanes()[3].getNormal();
-          ppos = model.renderable.getClippingPlanes()[3].getOrigin();
           break;
         case 4:
           vec3.set(normal, 0.0, 0.0, 1.0);
           vec3.set(pos2, ext[1], ext[3], ext[5]);
-          pnormal = model.renderable.getClippingPlanes()[4].getNormal();
-          ppos = model.renderable.getClippingPlanes()[4].getOrigin();
           break;
         case 5:
           vec3.set(normal, 0.0, 0.0, -1.0);
           vec3.set(pos2, ext[0], ext[2], ext[4]);
-          pnormal = model.renderable.getClippingPlanes()[5].getNormal();
-          ppos = model.renderable.getClippingPlanes()[5].getOrigin();
           break;
       }
+
+      console.log('vPlaneNormal 1 : ', normal);
       vec3.transformMat3(normal, normal, model.idxNormalMatrix);
+      console.log('vPlaneNormal 2 : ', normal);
+
+      console.log('vClipPlaneNormal 1 : ', clipPlaneNormal);
+      vec3.transformMat3(clipPlaneNormal, clipPlaneNormal, model.idxNormalMatrix);
+      console.log('vClipPlaneNormal 2 : ', clipPlaneNormal);
+
+      console.log('vPlanePos 1 : ', pos2);
       vec3.transformMat4(pos2, pos2, model.idxToView);
+      console.log('vPlanePos 2 : ', pos2);
       const dist = -1.0 * vec3.dot(pos2, normal);
+
+      console.log('vClipPlanePos 1 : ', clipPlanePos);
+      // vec3.transformMat4(clipPlanePos, clipPlanePos, model.idxToView);
+      vec3.transformMat4(clipPlanePos, clipPlanePos, model.modelToView);
+
+      console.log('vClipPlanePos 2 : ', clipPlanePos);
+      const clipPlaneDist = -1.0 * vec3.dot(clipPlanePos, clipPlaneNormal);
 
       // we have the plane in view coordinates
       // specify the planes in view coordinates
@@ -588,34 +611,40 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
       program.setUniformf(`vPlaneDistance${i}`, dist);
 
       // charles start
-      vec3.transformMat3(pnormal, pnormal, model.idxNormalMatrix);
-      vec3.transformMat4(ppos, ppos, model.idxToView);
-
-      const pdist = -1.0 * vec3.dot(ppos, pnormal);
-      program.setUniform3f(`vClipPlaneNormal${i}`, pnormal[0], pnormal[1], pnormal[2]);
-      program.setUniformf(`vClipPlaneDistance${i}`, pdist);
-      const clipPlaneDimension = [
-        model.renderable.getClippingPlanes()[0].getOrigin()[0] -
-          model.renderable.getClippingPlanes()[1].getOrigin()[0] +
-          1,
-        model.renderable.getClippingPlanes()[2].getOrigin()[1] -
-          model.renderable.getClippingPlanes()[3].getOrigin()[1] +
-          1,
-        model.renderable.getClippingPlanes()[4].getOrigin()[2] -
-          model.renderable.getClippingPlanes()[5].getOrigin()[2] +
-          1
-      ];
-      program.setUniform3i(
-        'clipPlaneDimensions',
-        clipPlaneDimension[0],
-        clipPlaneDimension[1],
-        clipPlaneDimension[2]
+      console.log('vClipDist : ', clipPlaneDist);
+      console.log('vDist : ', dist);
+      program.setUniform3f(
+        `vClipPlaneNormal${i}`,
+        clipPlaneNormal[0],
+        clipPlaneNormal[1],
+        clipPlaneNormal[2]
       );
-      const origin = model.renderable.getClippingPlanes()[5].getOrigin();
-      model.currentInput.indexToWorldVec3(origin, origin);
+      program.setUniformf(`vClipPlaneDistance${i}`, clipPlaneDist);
+      // const clipPlaneSize = [
+      //   model.renderable.getClippingPlanes()[0].getOrigin()[0] -
+      //     model.renderable.getClippingPlanes()[1].getOrigin()[0],
+      //   model.renderable.getClippingPlanes()[2].getOrigin()[1] -
+      //     model.renderable.getClippingPlanes()[3].getOrigin()[1],
+      //   model.renderable.getClippingPlanes()[4].getOrigin()[2] -
+      //     model.renderable.getClippingPlanes()[5].getOrigin()[2]
+      // ];
 
-      vec3.transformMat4(origin, origin, model.modelToView);
-      program.setUniform3f('vClipPlaneOriginVC', origin[0], origin[1], origin[2]);
+      const xMaxDim = 123 * 0.8;
+      const xMinDim = 0 * 0.8;
+      const yMaxDim = 123 * 0.8;
+      const yMinDim = 0 * 0.8;
+      const zMaxDim = 99 * 0.8;
+      const zMinDim = 0 * 0.8;
+      const ratio = 1.0;
+      // const ratio = spc[0];
+      const clipPlaneSize = [
+        (xMaxDim - xMinDim) * ratio,
+        (yMaxDim - yMinDim) * ratio,
+        (zMaxDim - zMinDim) * ratio
+      ];
+
+      console.log('clipPlaneSize : ', clipPlaneSize);
+      program.setUniform3f('clipPlaneSize', clipPlaneSize[0], clipPlaneSize[1], clipPlaneSize[2]);
 
       // console.log('ext : ', ext);
       // console.log('pos2 : ', pos2);

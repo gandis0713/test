@@ -86,19 +86,19 @@ function ResliceSingleContext() {
           viewType: sliceTypes[i]
         };
 
-        // const xMaxDim = 50;
-        // const xMinDim = 0;
-        // const yMaxDim = 50;
-        // const yMinDim = 0;
-        // const zMaxDim = 50;
-        // const zMinDim = 0;
+        const xMaxDim = 123 * 0.8;
+        const xMinDim = 0 * 0.8;
+        const yMaxDim = 123 * 0.8;
+        const yMinDim = 0 * 0.8;
+        const zMaxDim = 99 * 0.8;
+        const zMinDim = 0 * 0.8;
 
-        const xMaxDim = 90;
-        const xMinDim = 40;
-        const yMaxDim = 90;
-        const yMinDim = 40;
-        const zMaxDim = 80;
-        const zMinDim = 40;
+        // const xMaxDim = 90 * 0.8;
+        // const xMinDim = 20 * 0.8;
+        // const yMaxDim = 90 * 0.8;
+        // const yMinDim = 20 * 0.8;
+        // const zMaxDim = 80 * 0.8;
+        // const zMinDim = 20 * 0.8;
 
         let rightNormal = [1, 0, 0];
         let leftNormal = [-1, 0, 0];
@@ -111,7 +111,7 @@ function ResliceSingleContext() {
         let minOrigin = [xMinDim, yMinDim, zMinDim];
 
         const rotationNormal = [0, 0, 1];
-        const degree = 45;
+        const degree = -45;
         const radian = (degree * Math.PI) / 180;
 
         // rightNormal = vtkMath.rotateVector(rightNormal, rotationNormal, radian);
@@ -126,9 +126,11 @@ function ResliceSingleContext() {
         //   .rotate(radian, rotationNormal)
         //   .apply(maxOrigin);
 
+        // console.log('maxOrigin : ', maxOrigin);
+
         // vtkMatrixBuilder
         //   .buildFromRadian()
-        //   .rotate(degree, rotationNormal)
+        //   .rotate(radian, rotationNormal)
         //   .apply(minOrigin);
 
         const rightPlane = vtkPlane.newInstance();
@@ -162,7 +164,12 @@ function ResliceSingleContext() {
 
         obj.renderer.setViewport(0.5, 0, 1.0, 0.5);
 
-        obj.renderer.getActiveCamera().setParallelProjection(true);
+        const viewUp = [1, 1, 0];
+        vtkMath.normalize(viewUp);
+        const camera = obj.renderer.getActiveCamera();
+        // camera.setViewUp(viewUp);
+        camera.setParallelProjection(true);
+        console.log('camera : ', camera.getViewUp());
         renderWindow.addRenderer(obj.renderer);
         viewAttributes.push(obj);
       } else {

@@ -116,7 +116,7 @@ uniform vec3 vPlaneNormal5;
 uniform float vPlaneDistance5;
 
 uniform vec3 vClipPlaneOriginVC;
-uniform ivec3 clipPlaneDimensions; // 3d texture dimensions
+uniform vec3 clipPlaneSize; // 3d texture dimensions
 uniform vec3 vClipPlaneNormal0;
 uniform float vClipPlaneDistance0;
 uniform vec3 vClipPlaneNormal1;
@@ -998,7 +998,9 @@ vec2 computeRayDistances(vec3 rayDir, vec3 tdims)
 vec2 computeRayDistancesOnPlane(vec3 rayDir, vec3 tdims)
 {  
   vec2 dists = vec2(100.0*camFar, -1.0);
-  vec3 vSize = vSpacing*(tdims - 1.0);
+  vec3 vSize = tdims;
+  // vec3 vSize = vSpacing*(tdims - 1.0);
+
   getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
     vClipPlaneNormal0, vClipPlaneDistance0, dists, vClipPlaneNormal2, vClipPlaneNormal4,
     vSize.y, vSize.z);
@@ -1082,7 +1084,7 @@ void main()
   // compute the start and end points for the ray
   vec2 rayStartEndVolumeDistancesVC = computeRayDistances(rayDirVC, tdims);
   
-  vec3 clipDims = vec3(clipPlaneDimensions);
+  vec3 clipDims = vec3(clipPlaneSize);
   
   vec2 rayStartEndClipDistancesVC = computeRayDistancesOnPlane(rayDirVC, clipDims);
 
@@ -1105,14 +1107,13 @@ void main()
   // If not, bail out early
   if (rayStartEndDistancesVC.y <= rayStartEndDistancesVC.x)
   {
-    // discard;
-      gl_FragData[0] = vec4(1,0,0,1);
-  return;
-
+    discard;
+    // gl_FragData[0] = vec4(1,0,0,1);
+    // return;
   }
 
-  gl_FragData[0] = vec4(0,0,1,1);
-  return;
+  // gl_FragData[0] = vec4(0,0,1,1);
+  // return;
 
   // IS = Index Space
   vec3 posIS;
