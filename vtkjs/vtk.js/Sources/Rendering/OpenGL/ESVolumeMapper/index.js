@@ -305,9 +305,17 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
         '//VTK::ClipPlane::Impl',
         [
           `for(int i = 0; i < ${clipPlaneSize}; i++) {`,
-          `  getRayPointIntersectionBoundsByClipPlanes(vertexVCVSOutput, rayDir,`,
-          `  vClipPlaneNormals[i], vClipPlaneDistances[i], dists);`,
-          `}`,
+          '  float rayDirRatio = dot(rayDir, vClipPlaneNormals[i]);',
+          '  float equationResult = dot(vertexVCVSOutput, vClipPlaneNormals[i]) + vClipPlaneDistances[i];',
+          '  if (rayDirRatio == 0.0)',
+          '  {',
+          '    if (equationResult > 0.0) dists.x = dists.y;',
+          '    continue;',
+          '  }',
+          '  float result = -1.0 * equationResult / rayDirRatio;',
+          '  if (rayDirRatio > 0.0) dists.y = min(dists.y, result);',
+          '  else dists.x = max(dists.x, result);',
+          '}',
           '//VTK::ClipPlane::Impl'
         ],
         false
@@ -776,8 +784,8 @@ function vtkESOpenGLVolumeMapper(publicAPI, model) {
       const clipPlanes = model.renderable.getClippingPlanes();
       const clipPlaneSize = clipPlanes.length;
       for (let i = 0; i < clipPlaneSize; ++i) {
-        const clipPlaneNormal = model.renderable.getClippingPlanes()[i].getNormal();
-        const clipPlanePos = model.renderable.getClippingPlanes()[i].getOrigin();
+        const clipPlaneNormal = clipPlanes[i].getNormal();
+        const clipPlanePos = clipPlanes[i].getOrigin();
 
         vec3.transformMat3(clipPlaneNormal, clipPlaneNormal, model.idxNormalMatrix);
 

@@ -85,7 +85,7 @@ function ClipVolume() {
     let minOrigin = [xMinDim, yMinDim, zMinDim];
 
     const rotationNormal = [0, 0, 1];
-    const degree = 40;
+    const degree = 25;
     const radian = (degree * Math.PI) / 180;
 
     rightNormal = vtkMath.rotateVector(rightNormal, rotationNormal, radian);
@@ -123,12 +123,12 @@ function ClipVolume() {
     const farPlane = vtkPlane.newInstance();
     farPlane.setNormal(farNormal);
     farPlane.setOrigin(minOrigin);
-    // volumeMapper.addClippingPlane(rightPlane);
+    volumeMapper.addClippingPlane(rightPlane);
     volumeMapper.addClippingPlane(leftPlane);
     volumeMapper.addClippingPlane(topPlane);
-    // volumeMapper.addClippingPlane(bottomPlane);
-    // volumeMapper.addClippingPlane(nearPlane);
-    // volumeMapper.addClippingPlane(farPlane);
+    volumeMapper.addClippingPlane(bottomPlane);
+    volumeMapper.addClippingPlane(nearPlane);
+    volumeMapper.addClippingPlane(farPlane);
 
     volume.setMapper(volumeMapper);
     renderer.addVolume(volume);
@@ -139,7 +139,7 @@ function ClipVolume() {
     const viewUp = [1, 1, 0];
     vtkMath.normalize(viewUp);
     const camera = renderer.getActiveCamera();
-    camera.setViewUp(viewUp);
+    // camera.setViewUp(viewUp);
     camera.setParallelProjection(true);
     // console.log('camera : ', camera.getViewUp());
     renderWindow.addRenderer(renderer);

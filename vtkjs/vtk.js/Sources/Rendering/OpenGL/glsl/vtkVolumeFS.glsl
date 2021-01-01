@@ -900,50 +900,6 @@ void getRayPointIntersectionBounds(
    check);  // 0 in 1 out
 }
 
-void getRayPointIntersectionBoundsByClipPlanes(
-  vec3 rayPos, vec3 rayDir,
-  vec3 clipPlaneDir, float clipPlaneDist,
-  inout vec2 tbounds)
-{  
-  
-  // float result = dot(rayDir, clipPlaneDir);
-  // float dist = dot(rayPos, clipPlaneDir) + clipPlaneDist;
-  // if(dist > 0.0 && result == 0.0) {
-  //   tbounds.x = tbounds.y  +10000.0;
-  //   return;
-  // }
-  // if (dist <= 0.0 && result != 0.0)
-  // {
-  //   float inoutValue = sign(result);    
-  //   float value = -1.0 * dist / result;
-  //   tbounds = mix(
-  //     vec2(tbounds.x, min(tbounds.y, value)),
-  //     vec2(max(tbounds.x, value), tbounds.y),
-  //     inoutValue);
-  // }
-
-
-  float result = dot(rayDir, clipPlaneDir);
-  if (result == 0.0)
-  {    
-    float result2 = dot(rayPos, clipPlaneDir) + clipPlaneDist;
-    if (result2 > 0.0)
-    {
-      tbounds.x = tbounds.y  +10000.0;
-    }
-  }
-  else if (result > 0.0)
-  {
-    result = -1.0 * (dot(rayPos, clipPlaneDir) + clipPlaneDist) / result;
-    tbounds = vec2(tbounds.x, min(tbounds.y, result));
-  }
-  else
-  {
-    result = -1.0 * (dot(rayPos, clipPlaneDir) + clipPlaneDist) / result;
-    tbounds = vec2(max(tbounds.x, result), tbounds.y);    
-  }
-}
-
 //=======================================================================
 // given a
 // - ray direction (rayDir)
