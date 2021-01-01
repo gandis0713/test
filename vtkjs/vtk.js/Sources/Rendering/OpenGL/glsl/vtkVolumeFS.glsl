@@ -115,8 +115,6 @@ uniform float vPlaneDistance4;
 uniform vec3 vPlaneNormal5;
 uniform float vPlaneDistance5;
 
-uniform vec3 vClipPlaneOriginVC;
-uniform vec3 clipPlaneSize; // 3d texture dimensions
 uniform vec3 vClipPlaneNormal0;
 uniform float vClipPlaneDistance0;
 uniform vec3 vClipPlaneNormal1;
@@ -915,36 +913,27 @@ void getRayPointIntersectionBounds(
 void getRayPointIntersectionBoundsOnPlane(
   vec3 rayPos, vec3 rayDir,
   vec3 planeDir, float planeDist,
-  inout vec2 tbounds, vec3 vPlaneX, vec3 vPlaneY,
-  float vSize1, float vSize2)
+  inout vec2 tbounds)
 {
   float result = dot(rayDir, planeDir);
   if (result == 0.0)
-  {
-    return;
+  {    
+    float result2 = dot(rayPos, planeDir) + planeDist;
+    if (result2 > 0.0)
+    {
+      tbounds.x = tbounds.y  +10000.0;
+    }
   }
-  result = -1.0 * (dot(rayPos, planeDir) + planeDist) / result;
-  vec3 xposVC = rayPos + rayDir*result;
-  vec3 vxpos = xposVC - vClipPlaneOriginVC;
-  vec2 vpos = vec2(
-    dot(vxpos, vPlaneX),
-    dot(vxpos, vPlaneY));
-
-  // on some apple nvidia systems this does not work
-  // if (vpos.x < 0.0 || vpos.x > vSize1 ||
-  //     vpos.y < 0.0 || vpos.y > vSize2)
-  // even just
-  // if (vpos.x < 0.0 || vpos.y < 0.0)
-  // fails
-  // so instead we compute a value that represents in and out
-  //and then compute the return using this value
-  float xcheck = max(0.0, vpos.x * (vpos.x - vSize1)); //  0 means in bounds
-  float check = sign(max(xcheck, vpos.y * (vpos.y - vSize2))); //  0 means in bounds, 1 = out
-
-  tbounds = mix(
-   vec2(min(tbounds.x, result), max(tbounds.y, result)), // in value
-   tbounds, // out value
-   check);  // 0 in 1 out
+  else if (result > 0.0)
+  {
+    result = -1.0 * (dot(rayPos, planeDir) + planeDist) / result;
+    tbounds = vec2(tbounds.x, min(tbounds.y, result));
+  }
+  else
+  {
+    result = -1.0 * (dot(rayPos, planeDir) + planeDist) / result;
+    tbounds = vec2(max(tbounds.x, result), tbounds.y);    
+  }
 }
 
 //=======================================================================
@@ -981,6 +970,19 @@ vec2 computeRayDistances(vec3 rayDir, vec3 tdims)
     vPlaneNormal5, vPlaneDistance5, dists, vPlaneNormal0, vPlaneNormal2,
     vSize.x, vSize.y);
 
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+  vClipPlaneNormal0, vClipPlaneDistance0, dists);
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+  vClipPlaneNormal1, vClipPlaneDistance1, dists);
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+  vClipPlaneNormal2, vClipPlaneDistance2, dists);
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+  vClipPlaneNormal3, vClipPlaneDistance3, dists);
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+  vClipPlaneNormal4, vClipPlaneDistance4, dists);
+  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
+  vClipPlaneNormal5, vClipPlaneDistance5, dists);
+
   // do not go behind front clipping plane
   dists.x = max(0.0,dists.x);
 
@@ -988,44 +990,9 @@ vec2 computeRayDistances(vec3 rayDir, vec3 tdims)
   float farDist = -camThick/rayDir.z;
   dists.y = min(farDist,dists.y);
 
-  // Do not go past the zbuffer value if set
-  // This is used for intermixing opaque geometry
-  //VTK::ZBuffer::Impl
 
-  return dists;
-}
 
-vec2 computeRayDistancesOnPlane(vec3 rayDir, vec3 tdims)
-{  
-  vec2 dists = vec2(100.0*camFar, -1.0);
-  vec3 vSize = tdims;
-  // vec3 vSize = vSpacing*(tdims - 1.0);
 
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
-    vClipPlaneNormal0, vClipPlaneDistance0, dists, vClipPlaneNormal2, vClipPlaneNormal4,
-    vSize.y, vSize.z);
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
-    vClipPlaneNormal1, vClipPlaneDistance1, dists, vClipPlaneNormal2, vClipPlaneNormal4,
-    vSize.y, vSize.z);
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
-    vClipPlaneNormal2, vClipPlaneDistance2, dists, vClipPlaneNormal0, vClipPlaneNormal4,
-    vSize.x, vSize.z);
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
-    vClipPlaneNormal3, vClipPlaneDistance3, dists, vClipPlaneNormal0, vClipPlaneNormal4,
-    vSize.x, vSize.z);
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
-    vClipPlaneNormal4, vClipPlaneDistance4, dists, vClipPlaneNormal0, vClipPlaneNormal2,
-    vSize.x, vSize.y);
-  getRayPointIntersectionBoundsOnPlane(vertexVCVSOutput, rayDir,
-    vClipPlaneNormal5, vClipPlaneDistance5, dists, vClipPlaneNormal0, vClipPlaneNormal2,
-    vSize.x, vSize.y);
-
-  // do not go behind front clipping plane
-  dists.x = max(0.0,dists.x);
-
-  // do not go PAST far clipping plane
-  float farDist = -camThick/rayDir.z;
-  dists.y = min(farDist,dists.y);
 
   // Do not go past the zbuffer value if set
   // This is used for intermixing opaque geometry
@@ -1082,26 +1049,7 @@ void main()
   vec3 tdims = vec3(volumeDimensions);
 
   // compute the start and end points for the ray
-  vec2 rayStartEndVolumeDistancesVC = computeRayDistances(rayDirVC, tdims);
-  
-  vec3 clipDims = vec3(clipPlaneSize);
-  
-  vec2 rayStartEndClipDistancesVC = computeRayDistancesOnPlane(rayDirVC, clipDims);
-
-  vec2 rayStartEndDistancesVC;
-  rayStartEndDistancesVC.x = max(rayStartEndClipDistancesVC.x, rayStartEndVolumeDistancesVC.x);
-  rayStartEndDistancesVC.y = min(rayStartEndClipDistancesVC.y, rayStartEndVolumeDistancesVC.y);
-  rayStartEndDistancesVC = rayStartEndClipDistancesVC;
-  // rayStartEndDistancesVC = rayStartEndVolumeDistancesVC;
-
-  // if(0.0 > rayStartEndDistancesVC.y) {    
-  //   gl_FragData[0] = vec4(1,0,0,1);
-  //   return;
-  // }
-  // else {    
-  //   gl_FragData[0] = vec4(0,0,1,1);
-  //   return;
-  // }
+  vec2 rayStartEndDistancesVC = computeRayDistances(rayDirVC, tdims);
 
   // do we need to composite? aka does the ray have any length
   // If not, bail out early

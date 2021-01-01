@@ -7,15 +7,11 @@ import vtkInteractorStyleMPR from '../../vtk.js/Sources/Interaction/Style/Intera
 import vtkPlane from 'vtk.js/Sources/Common/DataModel/Plane';
 
 import vtkMatrixBuilder from 'vtk.js/Sources/Common/Core/MatrixBuilder';
+import vtkBox from 'vtk.js/Sources/Common/DataModel/Box';
 
-import vtkMPRAxisWidget from '../../vtk.js/Sources/Widgets/Widgets3D/MPRAxisWidget';
-import vtkWidgetManager from '../../vtk.js/Sources/Widgets/Core/WidgetManager';
-import vtkImageMapper from 'vtk.js/Sources/Rendering/Core/ImageMapper';
 import vtkESVolumeMapper from '../../vtk.js/Sources/Rendering/Core/ESVolumeMapper';
 import vtkCustomPass from '../../vtk.js/Sources/Rendering/Core/SceneGraph/CustomPass';
 import vtkVolume from 'vtk.js/Sources/Rendering/Core/Volume';
-import vtkImageReslice from 'vtk.js/Sources/Imaging/Core/ImageReslice';
-import vtkImageSlice from 'vtk.js/Sources/Rendering/Core/ImageSlice';
 import * as vtkMath from 'vtk.js/Sources/Common/Core/Math';
 
 import { ViewTypes, CaptureOn } from 'vtk.js/Sources/Widgets/Core/WidgetManager/Constants';
@@ -57,12 +53,12 @@ function ClipVolume() {
     const renderer = vtkESRenderer.newInstance();
     const volume = vtkVolume.newInstance();
     const volumeMapper = vtkESVolumeMapper.newInstance();
-    const xMaxDim = 123 * 0.8;
-    const xMinDim = 0 * 0.8;
-    const yMaxDim = 123 * 0.8;
-    const yMinDim = 0 * 0.8;
-    const zMaxDim = 99 * 0.8;
-    const zMinDim = 0 * 0.8;
+    // const xMaxDim = 123 * 0.8;
+    // const xMinDim = 0 * 0.8;
+    // const yMaxDim = 123 * 0.8;
+    // const yMinDim = 0 * 0.8;
+    // const zMaxDim = 99 * 0.8;
+    // const zMinDim = 0 * 0.8;
 
     // const xMaxDim = 123;
     // const xMinDim = 0;
@@ -71,12 +67,12 @@ function ClipVolume() {
     // const zMaxDim = 99;
     // const zMinDim = 0;
 
-    // const xMaxDim = 90 * 0.8;
-    // const xMinDim = 20 * 0.8;
-    // const yMaxDim = 90 * 0.8;
-    // const yMinDim = 20 * 0.8;
-    // const zMaxDim = 80 * 0.8;
-    // const zMinDim = 20 * 0.8;
+    const xMaxDim = 90 * 0.8;
+    const xMinDim = 40 * 0.8;
+    const yMaxDim = 90 * 0.8;
+    const yMinDim = 40 * 0.8;
+    const zMaxDim = 80 * 0.8;
+    const zMinDim = 30 * 0.8;
 
     let rightNormal = [1, 0, 0];
     let leftNormal = [-1, 0, 0];
@@ -88,7 +84,7 @@ function ClipVolume() {
     let maxOrigin = [xMaxDim, yMaxDim, zMaxDim];
     let minOrigin = [xMinDim, yMinDim, zMinDim];
 
-    const rotationNormal = [0, 0, 1];
+    const rotationNormal = [1, 1, 1];
     const degree = 45;
     const radian = (degree * Math.PI) / 180;
 
