@@ -67,12 +67,12 @@ function ClipVolume() {
     // const zMaxDim = 99;
     // const zMinDim = 0;
 
-    const xMaxDim = 90 * 0.8;
+    const xMaxDim = 70 * 0.8;
     const xMinDim = 40 * 0.8;
-    const yMaxDim = 90 * 0.8;
+    const yMaxDim = 70 * 0.8;
     const yMinDim = 40 * 0.8;
-    const zMaxDim = 80 * 0.8;
-    const zMinDim = 30 * 0.8;
+    const zMaxDim = 70 * 0.8;
+    const zMinDim = 40 * 0.8;
 
     let rightNormal = [1, 0, 0];
     let leftNormal = [-1, 0, 0];
@@ -84,8 +84,8 @@ function ClipVolume() {
     let maxOrigin = [xMaxDim, yMaxDim, zMaxDim];
     let minOrigin = [xMinDim, yMinDim, zMinDim];
 
-    const rotationNormal = [1, 1, 1];
-    const degree = 45;
+    const rotationNormal = [0, 0, 1];
+    const degree = 40;
     const radian = (degree * Math.PI) / 180;
 
     rightNormal = vtkMath.rotateVector(rightNormal, rotationNormal, radian);
@@ -123,12 +123,12 @@ function ClipVolume() {
     const farPlane = vtkPlane.newInstance();
     farPlane.setNormal(farNormal);
     farPlane.setOrigin(minOrigin);
-    volumeMapper.addClippingPlane(rightPlane);
+    // volumeMapper.addClippingPlane(rightPlane);
     volumeMapper.addClippingPlane(leftPlane);
     volumeMapper.addClippingPlane(topPlane);
-    volumeMapper.addClippingPlane(bottomPlane);
-    volumeMapper.addClippingPlane(nearPlane);
-    volumeMapper.addClippingPlane(farPlane);
+    // volumeMapper.addClippingPlane(bottomPlane);
+    // volumeMapper.addClippingPlane(nearPlane);
+    // volumeMapper.addClippingPlane(farPlane);
 
     volume.setMapper(volumeMapper);
     renderer.addVolume(volume);
@@ -139,7 +139,7 @@ function ClipVolume() {
     const viewUp = [1, 1, 0];
     vtkMath.normalize(viewUp);
     const camera = renderer.getActiveCamera();
-    // camera.setViewUp(viewUp);
+    camera.setViewUp(viewUp);
     camera.setParallelProjection(true);
     // console.log('camera : ', camera.getViewUp());
     renderWindow.addRenderer(renderer);
