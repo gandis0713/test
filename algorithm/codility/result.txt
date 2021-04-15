@@ -1,8 +1,13 @@
 site-address : https://app.codility.com/demo/results/<result>/
 
+demo
+[demo] demoT4GHJQ-Z5Q
 
 lesson 1
 [BinaryGap] trainingFK4ADR-8SS
 
 lesson 2
 [CyclicRotation] training8JD2ZD-XUA
+
+lesson 3
+[FrogJump] trainingAWG3TT-3V3
