@@ -11,3 +11,9 @@ lesson 2
 
 lesson 3
 [FrogJump] trainingAWG3TT-3V3
+[PermMissingElem] trainingH4T6HU-A3E
+[TapeEquilibrium] training6FM7SK-UU2
+[OddOccurrencesInArray] training8AW7GT-XZ7
+
+lesson 4
+[FrogRiverOne] trainingVXE4GH-TEA
